@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matematik 9 · Hafta 2 · Gerçek Sayı Aralıkları</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Matematik · Ünite 1 Sayılar · Hafta 2<b>Gerçek sayı aralıkları ve aralıklarda işlemler</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>"7 ile 8 arasındaki en büyük sayı" diye bir şey yoktur</h1>
+  <p class="lead">Geçen hafta √50'yi 7 ile 8 arasına sıkıştırdık. Bu hafta o "ara"nın kendisini inceliyoruz: 7 ile 8 arasında kaç sayı var, hangisi en büyük, "7'den büyük ve 8'den küçük" ile "7 ya da daha büyük" arasında ne fark var? Cevaplar sandığından daha şaşırtıcı — ve kombi termostatından deprem sınıflarına kadar her yerde.</p>
+  <div class="card">
+    <p><b>Aralık</b>, sayı doğrusunda kesintisiz bir parçadır: "18 °C ile 21 °C arası", "50 km/sa ve altı", "4,0-4,9 büyüklüğünde deprem". Bu hafta aralıkları üç dilde yazmayı öğreneceğiz — <b>eşitsizlik</b>, <b>aralık gösterimi</b>, <b>sayı doğrusu</b> — ve aralıklarla işlem yapmayı: iki koşulu birden sağlayan sayılar (kesişim), en az birini sağlayanlar (birleşim).</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>Evdeki kombi 20 °C'ye ayarlı ama sürekli 19,5-20,5 arasında salınıyor; "tam 20" hiç olmuyor. Termostat neden tek bir sayıya değil, bir aralığa göre çalışır? Cevap 4. sekmede — ve cevabın içinde bu haftanın en önemli fikri var: aralık uçlarının "dahil" olup olmaması.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Sayılar)</div>Gerçek sayı aralıklarını eşitsizlik, aralık gösterimi ve sayı doğrusuyla ifade etmek · açık/kapalı/yarı açık ve sonsuz aralıkları ayırt etmek · aralıklarda kesişim, birleşim ve fark işlemleri yapmak · aralıkların uç davranışını (en büyük/en küçük eleman) gerekçelendirmek.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma ve aralıklı tekrar</h2>
+  <div class="grid2">
+    <div class="card"><b>Eşitsizlik işaretleri (ortaokul)</b><p>x &lt; 3: 3'ten küçük · x ≤ 3: 3 veya daha küçük · x &gt; 3 · x ≥ 3. Sayı doğrusunda "dahil" için dolu nokta, "hariç" için boş nokta.</p></div>
+    <div class="card"><b>Eşitsizlik çözme temelleri</b><p>İki tarafa aynı sayı eklenir/çıkarılır; pozitifle çarpılır/bölünür. Negatifle çarpınca işaret <b>yön değiştirir</b>: −2x &lt; 6 → x &gt; −3.</p></div>
+    <div class="card"><b>Geçen haftadan: sıkıştırma</b><p>49 &lt; 50 &lt; 64 → 7 &lt; √50 &lt; 8. Yani √50, "7'den büyük 8'den küçük sayılar" kümesinin bir elemanı.</p></div>
+    <div class="card"><b>Dersler arası köprü</b><p>Fizik H2'de ölçüm hatası göreceksin: "5,0 ± 0,2 cm" demek 4,8 ≤ uzunluk ≤ 5,2 — yani kapalı bir aralık.</p></div>
+  </div>
+  <h3>Aralıklı tekrar (3 soru, anında geri bildirim)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Sayı doğrusu "dolu"dur</h3>
+  <p>Gerçek sayılar sayı doğrusunun her noktasını doldurur: iki farklı gerçek sayı arasında daima başka bir gerçek sayı vardır (ortalamaları). O yüzden 7 ile 8 arasında sonsuz sayı var: 7,1; 7,01; 7,001; √50; 7,999… Bu "yoğunluk" özelliği, aralıkların neden liste değil <em>parça</em> olarak düşünülmesi gerektiğini açıklar.</p>
+  <div class="box def"><div class="t">Tanım</div>a &lt; b olmak üzere, a ile b arasındaki (uçlar dahil ya da hariç) tüm gerçek sayıların kümesine <b>aralık</b> denir. Uç nokta dahilse <b>köşeli ayraç [ ]</b>, hariçse <b>yuvarlak ayraç ( )</b> kullanılır.</div>
+  <h3>3.2 Dört tür aralık ve sonsuz aralıklar</h3>
+  <table>
+    <tr><th>Eşitsizlik</th><th>Aralık</th><th>Adı</th><th>Sayı doğrusu</th></tr>
+    <tr><td>a ≤ x ≤ b</td><td>[a, b]</td><td>kapalı</td><td>● ——— ●</td></tr>
+    <tr><td>a &lt; x &lt; b</td><td>(a, b)</td><td>açık</td><td>○ ——— ○</td></tr>
+    <tr><td>a ≤ x &lt; b</td><td>[a, b)</td><td>yarı açık (sağdan açık)</td><td>● ——— ○</td></tr>
+    <tr><td>a &lt; x ≤ b</td><td>(a, b]</td><td>yarı açık (soldan açık)</td><td>○ ——— ●</td></tr>
+    <tr><td>x &gt; a</td><td>(a, ∞)</td><td>sonsuz aralık</td><td>○ ———→</td></tr>
+    <tr><td>x ≤ b</td><td>(−∞, b]</td><td>sonsuz aralık</td><td>←——— ●</td></tr>
+    <tr><td>her x</td><td>(−∞, ∞) = ℝ</td><td>gerçek sayılar</td><td>←———→</td></tr>
+  </table>
+  <div class="box warn"><div class="t">Tuzak: ∞ bir sayı değildir</div>Sonsuzluk tarafı <b>her zaman yuvarlak</b> ayraçla yazılır: [3, ∞) doğru, [3, ∞] yanlış. "Sonsuza kadar" demek, bir yerde durup onu dahil etmek demek değildir.</div>
+  <div class="sim">
+    <h3>Aralık oluşturucu</h3>
+    <div class="hint">Uçları kaydır, dahil/hariç anahtarlarını değiştir; üç gösterim (eşitsizlik, aralık, sayı doğrusu) birlikte güncellenir. Uçları eşitleyince ne olduğuna dikkat et.</div>
+    <div class="ctrl">
+      <label>a <input type="range" id="ia" min="-6" max="8" value="-2"><output id="iao">-2</output></label>
+      <label><input type="checkbox" id="ial" checked> a dahil</label>
+      <label>b <input type="range" id="ib" min="-6" max="8" value="5"><output id="ibo">5</output></label>
+      <label><input type="checkbox" id="ibl"> b dahil</label>
+      <label><input type="checkbox" id="iinf"> sağ uç ∞</label>
+    </div>
+    <div class="svgwrap"><svg id="iSvg" viewBox="0 0 720 130" role="img" aria-label="Aralık sayı doğrusu"></svg></div>
+    <div class="readout" id="iOut" style="display:block"></div>
+  </div>
+  <h3>3.3 Üç dil, tek anlam</h3>
+  <p>Sınavda üç gösterim arasında geçiş istenir. Yöntem: önce uçları ve dahil/hariç durumunu belirle, sonra çevir. Örnek: "En az 3, 9'dan küçük" → 3 ≤ x &lt; 9 → [3, 9) → sayı doğrusunda 3'te dolu, 9'da boş nokta.</p>
+  <div class="formula"><div class="m">x ≥ −1 &nbsp;⇔&nbsp; [−1, ∞) &nbsp;⇔&nbsp; ● ———→</div><div class="why">"−1 ve üzeri": −1 dahil, sağa sonsuz.</div></div>
+  <div class="formula"><div class="m">−4 &lt; x ≤ 2 &nbsp;⇔&nbsp; (−4, 2] &nbsp;⇔&nbsp; ○ ——— ●</div><div class="why">−4 hariç, 2 dahil. Hangi uç dahil, ona bak; sıra değil.</div></div>
+  <h3>3.4 Aralıklarda işlemler: kesişim, birleşim, fark</h3>
+  <p>Aralıklar kümedir; küme işlemleri aynen geçerlidir. <b>Kesişim (∩)</b>: her iki koşulu birden sağlayan sayılar ("ve"). <b>Birleşim (∪)</b>: en az birini sağlayanlar ("veya"). <b>Fark (A − B)</b>: A'da olup B'de olmayanlar.</p>
+  <div class="sim">
+    <h3>Kesişim ve birleşim laboratuvarı</h3>
+    <div class="hint">İki aralığı kaydır; kesişim (koyu) ve birleşimi (açık) izle. Aralıklar birbirinden ayrılınca kesişim boş kümeye, birleşim iki parçaya dönüşür — birleşim her zaman tek aralık değildir.</div>
+    <div class="ctrl">
+      <label>A: [<input type="number" id="a1" value="-3" style="width:64px">, <input type="number" id="a2" value="4" style="width:64px">]</label>
+      <label>B: (<input type="number" id="b1" value="1" style="width:64px">, <input type="number" id="b2" value="7" style="width:64px">)</label>
+      <button id="kReset" class="alt">Sıfırla</button>
+    </div>
+    <div class="svgwrap"><svg id="kSvg" viewBox="0 0 720 200" role="img" aria-label="Kesişim ve birleşim"></svg></div>
+    <div class="readout" id="kOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Uç noktalarda kural</div>Kesişimde bir uç, <em>her iki</em> aralıkta dahilse dahildir. [1, 5] ∩ (1, 5) = (1, 5). Birleşimde bir uç, aralıklardan <em>en az birinde</em> dahilse dahildir: [1, 5) ∪ (3, 5] = [1, 5].</div>
+  <h3>3.5 Sınırda ne olur? En büyük eleman meselesi</h3>
+  <p>[2, 5] aralığının en büyük elemanı 5'tir. Peki (2, 5) aralığının? 5 dahil değil; 4,9 var ama 4,99 daha büyük; 4,999 daha da büyük… Hangi sayıyı seçersen seç, onunla 5'in ortalaması hem aralıktadır hem de daha büyüktür. <b>Açık uçlu bir aralığın o uçta en büyük (ya da en küçük) elemanı yoktur.</b> 5, aralığın "üst sınırı"dır ama elemanı değildir. Bu fikir, ileride limit ve sürekliliğin temelidir.</p>
+  <div class="box warn"><div class="t">Tuzak: 0,999… = 1</div>"(2, 5)'in en büyük elemanı 4,999…'dur" demek yanlıştır; çünkü 4,999… (sonsuz dokuz) tam olarak 5'e eşittir. Kanıt: x = 4,999…, 10x = 49,999…, 10x − x = 45 → x = 5. Yani 4,999… aralıkta değildir. Sonlu sayıda dokuz (4,999) ise aralıktadır ama en büyük değildir.</div>
+  <h3>3.6 Tek noktalı ve boş aralıklar</h3>
+  <div class="formula"><div class="m">[3, 3] = {3} &nbsp;·&nbsp; (3, 3) = ∅ &nbsp;·&nbsp; [3, 3) = ∅</div><div class="why">Uçlar eşitse yalnızca kapalı aralık bir eleman içerir. Simülasyonda a = b yaparak gör.</div></div>
+  <div class="box warn"><div class="t">Tuzak: "aralık" ile "tam sayılar" karışması</div>(2, 6) aralığında sonsuz sayı vardır; ama (2, 6) ∩ ℤ = {3, 4, 5} yalnızca 3 elemanlıdır. Soru "kaç tam sayı" diyorsa ayraç türü sayıyı doğrudan değiştirir: [2, 6] ∩ ℤ = {2, 3, 4, 5, 6}.</div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · Kombi termostatı: neden tek sayı değil, aralık?</h3>
+    <p><b>Durum:</b> Termostat 20 °C'ye ayarlı. Kombi 19,5 °C'de yanıyor, 20,5 °C'de sönüyor.</p>
+    <p><b>Kavramla bağ:</b> Cihaz "sıcaklık = 20" koşuluyla çalışsa, 20'nin çevresindeki minicik dalgalanmalarda saniyede yüzlerce kez açılıp kapanırdı. Onun yerine bir aralık tanımlanır: t ≤ 19,5 ise yan, t ≥ 20,5 ise sön. Bu, [19,5, 20,5] aralığının dışına çıkınca müdahale demektir; mühendisler buna <em>histerezis</em> der.</p>
+    <p><b>Analiz:</b> "Rahat aralık" = [19,5, 20,5]. Kombi yanma koşulu = (−∞, 19,5], sönme koşulu = [20,5, ∞). İkisinin kesişimi ∅ — asla aynı anda hem yanıp hem sönmez. Birleşimleri ise ℝ − (19,5, 20,5): kombinin karar verdiği bölge.</p>
+    <p><b>Sonuç:</b> Termostat, aralıkların kesişim ve farkıyla tasarlanmış küçük bir mantık devresidir.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · Bisiklet lastiği basıncı</h3>
+    <p><b>Durum:</b> Lastiğin yanında "35-50 psi" yazıyor. 34 psi'ye şişirsen ne olur, 51'e şişirsen?</p>
+    <p><b>Kavramla bağ:</b> Üreticinin güvenli aralığı [35, 50] (psi). Alt sınırın altı "jant vuruğu ve patlak" riski, üst sınırın üstü "patlama" riski: (−∞, 35) ∪ (50, ∞) tehlike bölgesi — bir birleşim.</p>
+    <p><b>Hesap:</b> Pompan 0,1 psi hassasiyetle okuyor. Hedef: yolda konfor için aralığın alt yarısı, [35, 42,5]. Bu, [35, 50] aralığının orta noktası 42,5 alınarak bulunan alt yarısı; uzunluğu 7,5 psi.</p>
+    <p><b>Sonuç:</b> Aralığın uçları güvenlik sınırıdır; "orta nokta" ve "yarı" kavramları aralık aritmetiğidir.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Deprem büyüklük sınıfları — uçlar kime ait?</h3>
+    <p><b>Durum:</b> Sismolojide sınıflar: hafif 4,0-4,9 · orta 5,0-5,9 · kuvvetli 6,0-6,9 · büyük 7,0-7,9. 1999 İzmit depremi 7,4 → "büyük".</p>
+    <p><b>Kavramla bağ:</b> Bu sınıflar aslında yarı açık aralıklardır: hafif = [4, 5), orta = [5, 6), kuvvetli = [6, 7), büyük = [7, 8). Neden? 4,95 büyüklüğündeki bir deprem "4,0-4,9" listesinde görünmez ama "5,0-5,9"da da yoktur; yarı açık aralıklar bu boşluğu kapatır ve her sayıyı tam bir sınıfa koyar.</p>
+    <p><b>Analiz:</b> Sınıfların birleşimi [4, 8) kesintisizdir; ikili kesişimleri boştur. Bu iki özellik ("örtme" ve "ayrıklık") iyi bir sınıflandırmanın tanımıdır.</p>
+    <p><b>Sonuç:</b> Gazetedeki "4,0-4,9" yazımı bir kısaltmadır; matematiksel karşılığı [4, 5)'tir.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · Hava kalitesi indeksi (Kocaeli sanayi bölgesi)</h3>
+    <p><b>Durum:</b> Belediye ölçüm ekranı: 0-50 "iyi", 51-100 "orta", 101-150 "hassas gruplar için sağlıksız"… İndeks 100,4 çıktı; hangi sınıf?</p>
+    <p><b>Kavramla bağ:</b> Tam sayı sınırlarla yazılmış sınıflarda 100 ile 101 arasındaki ondalıklar açıkta kalır. Resmî tanımda indeks tam sayıya yuvarlanır (100,4 → 100 → "orta"); yani sınıflar aslında [0, 50], [51, 100] gibi <em>tam sayı</em> aralıklarıdır: ℤ ile kesişim alınmış hâlleri.</p>
+    <p><b>Sonuç:</b> Bir aralığın ondalıklara mı tam sayılara mı ait olduğu, sınırların anlamını değiştirir. Soru "kaç değer var?" dediğinde ilk sorulacak şey budur.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Aralıkta mı? — hızlı karar oyunu</h3>
+    <div class="hint">Bir aralık ve bir sayı verilir; "içinde" ya da "dışında" seç. 12 tur; uç noktalar ve ∞ tuzakları sık gelir. Sonunda hangi tür hatayı yaptığını görürsün.</div>
+    <div id="game"></div>
+    <div class="ctrl"><button id="gmReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="sim">
+    <h3>En büyük eleman avcısı</h3>
+    <div class="hint">(7, 8) aralığında en büyük sayıyı bulmaya çalış: bir sayı yaz, simülasyon aralıkta ondan büyük bir sayı üretsin. Kaç turda pes edeceksin?</div>
+    <div class="ctrl"><label>Sayın <input type="text" id="supIn" placeholder="örn. 7,99" style="width:140px"></label><button id="supGo">Dene</button><button id="supReset" class="alt">Sıfırla</button></div>
+    <div class="svgwrap"><svg id="supSvg" viewBox="0 0 720 120" role="img" aria-label="En büyük eleman avı"></svg></div>
+    <div class="readout" id="supOut" style="display:block">7 ile 8 arasında bir sayı yaz.</div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Oyunda en çok hangi tuzağa düştün: uç nokta mı, ∞ mi, tam sayı sayma mı? &nbsp; 2) "Avcı"da yazdığın her sayıya karşılık verilen sayı nasıl üretiliyor olabilir? (İpucu: ortalama.) &nbsp; 3) [7, 8] aralığında aynı oyun oynansa ne olurdu?</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · "3'ten büyük, 10 veya daha küçük" sayılar</h3>
+    <ol class="steps"><li>Uçlar: 3 (hariç: "büyük"), 10 (dahil: "veya daha küçük").</li><li>Eşitsizlik: 3 &lt; x ≤ 10. Aralık: <b>(3, 10]</b>. Sayı doğrusu: 3'te boş, 10'da dolu nokta.<div class="why">"Veya eşit" gördüğün yer köşeli ayraçtır.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · [−2, 4) aralığını eşitsizlik ve sayı doğrusuyla göster; kaç tam sayı içerir?</h3>
+    <ol class="steps"><li>−2 ≤ x &lt; 4; −2'de dolu, 4'te boş nokta.</li><li>Tam sayılar: −2, −1, 0, 1, 2, 3 → <b>6 tane</b>. 4 dahil değil.<div class="why">Sayarken uç ayraçlarına bak: sağ uç yuvarlak, 4 sayılmaz.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · A = [−2, 5), B = (1, 8] için A ∩ B, A ∪ B, A − B</h3>
+    <ol class="steps"><li>Sayı doğrusuna ikisini de çiz; kesişim ikisinin örtüştüğü bölge: 1'den 5'e. 1 hangi ayraçla? B'de hariç → hariç. 5? A'da hariç → hariç. <b>A ∩ B = (1, 5)</b>.</li><li>Birleşim: −2'den 8'e kesintisiz (aralıklar örtüşüyor). −2 A'da dahil → dahil; 8 B'de dahil → dahil. <b>A ∪ B = [−2, 8]</b>.</li><li>Fark A − B: A'da olup B'de olmayan: B'ye girmeyen kısım 1 ve altı. 1, B'de yok → A − B'de var. <b>A − B = [−2, 1]</b>.<div class="why">Fark alırken çıkarılan kümenin uç ayracı tersine döner: B'de 1 hariçti, farkta 1 dahil oldu.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · 3 ≤ 2x − 1 &lt; 9 eşitsizliğinin çözüm aralığı</h3>
+    <ol class="steps"><li>Her tarafa 1 ekle: 4 ≤ 2x &lt; 10.</li><li>2'ye böl (pozitif, yön değişmez): 2 ≤ x &lt; 5 → <b>[2, 5)</b>.</li><li>Kontrol: x = 2 → 2·2−1 = 3 ✓ (dahil); x = 5 → 9, "&lt; 9" sağlanmaz ✓ (hariç).<div class="why">Uç kontrolü, ayraç türünü doğrulamanın en güvenli yolu.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · A = (−∞, 3], B = [3, ∞) için A ∩ B ve A ∪ B; sonra B yerine (3, ∞) alınırsa?</h3>
+    <ol class="steps"><li>A ∩ B: yalnız 3 her ikisinde de var → <b>{3}</b> = [3, 3]. A ∪ B = <b>ℝ</b>.</li><li>B = (3, ∞) olursa: 3 artık B'de yok → A ∩ B = <b>∅</b>; A ∪ B yine ℝ (3, A'dan geliyor).<div class="why">Tek bir ayraç değişikliği kesişimi bir elemandan boş kümeye indirdi; birleşim etkilenmedi.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · İç içe aralıklar: I₁ = (0, 1), I₂ = (0, ½), I₃ = (0, ⅓), … Tüm I_n'lerin ortak elemanı var mı?</h3>
+    <ol class="steps"><li>Aday: 0 mı? Hiçbirinde yok (açık uç).</li><li>Pozitif herhangi bir x alalım, örn. x = 0,001. n = 1001 için 1/n = 0,000999 &lt; x → x ∉ I₁₀₀₁. Her pozitif x için böyle bir n bulunur (Arşimet özelliği).</li><li>Sonuç: ortak eleman <b>yok</b>, kesişim ∅. Oysa kapalı hâlleri [0, 1/n] alınsaydı kesişim {0} olurdu.<div class="why">Açık/kapalı ayrımı burada "sonsuz kesişim" sorusunun cevabını tamamen değiştiriyor — analiz derslerinin kapısı.</div></li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 çoktan seçmeli (4 temel, 5 orta, 3 fen lisesi) + 2 açık uçlu. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Ayraçlar</b>[ ] dahil · ( ) hariç · ∞ tarafı daima ( ) · [a,a] = {a}, (a,a) = ∅</div>
+    <div class="card"><b>Üç dil</b>a ≤ x &lt; b ⇔ [a, b) ⇔ ● — ○. Önce uçlar ve dahil/hariç, sonra çevir; uç kontrolüyle doğrula.</div>
+    <div class="card"><b>İşlemler</b>∩ "ve": ikisinde de · ∪ "veya": en az birinde · A − B: A'da olup B'de olmayan (B'nin ayracı tersine döner)</div>
+    <div class="card"><b>Sınır davranışı</b>Açık uçta en büyük/en küçük eleman yoktur; 0,999… = 1; tam sayı sayarken ayraca bak.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>[3, ∞] yazmak. Sonsuz tarafı her zaman yuvarlak.</li>
+    <li>(2, 6) aralığında "4 sayı var" demek. Sonsuz gerçek sayı var; 3 tam sayı var.</li>
+    <li>Kesişimde ucu "kapalı olandan" almak. Uç, ancak <em>her iki</em> kümede dahilse dahildir.</li>
+    <li>İki ayrık aralığın birleşimini tek aralık yazmak: [1, 2] ∪ [4, 5] = [1, 5] <b>değildir</b>.</li>
+    <li>(a, b) aralığının en büyük elemanını "b'ye çok yakın bir sayı" sanmak. Yoktur.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Bu hafta "7 ile 8 arasında sonsuz sayı var" dedik. Peki bunların kaçı kesir olarak yazılabilir, kaçı yazılamaz? √50 yazılamaz — bunu nasıl <em>kanıtlarız</em>? Gelecek hafta: <b>sayı kümeleri (ℕ, ℤ, ℚ, ℝ) ve işlem özellikleri</b>.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Matematik · Ünite 1 · Hafta 2 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='mat-h02', HAFTA=2;
+const BASEKEY='ah9-mat-h02';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Matematik 9 · Ünite 1 · Hafta 2 · Gerçek sayı aralıkları';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'<span class="tag">Geçen hafta</span> 2<sup>−3</sup> · 4<sup>2</sup> işleminin sonucu kaçtır?',o:['2','−2','1/2','32'],a:0,e:'2⁻³ = 1/8, 4² = 16; 16/8 = 2. Negatif üs işaret değil, ters çevirme.'},
+ {s:'<span class="tag">Geçen hafta</span> √40 hangi iki ardışık tam sayı arasındadır?',o:['6 ile 7','5 ile 6','7 ile 8','4 ile 5'],a:0,e:'36 < 40 < 49 → 6 < √40 < 7. Yani √40 ∈ (6, 7).'},
+ {s:'<span class="tag">Ortaokul</span> −3x > 12 eşitsizliğinin çözümü hangisidir?',o:['x < −4','x > −4','x < 4','x > 4'],a:0,e:'−3 ile bölünce yön değişir: x < −4. Bu hafta bunu (−∞, −4) diye yazacağız.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,true)));}
+/* ana test */
+const QUIZ=[
+ {s:'"−5 veya daha büyük, 2\'den küçük" sayılar kümesi hangi aralıktır?',o:['[−5, 2)','(−5, 2]','(−5, 2)','[−5, 2]'],a:0,e:'"Veya daha büyük" → −5 dahil (köşeli); "küçük" → 2 hariç (yuvarlak).'},
+ {s:'x ≤ 4 eşitsizliğinin aralık gösterimi hangisidir?',o:['(−∞, 4]','(−∞, 4)','[−∞, 4]','[4, ∞)'],a:0,e:'4 dahil → köşeli; sonsuz tarafı daima yuvarlak. [−∞, 4] yazımı hatalıdır.'},
+ {s:'(−3, 5] aralığında kaç tam sayı vardır?',o:['8','9','7','Sonsuz'],a:0,e:'−2, −1, 0, 1, 2, 3, 4, 5 → 8 tane. −3 hariç. "Sonsuz" cevabı gerçek sayılar için doğrudur, tam sayılar için değil.'},
+ {s:'Sayı doğrusunda 1\'de dolu nokta, 6\'da boş nokta ve arası taralı olan gösterim hangi aralıktır?',o:['[1, 6)','(1, 6]','[1, 6]','(1, 6)'],a:0,e:'Dolu nokta dahil, boş nokta hariç.'},
+ {s:'A = [−1, 6), B = (2, 9] ise A ∩ B kaçtır?',o:['(2, 6)','[2, 6]','[−1, 9]','(2, 6]'],a:0,e:'Örtüşen bölge 2\'den 6\'ya; 2 B\'de hariç, 6 A\'da hariç → (2, 6).'},
+ {s:'A = (−∞, 2], B = [2, ∞) ise A ∪ B ve A ∩ B sırasıyla nedir?',o:['ℝ ve {2}','ℝ ve ∅','(−∞, ∞) ve (2, 2)','[2, 2] ve ℝ'],a:0,e:'Her sayı ya 2 ve altı ya 2 ve üstü → birleşim ℝ. İkisinde de olan tek sayı 2 → kesişim {2}.'},
+ {tag:'bağlam',s:'Bir bisiklet lastiğinde "35-50 psi" yazıyor; üretici sınır değerlerin de güvenli olduğunu belirtiyor. Tehlikeli basınç değerleri kümesi hangisidir?',o:['(−∞, 35) ∪ (50, ∞)','(−∞, 35] ∪ [50, ∞)','(35, 50)','[35, 50]'],a:0,e:'Güvenli aralık [35, 50]; tümleyeni iki parçalı birleşimdir ve uçlar tehlikede değildir (yuvarlak).'},
+ {s:'2 < 3x + 1 ≤ 10 eşitsizliğinin çözüm kümesi hangisidir?',o:['(1/3, 3]','[1/3, 3)','(1, 3]','[1, 3]'],a:0,e:'1 çıkar: 1 < 3x ≤ 9; 3\'e böl: 1/3 < x ≤ 3. Uç kontrolü: x = 3 → 10 ✓ dahil.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Deprem sınıfları "orta: 5,0-5,9", "kuvvetli: 6,0-6,9" biçiminde yazılır; her büyüklük tam bir sınıfa ait olmalıdır.<br>5,97 büyüklüğündeki bir deprem için doğru matematiksel sınıf aralığı hangisidir?',o:['[5, 6) → orta','[5, 5,9] → orta','(5,9, 6) → sınıfsız','[6, 7) → kuvvetli'],a:0,e:'Boşluk kalmaması için sınıflar yarı açık [5, 6) biçimindedir; 5,97 bu aralıktadır.'},
+ {s:'A = [1, 4], B = (1, 4) için A − B hangisidir?',o:['{1, 4}','∅','[1, 4]','(1, 4)'],a:0,e:'A\'da olup B\'de olmayanlar yalnızca uçlar: 1 ve 4. İki elemanlı küme.'},
+ {tag:'bağlam',s:'Bir termostat, sıcaklık 19,5 °C ve altına düşünce ısıtıcıyı açıyor; 20,5 °C ve üstüne çıkınca kapatıyor. Isıtıcının ne açılıp ne kapandığı ("bekleme") sıcaklık aralığı hangisidir?',o:['(19,5, 20,5)','[19,5, 20,5]','(−∞, 19,5] ∪ [20,5, ∞)','{20}'],a:0,e:'19,5 ve 20,5 karar noktalarıdır (açma/kapama); bekleme bölgesi bu iki değeri içermez → açık aralık.'},
+ {s:'Aşağıdaki ifadelerden hangisi doğrudur?',o:['(2, 5) aralığının en büyük elemanı yoktur','(2, 5) aralığının en büyük elemanı 4,999…\'dur','[2, 5) aralığının en büyük elemanı 5\'tir','(2, 5) aralığında 5\'e en yakın sayı 4,99\'dur'],a:0,e:'Her elemandan büyük bir eleman daha vardır (ortalama al). 4,999… = 5 olduğundan aralıkta değildir.'},
+ {open:true,s:'A = [−4, 2) ve B = [0, 6] için A ∪ B, A ∩ B ve B − A kümelerini bul; her sonuçta uçların neden dahil/hariç olduğunu bir cümleyle açıkla.',ans:'A ∪ B = [−4, 6] (−4 A\'da dahil, 6 B\'de dahil); A ∩ B = [0, 2) (0 her ikisinde dahil, 2 A\'da hariç); B − A = [2, 6] (2 A\'da olmadığı için farkta kalır).',e:'Uç gerekçeleri beklenir.'},
+ {open:true,s:'"(0, 1) aralığında en küçük pozitif sayı vardır" iddiasını çürüt.',ans:'x en küçük olsun; x/2 de aralıktadır ve x\'ten küçüktür → çelişki. Dolayısıyla en küçük eleman yoktur.',e:'Çelişkiyle ispat sezgisi; "yarısını al" adımı yeterli.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+
+/* --- Aralık oluşturucu --- */
+function fmtI(a,b,al,bl,inf){if(inf)return (al?'[':'(')+a+', ∞)';if(a>b)return '∅ (a > b)';if(a===b)return (al&&bl)?'{'+a+'}':'∅';return (al?'[':'(')+a+', '+b+(bl?']':')');}
+function drawI(){const a=+$('#ia').value,b=+$('#ib').value,al=$('#ial').checked,bl=$('#ibl').checked,inf=$('#iinf').checked;$('#iao').value=a;$('#ibo').value=b;
+  const svg=$('#iSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),X=v=>60+(v+7)*40;
+  svg.appendChild(el('line',{x1:20,y1:70,x2:700,y2:70,stroke:ink,'stroke-width':2}));svg.appendChild(el('path',{d:'M700 70 l-8 -5 v10 z',fill:ink}));
+  for(let v=-7;v<=9;v++){svg.appendChild(el('line',{x1:X(v),y1:64,x2:X(v),y2:76,stroke:ink}));svg.appendChild(el('text',{x:X(v),y:98,'text-anchor':'middle','font-size':'12',fill:css('--ink2')},v));}
+  const bad=!inf&&(a>b||(a===b&&!(al&&bl)));
+  if(!bad){svg.appendChild(el('rect',{x:X(a),y:62,width:(inf?X(9.5):X(b))-X(a),height:16,fill:nv,opacity:.35}));
+    svg.appendChild(el('circle',{cx:X(a),cy:70,r:7,fill:al?nv:css('--paper'),stroke:nv,'stroke-width':3}));
+    if(!inf)svg.appendChild(el('circle',{cx:X(b),cy:70,r:7,fill:bl?nv:css('--paper'),stroke:nv,'stroke-width':3}));}
+  const ineq=inf?(a+(al?' ≤ ':' < ')+'x'):(a>b?'çözüm yok':a+(al?' ≤ ':' < ')+'x'+(bl?' ≤ ':' < ')+b);
+  $('#iOut').innerHTML='<b>Aralık:</b> '+fmtI(a,b,al,bl,inf)+' &nbsp;·&nbsp; <b>Eşitsizlik:</b> '+ineq+(a===b&&!inf?' &nbsp;<span style="color:var(--gold)">Uçlar eşit: yalnız kapalı aralık bir eleman içerir.</span>':'')+(inf?' &nbsp;<span style="color:var(--gold)">∞ tarafı her zaman yuvarlak.</span>':'');}
+['#ia','#ib','#ial','#ibl','#iinf'].forEach(s=>$(s).addEventListener('input',drawI));
+/* --- Kesişim / birleşim --- */
+function drawK(){const a1=+$('#a1').value,a2=+$('#a2').value,b1=+$('#b1').value,b2=+$('#b2').value;const svg=$('#kSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  const lo=Math.min(a1,b1,-1)-1,hi=Math.max(a2,b2,1)+1,X=v=>40+(v-lo)/(hi-lo)*640;
+  const row=(y,l,r,lc,rc,color,label)=>{svg.appendChild(el('line',{x1:40,y1:y,x2:680,y2:y,stroke:css('--line')}));if(l<=r){svg.appendChild(el('rect',{x:X(l),y:y-7,width:Math.max(2,X(r)-X(l)),height:14,fill:color,opacity:.5}));svg.appendChild(el('circle',{cx:X(l),cy:y,r:6,fill:lc?color:css('--paper'),stroke:color,'stroke-width':2.5}));svg.appendChild(el('circle',{cx:X(r),cy:y,r:6,fill:rc?color:css('--paper'),stroke:color,'stroke-width':2.5}));}svg.appendChild(el('text',{x:10,y:y+5,'font-size':'13','font-weight':'700',fill:ink},label));};
+  row(30,a1,a2,true,true,nv,'A');row(70,b1,b2,false,false,gd,'B');
+  // kesişim (A kapalı, B açık)
+  const il=Math.max(a1,b1),ir=Math.min(a2,b2);const inB=v=>v>b1&&v<b2;let inter='∅';
+  if(il<ir){const ilc=inB(il),irc=inB(ir);inter=(ilc?'[':'(')+il+', '+ir+(irc?']':')');row(110,il,ir,ilc,irc,css('--ok'),'A∩B');}
+  else if(il===ir&&inB(il)){inter='{'+il+'}';row(110,il,ir,true,true,css('--ok'),'A∩B');}
+  else{svg.appendChild(el('text',{x:10,y:115,'font-size':'13','font-weight':'700',fill:ink},'A∩B'));svg.appendChild(el('text',{x:360,y:115,'text-anchor':'middle','font-size':'13',fill:css('--ink2')},'∅ — ortak eleman yok'));}
+  // birleşim
+  let uni;const overlap=(a1<=b2&&b1<=a2);
+  if(overlap){const ul=Math.min(a1,b1),ur=Math.max(a2,b2),ulc=a1<=b1,urc=a2>=b2;uni=(ulc?'[':'(')+ul+', '+ur+(urc?']':')');row(150,ul,ur,ulc,urc,nv,'A∪B');}
+  else{uni='['+a1+', '+a2+'] ∪ ('+b1+', '+b2+')';svg.appendChild(el('text',{x:10,y:155,'font-size':'13','font-weight':'700',fill:ink},'A∪B'));svg.appendChild(el('rect',{x:X(a1),y:143,width:Math.max(2,X(a2)-X(a1)),height:14,fill:nv,opacity:.5}));svg.appendChild(el('rect',{x:X(b1),y:143,width:Math.max(2,X(b2)-X(b1)),height:14,fill:gd,opacity:.5}));svg.appendChild(el('text',{x:360,y:185,'text-anchor':'middle','font-size':'12',fill:css('--ink2')},'iki ayrı parça — tek aralık olarak yazılamaz'));}
+  for(let v=Math.ceil(lo);v<=Math.floor(hi);v++)svg.appendChild(el('text',{x:X(v),y:196,'text-anchor':'middle','font-size':'10',fill:css('--ink2')},v));
+  $('#kOut').innerHTML='A = ['+a1+', '+a2+'] · B = ('+b1+', '+b2+')<br><b>A ∩ B = '+inter+'</b> &nbsp;·&nbsp; <b>A ∪ B = '+uni+'</b>';}
+['#a1','#a2','#b1','#b2'].forEach(s=>$(s).addEventListener('input',drawK));
+$('#kReset').onclick=()=>{$('#a1').value=-3;$('#a2').value=4;$('#b1').value=1;$('#b2').value=7;drawK();};
+/* --- Aralıkta mı? oyunu --- */
+const GQ=[['[2, 7]',7,true,'Kapalı uç: 7 dahil.'],['(2, 7)',2,false,'Açık uç: 2 hariç.'],['[−3, ∞)',1000,true,'Sonsuz aralık; büyük sayılar da dahil.'],['(−∞, 4]',4,true,'4 dahil (köşeli).'],['(0, 1)',0.5,true,'0,5 aralıktadır; ondalıklar da gerçek sayıdır.'],['(0, 1)',1,false,'1 hariç.'],['[5, 5]',5,true,'{5} tek elemanlı küme.'],['(5, 5)',5,false,'Boş küme: hiçbir sayı içermez.'],['[−2, 3)',-2,true,'−2 dahil.'],['[−2, 3)',2.999,true,'3 altındaki her sayı dahil.'],['(1, 4] ∩ [4, 9)',4,true,'4 her ikisinde de var → kesişimde.'],['(1, 4) ∪ (4, 9)',4,false,'İki aralıkta da 4 yok; birleşimde de yoktur.']];
+let GM={i:0,s:0,log:[]};
+function drawGame(){const box=$('#game');if(GM.i>=GQ.length){box.innerHTML='<div class="readout">Puan: '+GM.s+' / '+GQ.length+'</div>'+GM.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ ')+l.e+'</div></div>').join('');return;}
+  const q=GQ[GM.i];box.innerHTML='<div class="readout">'+(GM.i+1)+' / '+GQ.length+' · Puan '+GM.s+'</div><div class="q"><div class="stem" style="font-size:20px">'+String(q[1]).replace('.',',')+' &nbsp;∈&nbsp; '+q[0]+' &nbsp;?</div><div class="ctrl"><button class="btn" data-v="1">İçinde</button><button class="btn alt" data-v="0">Dışında</button></div><div class="fb" id="gmFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=(b.dataset.v==='1')===q[2];if(ok)GM.s++;GM.log.push({q:String(q[1]).replace('.',',')+' ∈ '+q[0]+' ?',ok,e:q[3]});box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#gmFb').innerHTML=(ok?'✔ Doğru. ':'✘ ')+q[3]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="gmNext">Sonraki →</button>';$('#gmNext').onclick=()=>{GM.i++;drawGame();};});}
+$('#gmReset').onclick=()=>{GM={i:0,s:0,log:[]};drawGame();};
+/* --- En büyük eleman avcısı --- */
+let SUP={tries:0,pts:[]};
+function drawSup(){const svg=$('#supSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');const X=v=>40+(v-7)*640;
+  svg.appendChild(el('line',{x1:40,y1:60,x2:680,y2:60,stroke:ink,'stroke-width':2}));svg.appendChild(el('circle',{cx:40,cy:60,r:7,fill:css('--paper'),stroke:nv,'stroke-width':3}));svg.appendChild(el('circle',{cx:680,cy:60,r:7,fill:css('--paper'),stroke:nv,'stroke-width':3}));
+  svg.appendChild(el('text',{x:40,y:90,'text-anchor':'middle','font-size':'14',fill:ink},'7'));svg.appendChild(el('text',{x:680,y:90,'text-anchor':'middle','font-size':'14',fill:ink},'8'));
+  SUP.pts.forEach((p,i)=>{svg.appendChild(el('circle',{cx:X(p.u),cy:60,r:5,fill:nv}));svg.appendChild(el('circle',{cx:X(p.m),cy:40,r:5,fill:gd}));svg.appendChild(el('line',{x1:X(p.u),y1:60,x2:X(p.m),y2:40,stroke:gd,'stroke-dasharray':'3 3'}));});}
+$('#supGo').onclick=()=>{const v=parseFloat($('#supIn').value.replace(',','.'));if(isNaN(v)){$('#supOut').textContent='Bir sayı yaz.';return;}
+  if(!(v>7&&v<8)){$('#supOut').innerHTML=v.toString().replace('.',',')+' aralıkta değil: (7, 8) yalnız 7\'den büyük 8\'den küçük sayıları içerir.';return;}
+  const m=(v+8)/2;SUP.tries++;SUP.pts.push({u:v,m});drawSup();
+  const ms=m.toFixed(Math.min(12,(v.toString().split('.')[1]||'').length+1)).replace('.',',');
+  $('#supOut').innerHTML='Senin sayın: <b>'+v.toString().replace('.',',')+'</b>. Daha büyüğü: <b>'+ms+'</b> = (senin sayın + 8) / 2 — o da aralıkta.'+(SUP.tries>=3?'<br><span style="color:var(--gold)">Her adımda 8\'e olan uzaklık yarıya iniyor ama hiçbir zaman sıfır olmuyor: en büyük eleman yok, 8 yalnızca üst sınır.</span>':'');};
+$('#supIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('#supGo').click();});
+$('#supReset').onclick=()=>{SUP={tries:0,pts:[]};drawSup();$('#supOut').textContent='7 ile 8 arasında bir sayı yaz.';$('#supIn').value='';};
+function stopAll(){}
+
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawI();drawK();drawGame();drawSup();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

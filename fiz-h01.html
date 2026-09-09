@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fizik 9 · Hafta 1 · Fizik Bilimi ve Kariyer Keşfi</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#9a3b00;--navy2:#d9540f;--sky:#ffe8d6;--gold:#1b4f9c;--gold2:#dce8ff}
+[data-theme="dark"]{--navy:#ffb37a;--navy2:#f07a2a;--sky:#4a2410;--gold:#8fb4ff;--gold2:#16264a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Fizik · Ünite 1 Fizik Bilimi ve Kariyer Keşfi · Hafta 1<b>Fiziğin doğası, alt dalları, öncüleri ve kariyer</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>İlerlemen yalnızca bu cihazda kalır ve puan kazanmazsın. <a href="index.html">Ana sayfadan giriş yap</a>, sonra bu sayfaya dön.</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>Telefonundaki her şey bir fizikçinin merakıyla başladı</h1>
+  <p class="lead">Ekran (optik ve katıhal), GPS (görelilik — evet, gerçekten), pil (elektrokimya ve termodinamik), hoparlör (manyetizma ve dalgalar), işlemci (kuantum fiziği). Hiçbiri "telefon yapalım" diye bulunmadı; hepsi "bu neden böyle?" sorusundan çıktı.</p>
+  <div class="card">
+    <p><b>Fizik nedir?</b> Maddeyi, enerjiyi ve aralarındaki etkileşimi; en küçük parçacıktan evrenin bütününe kadar aynı yasalarla açıklamaya çalışan bilim. Fiziğin gücü ölçmekten gelir: "hızlı" değil, "12,3 m/s" der.</p>
+    <p><b>Bu hafta:</b> fiziğin alt dallarını, bunların günlük hayatta ve teknolojide nerede olduğunu, alanı kuran öncüleri ve fizik okuyan birinin hangi mesleklere gidebildiğini öğreneceğiz. Yani ünitenin adı boşuna "Kariyer Keşfi" değil.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>17 Ağustos 1999'da İzmit'te yer 45 saniye sallandı. Sismologlar depremin büyüklüğünü kaydeden aletleri, mühendisler binaların neden yıkıldığını, jeofizikçiler fayın nasıl kırıldığını inceledi. Üçü de fizik kullanıyor — ama hangi alt dallarını? Cevap 3. sekmede.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Fizik Bilimi ve Kariyer Keşfi)</div>Fiziğin uğraş alanını ve alt dallarını açıklamak · alt dalların birbiriyle ve diğer bilimlerle ilişkisini örneklemek · fizik biliminin gelişimine katkı veren öncüleri tanımak · fizik temelli kariyer alanlarını keşfetmek.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma: ortaokul fen bilimlerinden</h2>
+  <div class="grid2">
+    <div class="card"><b>Kuvvet ve hareket</b><p>Kuvvet itme ya da çekmedir, birimi newton (N). Sürat = yol / zaman (m/s). Sürtünme hareketi yavaşlatır.</p></div>
+    <div class="card"><b>Enerji</b><p>Enerji yok olmaz, dönüşür: kinetik ↔ potansiyel ↔ ısı. Birimi joule (J).</p></div>
+    <div class="card"><b>Işık ve ses</b><p>Işık doğrusal yayılır, yansır, kırılır. Ses bir dalgadır; boşlukta yayılmaz, yaklaşık 340 m/s.</p></div>
+    <div class="card"><b>Elektrik ve mıknatıs</b><p>Akım, gerilim, direnç. Mıknatısın kutupları; elektrik akımı mıknatıslık oluşturur (elektromıknatıs).</p></div>
+  </div>
+  <h3>Mini test (3 soru)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Fizik ne yapar, nasıl yapar?</h3>
+  <p>Fizik, doğadaki olayları <b>gözlemler</b>, <b>ölçer</b>, ölçümler arasında <b>matematiksel ilişki</b> arar ve bu ilişkiden bir <b>model</b> kurar. Model yeni bir şey öngörür; öngörü deneyle sınanır. Tutmazsa model değişir — fizikte hiçbir şey "kesin" değildir, yalnızca "şimdiye kadar hiç yanlışlanmamış"tır.</p>
+  <div class="box def"><div class="t">Tanım</div>Fizik, madde ile enerjiyi ve bunların uzay-zamandaki etkileşimlerini temel yasalarla açıklayan doğa bilimidir. Kimya, biyoloji, jeoloji ve astronomi bu yasaların üzerine kurulur.</div>
+  <div class="box warn"><div class="t">Tuzak: "Teori" gündelik dilde "tahmin" demek; fizikte tam tersi</div>Fizikte teori, sayısız deneyle doğrulanmış, öngörü gücü olan açıklamadır (kütle çekim teorisi, atom teorisi). "Sadece bir teori" cümlesi fizikte anlamsızdır.</div>
+  <div class="sim">
+    <h3>Model sınama: ağır cisim daha hızlı mı düşer?</h3>
+    <div class="hint">Aristo 2000 yıl boyunca "evet" dedi. İki cismin kütlesini ve şeklini değiştir, hava direncini aç/kapat, <kbd>Bırak</kbd>'a bas. Hangi değişken gerçekten fark yaratıyor?</div>
+    <div class="ctrl">
+      <label>Sol kütle <input type="range" id="m1" min="1" max="20" value="1"><output id="m1o">1</output> kg</label>
+      <label>Sağ kütle <input type="range" id="m2" min="1" max="20" value="10"><output id="m2o">10</output> kg</label>
+      <label><input type="checkbox" id="airOn"> Hava direnci açık</label>
+      <label><input type="checkbox" id="flat"> Sağdaki yassı (geniş yüzey)</label>
+      <button id="dropGo">▶ Bırak</button><button id="dropReset" class="alt">Sıfırla</button>
+    </div>
+    <div class="svgwrap"><svg id="dropSvg" viewBox="0 0 720 300" role="img" aria-label="Serbest düşme karşılaştırması"></svg></div>
+    <div class="readout" id="dropOut" style="display:block">Havasız ortamda iki cisim aynı anda yere iner: düşme ivmesi kütleden bağımsızdır (g ≈ 9,8 m/s²).</div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Kütleyi 1 kg'dan 20 kg'a çıkar: hiçbir şey değişmez. Hava direncini aç ve sağdakini yassılaştır: <em>şimdi</em> fark oluşur. Demek ki Aristo'nun gözlemi yanlış değildi, açıklaması yanlıştı — fark kütleden değil, hava direncinden geliyor. Bilimde bir modeli sınamak, hangi değişkenin sonucu değiştirdiğini tek tek ayırmaktır.</div>
+
+  <h3>3.2 Fiziğin alt dalları</h3>
+  <p>Alt dallar, fiziğin farklı ölçek ve olay türlerine odaklanır; sınırları keskin değildir. Aşağıdaki haritada bir dala dokun.</p>
+  <div class="sim">
+    <h3>Alt dal haritası</h3>
+    <div class="hint">Halkadaki bir dala dokun: uğraş alanı, günlük hayat örneği ve meslek görünür. Ortadaki soru işaretine dokununca dalları birbirine bağlayan örnek gelir.</div>
+    <div class="svgwrap"><svg id="mapSvg" viewBox="0 0 720 420" role="img" aria-label="Fiziğin alt dalları haritası"></svg></div>
+    <div class="readout" id="mapOut" style="display:block">Bir dal seç.</div>
+  </div>
+  <table>
+    <tr><th>Alt dal</th><th>Ne inceler?</th><th>Nerede karşına çıkar?</th></tr>
+    <tr><td>Mekanik</td><td>Kuvvet, hareket, denge, enerji, akışkanlar</td><td>Bisiklet vitesi, köprüler, deprem yalıtımı, futbol topunun falsosu</td></tr>
+    <tr><td>Elektrik ve manyetizma</td><td>Yükler, akım, alanlar, elektromanyetik dalgalar</td><td>Şarj kablosu, kablosuz şarj, hoparlör, MR cihazı</td></tr>
+    <tr><td>Termodinamik</td><td>Isı, sıcaklık, enerji dönüşümleri, verim</td><td>Klima, araba motoru, termos, İzmit'teki rafineri</td></tr>
+    <tr><td>Optik</td><td>Işığın davranışı: yansıma, kırılma, girişim</td><td>Gözlük, kamera, fiber internet, OLED ekran</td></tr>
+    <tr><td>Dalgalar ve akustik</td><td>Titreşim, ses, dalga yayılımı</td><td>Kulaklık, ultrason, deprem dalgaları, gürültü yalıtımı</td></tr>
+    <tr><td>Atom ve molekül fiziği</td><td>Atomların yapısı, ışıkla etkileşimi</td><td>Lazer, LED, atom saati (GPS)</td></tr>
+    <tr><td>Nükleer fizik</td><td>Çekirdek, radyoaktivite, fisyon-füzyon</td><td>Nükleer santral, PET taraması, karbon-14 tarihleme</td></tr>
+    <tr><td>Katıhal fiziği</td><td>Kristaller, yarı iletkenler, süper iletkenler</td><td>İşlemci çipi, güneş paneli, SSD</td></tr>
+    <tr><td>Yüksek enerji / parçacık</td><td>Temel parçacıklar, temel kuvvetler</td><td>CERN, Higgs bozonu, kozmik ışın dedektörleri</td></tr>
+  </table>
+  <h3>3.3 Alt dallar birbirinden kopuk değil</h3>
+  <p>Merak sorusuna dönelim. Deprem: fay kırılması <b>mekanik</b> (gerilme, kırılma), yayılan sarsıntı <b>dalga fiziği</b> (P ve S dalgaları), sismograf <b>elektromanyetik</b> algılayıcı, binanın davranışı yine <b>mekanik</b> (rezonans). Tek bir olay, dört alt dal. Fizikçi olmak bir dalı bilmek değil, dalları birbirine bağlayabilmektir.</p>
+  <div class="box def"><div class="t">Fizik ve diğer bilimler</div>Kimya: atomlar arası bağlar kuantum fiziğidir. Biyoloji: sinir iletimi elektrik, kan dolaşımı akışkanlar mekaniğidir. Tıp: MR, röntgen, ultrason, radyoterapi doğrudan fizik cihazlarıdır. Mühendislik: fiziğin "yap" hâlidir. Astronomi: gökyüzüne uygulanmış fiziktir.</div>
+  <h3>3.4 Öncüler: fikirlerin zinciri</h3>
+  <p>Fizik tek başına dâhilerin işi değil, birbirinin omzuna basan insanların zinciridir. Aşağıda her adımın neyi değiştirdiğini izle.</p>
+  <div class="sim">
+    <h3>Öncüler zaman çizelgesi</h3>
+    <div class="hint"><kbd>Adım</kbd> ile bir sonraki bilim insanına geç; <kbd>Oynat</kbd> otomatik ilerler. Her kartta "ne değişti?" sorusunun cevabı var.</div>
+    <div class="ctrl"><button id="tlPlay">▶ Oynat</button><button id="tlStep" class="alt">Adım</button><button id="tlBack" class="alt">Geri</button><button id="tlReset" class="alt">Sıfırla</button><label>Hız <input type="range" id="tlSpeed" min="1" max="5" value="2" style="width:90px"></label></div>
+    <div class="svgwrap"><svg id="tlSvg" viewBox="0 0 720 120" role="img" aria-label="Zaman çizelgesi"></svg></div>
+    <div class="card" id="tlCard" style="margin:8px 0 0"></div>
+  </div>
+  <h3>3.5 Fizik okuyan ne olur?</h3>
+  <p>Fizik bölümü mezunu yalnızca "fizikçi" olmaz. Fizik, <b>problem çözme ve modelleme</b> öğretir; bu beceri her yerde para eder:</p>
+  <div class="grid2">
+    <div class="card"><b>Araştırma ve akademi</b><p>Üniversite, TÜBİTAK, CERN, ASELSAN/TÜBİTAK SAGE gibi Ar-Ge merkezleri. Deneysel ya da teorik.</p></div>
+    <div class="card"><b>Mühendislik ve sanayi</b><p>Otomotiv (Kocaeli'de Ford Otosan, Hyundai), enerji (TÜPRAŞ, santraller), yarı iletken ve elektronik, savunma sanayi, uzay (Türksat, TUA).</p></div>
+    <div class="card"><b>Tıp ve sağlık</b><p>Medikal fizik: radyoterapi planlama, görüntüleme cihazları, radyasyon güvenliği. Hastanelerde zorunlu meslek.</p></div>
+    <div class="card"><b>Veri, finans, yazılım</b><p>Fizikçiler modelleme ve istatistik bildiği için veri bilimi, finansal modelleme, oyun fiziği ve yapay zekâ ekiplerinde çok aranır.</p></div>
+    <div class="card"><b>Yer ve atmosfer bilimleri</b><p>Jeofizik (AFAD, Kandilli), meteoroloji, deniz bilimleri. Marmara'da deprem izleme bunun tam ortası.</p></div>
+    <div class="card"><b>Eğitim ve bilim iletişimi</b><p>Öğretmenlik, bilim müzeleri, bilim yazarlığı, bilim gazeteciliği.</p></div>
+  </div>
+  <div class="box warn"><div class="t">Tuzak: "Fizik = formül ezberi"</div>Formül, düşünmenin sonucudur; başlangıcı değil. Fizikçi, çözülmemiş problemle karşılaşınca hangi formülü kullanacağını değil, olayı hangi büyüklüklerle tarif edeceğini düşünür. Bu üniteden sonra her konuda "önce büyüklükler, sonra ilişki" alışkanlığı kuracağız.</div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · GPS neden Einstein'a muhtaç?</h3>
+    <p><b>Durum:</b> Telefonun konumunu 5 metre hassasiyetle biliyor. Uydular 20 200 km yukarıda, 14 000 km/sa hızla dönüyor.</p>
+    <p><b>Kavramla bağ:</b> Uydudaki saatler hem hızdan (özel görelilik: yavaşlar, günde −7 μs) hem de zayıf kütle çekimden (genel görelilik: hızlanır, günde +45 μs) dünyadakinden farklı işler. Net fark günde ≈ 38 μs.</p>
+    <p><b>Analiz:</b> Işık 1 μs'de 300 m gider. 38 μs düzeltilmezse konum hatası günde 38 × 300 ≈ 11 km büyür. Uydular bu düzeltmeyle programlanmıştır.</p>
+    <p><b>Sonuç:</b> "Soyut" sayılan görelilik, her navigasyon uygulamasının içinde her saniye çalışıyor. Alt dal: modern fizik (görelilik) + atom fiziği (atom saati).</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · Bisiklette vites ve inişte fren ısınması</h3>
+    <p><b>Durum:</b> Yokuşta küçük vites kolay pedal çevirtiyor; uzun inişte disk fren dokununca yakıyor.</p>
+    <p><b>Kavramla bağ:</b> Vites bir <b>mekanik</b> avantaj (kuvvet-yol takası: kuvvet azalır, pedal turu artar; iş aynı kalır). Fren, kinetik enerjiyi ısıya çevirir — <b>termodinamik</b>.</p>
+    <p><b>Hesap:</b> 60 kg sürücü + 12 kg bisiklet, 100 m yükseklikten sabit hızla inerse potansiyel enerji ≈ 72 × 10 × 100 = 72 000 J ısıya döner. Bu, 1 litre suyu ~17 °C ısıtacak enerji; 200 g'lık çelik diskte toplanınca yüzlerce derece.</p>
+    <p><b>Sonuç:</b> Uzun inişte frene aralıklı bas: diskin soğuması (ısı aktarımı) için zaman tanırsın.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Kocaeli'de deprem erken uyarı ve sismograf</h3>
+    <p><b>Durum:</b> Bazı ülkelerde telefona sarsıntıdan 10-20 saniye önce uyarı geliyor. Nasıl?</p>
+    <p><b>Kavramla bağ:</b> Deprem iki dalga üretir: P dalgası (~6 km/s, zayıf) ve S dalgası (~3,5 km/s, yıkıcı). Sismograflar P'yi yakalar, S gelmeden radyo sinyaliyle (ışık hızı) uyarı gönderir — <b>dalga fiziği</b> + <b>elektromanyetizma</b>.</p>
+    <p><b>Hesap:</b> Merkez üssü 60 km uzaktaysa P 10 s'de, S 17 s'de gelir. Uyarı ≈ 7 saniye: masanın altına girmeye, asansörü durdurmaya, doğal gaz vanasını kapatmaya yeter.</p>
+    <p><b>Sonuç:</b> Hız farkını bilen bir fizikçi, saniyeleri hayat kurtaran zamana çevirir.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · Hastanede MR: dev mıknatıs ve radyo dalgası</h3>
+    <p><b>Durum:</b> MR cihazı röntgen gibi ışın vermiyor ama vücudun içini gösteriyor.</p>
+    <p><b>Kavramla bağ:</b> 1,5-3 tesla'lık süper iletken mıknatıs (<b>katıhal + manyetizma</b>) vücuttaki hidrojen çekirdeklerini hizalar; radyo dalgası (<b>elektromanyetik dalga</b>) onları titreştirir; geri yayılan sinyalden görüntü kurulur (<b>atom/nükleer fizik</b>). Görüntüyü kuran kişi medikal fizikçidir.</p>
+    <p><b>Sonuç:</b> Bir cihaz, dört alt dal ve bir kariyer. Fizik okuyup hastanede çalışmak mümkün.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <p>Konu anlatımındaki harita ve zaman çizelgesine ek olarak: sınıflandırma oyunu.</p>
+  <div class="sim">
+    <h3>Hangi alt dal?</h3>
+    <div class="hint">Her olay için en uygun alt dala dokun. 12 olay var; sonunda puanını ve açıklamaları görürsün. Bazı olaylar birden fazla dala girer — "en baskın" olanı seç.</div>
+    <div id="game"></div>
+    <div class="ctrl"><button id="gmReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Hangi olaylarda ikilemde kaldın? Neden? &nbsp; 2) Kendi günün içinden (sabah alarmından akşam şarja takana kadar) 5 fizik olayı yaz ve alt dalını belirle. &nbsp; 3) Bu 5 olaydan hangisi ölçülebilir bir büyüklük içeriyor?</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · Aşağıdaki olayları alt dallarla eşleştir</h3>
+    <p>a) Gözlükle net görme &nbsp; b) Elektrikli süpürgenin motoru &nbsp; c) Termosun çayı sıcak tutması</p>
+    <ol class="steps"><li>a) Işığın kırılması → <b>optik</b>. <div class="why">Mercek, ışığın yolunu değiştirir.</div></li><li>b) Akımın manyetik alanla dönme oluşturması → <b>elektrik ve manyetizma</b>.</li><li>c) Isı aktarımının yavaşlatılması (vakum, yansıtıcı yüzey) → <b>termodinamik</b>.</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · "Fizik yasası" ile "fizik teorisi" farkı nedir? Örnek ver.</h3>
+    <ol class="steps"><li>Yasa: gözlemlerin özlü, çoğu kez matematiksel ifadesi; <em>ne</em> olduğunu söyler. Örnek: Newton'un hareket yasaları, enerjinin korunumu.</li><li>Teori: yasaları ve gözlemleri <em>neden</em> öyle olduğunu açıklayan, sınanmış çerçeve. Örnek: kütle çekim teorisi, kinetik teori.<div class="why">Yasa "elma düşer" der; teori "kütleler birbirini çeker, uzay-zamanı büker" der.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Deprem dalgaları ile uzaklık bulma</h3>
+    <p>Bir sismografa P dalgası S dalgasından 12 s önce ulaşıyor. P: 6 km/s, S: 3,5 km/s. Merkez üssü kaç km uzakta?</p>
+    <ol class="steps"><li>Uzaklık d olsun. t<sub>P</sub> = d/6, t<sub>S</sub> = d/3,5. <div class="why">Aynı yolu farklı hızlarla alıyorlar; fark zaman veriyor.</div></li><li>d/3,5 − d/6 = 12 → d(1/3,5 − 1/6) = 12 → d · (0,2857 − 0,1667) = 12 → d · 0,119 = 12.</li><li>d ≈ <b>101 km</b>. Kontrol: t<sub>P</sub> ≈ 16,8 s, t<sub>S</sub> ≈ 28,8 s, fark 12 s ✓</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Bir olayı alt dallara ayrıştır: kablosuz kulaklık</h3>
+    <ol class="steps"><li>Bluetooth sinyali → elektromanyetik dalga (<b>elektromanyetizma</b>).</li><li>Sinyalin işlendiği çip → yarı iletken (<b>katıhal</b>).</li><li>Diyafram titreşimi ve ses üretimi → <b>dalgalar/akustik</b>; titreşimi sağlayan mıknatıs-bobin → <b>manyetizma</b>.</li><li>Pilin ısınması ve ömrü → <b>termodinamik</b>. <div class="why">Beş dal, bir kulaklık. "Tek dal" cevabı eksik puan alır.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · GPS saat düzeltmesi hesabı</h3>
+    <p>Uydu saati dünyadakine göre günde net 38 μs ileri gidiyor. Düzeltme yapılmazsa 1 saatte konum hatası ne kadar olur? (c = 3 × 10<sup>8</sup> m/s)</p>
+    <ol class="steps"><li>Saatte kayma: 38 μs / 24 = 1,58 μs. <div class="why">Kayma zamanla doğrusal birikir.</div></li><li>Işığın bu sürede aldığı yol: 1,58 × 10<sup>−6</sup> s × 3 × 10<sup>8</sup> m/s ≈ 475 m.</li><li>Yani 1 saat sonra konum hatası ≈ <b>0,5 km</b>; bir günde ≈ 11 km. <div class="why">Matematik 1. haftadaki bilimsel gösterim burada iş başında.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Bir modelin sınanması</h3>
+    <p>"Ağır cisimler daha hızlı düşer" iddiasını (Aristo) Galileo nasıl çürüttü? Bir deney tasarla, kontrol edilmesi gereken değişkeni belirt.</p>
+    <ol class="steps"><li>Öngörü: iddia doğruysa 1 kg ve 10 kg'lık toplar farklı sürede düşmeli.</li><li>Deney: aynı yükseklikten, aynı anda, aynı biçim ve boyutta (hava direncini eşitlemek için) iki top bırak.<div class="why">Kontrol değişkeni: hava direnci. Kâğıt ile taş farklı düşer ama sebep kütle değil, direnç.</div></li><li>Gözlem: aynı anda yere varırlar → iddia yanlışlanır. Model değişir: serbest düşmede ivme kütleden bağımsızdır (g ≈ 9,8 m/s²).</li><li>Ay'da tüy ile çekiç aynı anda düşer (Apollo 15, 1971) — havasız ortam modelin sınırını gösterir.</li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 soru. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Fizik nedir</b>Madde, enerji ve etkileşimlerini ölçerek ve modelleyerek açıklar. Yasa "ne", teori "neden" der.</div>
+    <div class="card"><b>Alt dallar</b>Mekanik · elektrik-manyetizma · termodinamik · optik · dalgalar · atom · nükleer · katıhal · parçacık. Sınırlar geçirgen.</div>
+    <div class="card"><b>Öncüler</b>Arşimet → İbn-i Heysem → Galileo → Newton → Faraday/Maxwell → Curie → Einstein → Bohr → Gürsey. Her biri öncekinin sorusuna cevap.</div>
+    <div class="card"><b>Kariyer</b>Ar-Ge, sanayi, medikal fizik, jeofizik, veri/finans, eğitim. Ortak beceri: modelleme.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>"Teori = tahmin" sanmak. Fizikte teori en güçlü açıklama düzeyidir.</li>
+    <li>Bir olayı tek alt dala kilitlemek. Çoğu teknoloji 3-5 dalın kesişimidir.</li>
+    <li>Fiziği mühendislikle karıştırmak. Fizik "neden", mühendislik "nasıl yapılır" sorar; birbirini besler.</li>
+    <li>Öncüleri isim-tarih ezberi sanmak. Sınav "kim, hangi soruyu, neyi değiştirerek çözdü" diye sorar.</li>
+    <li>Ölçmeden yargılamak: "hızlı", "ağır", "sıcak" fizikte cevap değildir; sayı ve birim ister.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Bu hafta fiziğin ölçerek konuştuğunu gördük. Peki neyi, hangi birimle ölçeriz? Gelecek hafta: <b>temel ve türetilmiş büyüklükler, SI birim sistemi, skaler ve vektörel nicelikler</b> — 2. ünite "Kuvvet ve Hareket"in kapısı.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Fizik · Ünite 1 · Hafta 1 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='fiz-h01', HAFTA=1;
+const BASEKEY='ah9-fiz-h01';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Fizik 9 · Ünite 1 · Hafta 1 · Fizik bilimi ve kariyer keşfi';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'Sürati 5 m/s olan bir bisikletli 2 dakikada kaç metre yol alır?',o:['600 m','10 m','300 m','120 m'],a:0,e:'2 dk = 120 s; 5 × 120 = 600 m.'},
+ {s:'Ses hangi ortamda yayılmaz?',o:['Boşlukta','Suda','Çelikte','Havada'],a:0,e:'Ses mekanik dalgadır; taşıyıcı madde gerekir.'},
+ {s:'Kuvvetin SI birimi hangisidir?',o:['Newton (N)','Joule (J)','Watt (W)','Kilogram (kg)'],a:0,e:'Joule enerji, watt güç, kilogram kütle birimidir.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,false)));}
+/* ana test */
+const QUIZ=[
+ {s:'Aşağıdakilerden hangisi fiziğin uğraş alanını en iyi tanımlar?',o:['Madde, enerji ve aralarındaki etkileşimleri temel yasalarla açıklamak','Canlıların yapısını ve işleyişini incelemek','Maddelerin birbirine dönüşümünü incelemek','Yer kabuğunun yapısını incelemek'],a:0,e:'Diğerleri sırasıyla biyoloji, kimya ve jeolojinin alanıdır; hepsi fizik yasalarını kullanır ama fiziğin tanımı ilk seçenektir.'},
+ {s:'Fiber internet kablosunda ışığın cam içinde tam yansımayla ilerlemesi hangi alt dalın konusudur?',o:['Optik','Termodinamik','Nükleer fizik','Mekanik'],a:0,e:'Işığın yansıması ve kırılması optiğin konusudur.'},
+ {tag:'bağlam',s:'Bir bisikletteki dinamo, tekerlek dönerken farı yakıyor. Bu cihazın çalışma ilkesi hangi alt dalla açıklanır?',o:['Elektrik ve manyetizma','Optik','Atom fiziği','Akustik'],a:0,e:'Dönen mıknatıs, bobinde akım oluşturur: elektromanyetik indüksiyon.'},
+ {s:'Fizikte "teori" sözcüğü için hangisi doğrudur?',o:['Sınanmış, öngörü gücü olan açıklama çerçevesidir','Henüz kanıtlanmamış tahmindir','Yasaların matematiksel ifadesidir','Tek bir deneyin sonucudur'],a:0,e:'Gündelik dildeki "teori = tahmin" anlamı fizikte geçerli değildir.'},
+ {s:'Deprem dalgalarının yayılmasını ve sismografla kaydedilmesini inceleyen fizik temelli meslek hangisidir?',o:['Jeofizikçi','Medikal fizikçi','Astrofizikçi','Optik mühendisi'],a:0,e:'Jeofizik, yerin fiziğidir; sismoloji alt alanıdır.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Deprem iki dalga üretir; P dalgası ~6 km/s, S dalgası ~3,5 km/s hızla yayılır. Aynı yolu farklı hızlarda aldıkları için varış zamanları arasında fark oluşur.<br>Bir sismografa P dalgası, S dalgasından 6 s önce ulaşıyor. Merkez üssünün uzaklığı yaklaşık kaç km\'dir?',o:['50 km','25 km','100 km','200 km'],a:0,e:'d/3,5 − d/6 = 6 → d · 0,119 = 6 → d ≈ 50 km.'},
+ {s:'Aşağıdaki öncü-katkı eşleştirmelerinden hangisi yanlıştır?',o:['Faraday – kütle çekim yasası','İbn-i Heysem – ışığın gözden değil cisimden geldiğini göstermesi','Newton – hareket yasaları','Curie – radyoaktivite araştırmaları'],a:0,e:'Kütle çekim yasası Newton\'undur; Faraday elektromanyetik indüksiyonu buldu.'},
+ {s:'MR cihazında vücuttaki hidrojen çekirdeklerini hizalayan bileşen hangi fizik alanıyla ilgilidir?',o:['Manyetizma ve süper iletkenlik','Optik','Akustik','Termodinamik'],a:0,e:'Süper iletken bobinden oluşan güçlü mıknatıs, katıhal ve manyetizma konusudur.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> GPS konumu, sinyalin yolda geçirdiği süreden hesaplanır; saatteki her sapma, ışığın o sürede aldığı yol kadar konum hatasına dönüşür. Uydu saatleri dünyadakilere göre günde 38 μs ileri gider.<br>Düzeltme yapılmazsa 12 saat sonra konum hatası yaklaşık ne kadar olur? (c = 3×10⁸ m/s)',o:['≈ 5,7 km','≈ 570 m','≈ 11 km','≈ 57 m'],a:0,e:'12 saatte 19 μs; 19×10⁻⁶ × 3×10⁸ = 5700 m.'},
+ {s:'Fizik ile mühendislik arasındaki ilişki için en doğru ifade hangisidir?',o:['Fizik "neden" sorusunu, mühendislik "nasıl yapılır" sorusunu yanıtlar; birbirini besler','Mühendislik fiziğin bir alt dalıdır','Fizik yalnızca teorik, mühendislik yalnızca pratiktir','İkisi bağımsız alanlardır'],a:0,e:'Deneysel fizik pratik, mühendislik de teorik olabilir; ayrım sorunun türündedir.'},
+ {open:true,s:'Bir akıllı telefonda çalışan en az üç fizik alt dalını, telefonun hangi parçasıyla ilişkili olduğunu belirterek yaz.',ans:'Örn. Optik – ekran/kamera; Katıhal – işlemci; Elektromanyetizma – anten, şarj; Termodinamik – pil ısınması; Akustik – hoparlör.',e:'Her dal için parça ve ilke eşleşmesi beklenir.'},
+ {open:true,s:'Galileo\'nun düşme deneyinin bir "model sınama" örneği olmasının nedenini iki cümleyle açıkla.',ans:'Bir öngörü (ağır cisim önce düşer) deneyle sınandı ve yanlışlandı; model değiştirildi (düşme ivmesi kütleden bağımsız).',e:'Öngörü → deney → yanlışlama → yeni model zinciri anlatılmalı.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+/* --- Serbest düşme model sınaması --- */
+let DR={t:0,timer:null,run:false};
+function drawDrop(){const svg=$('#dropSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  const m1=+$('#m1').value,m2=+$('#m2').value,air=$('#airOn').checked,flat=$('#flat').checked;
+  $('#m1o').value=m1;$('#m2o').value=m2;
+  const H=200,g=9.8;
+  function yOf(m,wide){if(!air)return .5*g*DR.t*DR.t*12;
+    const k=(wide?0.9:0.25)/m; const vt=Math.sqrt(g/k); return vt*vt/g*Math.log(Math.cosh(g*DR.t/vt))*12;}
+  const y1=Math.min(H,yOf(m1,false)),y2=Math.min(H,yOf(m2,flat));
+  svg.appendChild(el('line',{x1:40,y1:H+40,x2:680,y2:H+40,stroke:ink,'stroke-width':3}));
+  [[220,y1,m1,false,'Sol'],[500,y2,m2,flat,'Sağ']].forEach(([x,y,m,w,lbl])=>{
+    const r=6+Math.sqrt(m)*2.2;
+    if(w)svg.appendChild(el('ellipse',{cx:x,cy:20+y,rx:r*2.2,ry:r*0.5,fill:nv}));
+    else svg.appendChild(el('circle',{cx:x,cy:20+y,r,fill:nv}));
+    svg.appendChild(el('text',{x,y:H+62,'text-anchor':'middle','font-size':'14',fill:ink},lbl+': '+m+' kg'+(w?' · yassı':'')));
+    svg.appendChild(el('line',{x1:x,y1:14,x2:x,y2:H+40,stroke:css('--line'),'stroke-dasharray':'4 6'}));});
+  const done1=y1>=H,done2=y2>=H;
+  svg.appendChild(el('text',{x:360,y:20,'text-anchor':'middle','font-size':'15',fill:gd},'t = '+DR.t.toFixed(2)+' s'));
+  if(done1&&done2){DR.run=false;clearInterval(DR.timer);DR.timer=null;
+    $('#dropOut').innerHTML=air?'<b>Hava direnci açık:</b> '+(flat?'yassı cisim daha yavaş indi — fark kütleden değil, yüzeyden ve direnç kuvvetinden geliyor.':'kütle farkı direnç altında küçük bir fark yaratıyor; şekli değiştirince etkiyi net görürsün.'):'<b>Havasız ortam:</b> ikisi aynı anda indi. Düşme ivmesi kütleden bağımsız (g ≈ 9,8 m/s²) — Aristo yanlışlandı.';}}
+function dropTick(){DR.t+=0.02;drawDrop();}
+$('#dropGo').onclick=()=>{if(DR.timer)return;DR.t=0;DR.run=true;if(!motionOn()){DR.t=3;drawDrop();return;}DR.timer=setInterval(dropTick,20);};
+$('#dropReset').onclick=()=>{clearInterval(DR.timer);DR.timer=null;DR.t=0;drawDrop();};
+['#m1','#m2','#airOn','#flat'].forEach(s=>$(s).addEventListener('input',()=>{clearInterval(DR.timer);DR.timer=null;DR.t=0;drawDrop();}));
+/* --- Alt dal haritası --- */
+const BR=[
+ {n:'Mekanik',d:'Kuvvet, hareket, denge, enerji, akışkanlar.',e:'Bisiklet vitesi, futbol falsosu, deprem yalıtımlı bina.',k:'Makine/inşaat mühendisi, deprem mühendisi'},
+ {n:'Elektrik & Manyetizma',d:'Yükler, akımlar, alanlar, elektromanyetik dalgalar.',e:'Kablosuz şarj, hoparlör, MR mıknatısı.',k:'Elektrik-elektronik mühendisi, medikal fizikçi'},
+ {n:'Termodinamik',d:'Isı, sıcaklık, verim, enerji dönüşümü.',e:'Klima, araba motoru, TÜPRAŞ rafinerisi.',k:'Enerji mühendisi, iklim modelleyici'},
+ {n:'Optik',d:'Işığın yansıması, kırılması, girişimi.',e:'Gözlük, kamera, fiber internet, OLED.',k:'Optik tasarımcı, lazer fizikçisi'},
+ {n:'Dalgalar & Akustik',d:'Titreşim, ses, dalga yayılımı.',e:'Kulaklık, ultrason, deprem dalgaları.',k:'Akustik mühendisi, sismolog'},
+ {n:'Atom fiziği',d:'Atomların yapısı ve ışıkla etkileşimi.',e:'Lazer, LED, GPS atom saati.',k:'Fotonik araştırmacısı'},
+ {n:'Nükleer fizik',d:'Çekirdek, radyoaktivite, fisyon-füzyon.',e:'Nükleer santral, PET, karbon-14.',k:'Nükleer mühendis, radyasyon güvenliği uzmanı'},
+ {n:'Katıhal fiziği',d:'Kristaller, yarı iletkenler, süper iletkenler.',e:'İşlemci çipi, güneş paneli, SSD.',k:'Yarı iletken/çip tasarımcısı'},
+ {n:'Parçacık fiziği',d:'Temel parçacıklar ve temel kuvvetler.',e:'CERN, Higgs bozonu, kozmik ışınlar.',k:'Yüksek enerji fizikçisi, dedektör mühendisi'}];
+let selB=-1;
+function drawMap(){const svg=$('#mapSvg');svg.innerHTML='';const cx=360,cy=210,R=150,ink=css('--ink'),nv=css('--navy2'),sky=css('--sky'),gd=css('--gold');
+  BR.forEach((b,i)=>{const a=-Math.PI/2+i*2*Math.PI/BR.length,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+    svg.appendChild(el('line',{x1:cx,y1:cy,x2:x,y2:y,stroke:nv,'stroke-width':i===selB?4:1.5,opacity:i===selB?1:.5}));
+    const g=el('g',{tabindex:0,role:'button','aria-label':b.n,style:'cursor:pointer'});
+    g.appendChild(el('circle',{cx:x,cy:y,r:34,fill:i===selB?nv:sky,stroke:nv,'stroke-width':2}));
+    const parts=b.n.split(' & ');parts.forEach((p,j)=>g.appendChild(el('text',{x,y:y+(parts.length>1?(j?12:-2):5),'text-anchor':'middle','font-size':'11','font-weight':'600',fill:i===selB?'#fff':ink},p.replace(' fiziği',''))));
+    g.onclick=()=>{selB=i;drawMap();$('#mapOut').innerHTML='<b>'+b.n+'</b><br>'+b.d+'<br><span style="color:var(--ok)">Günlük hayat:</span> '+b.e+'<br><span style="color:var(--gold)">Meslek:</span> '+b.k;};
+    g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.onclick();}};
+    svg.appendChild(g);});
+  const c=el('g',{tabindex:0,role:'button',style:'cursor:pointer'});c.appendChild(el('circle',{cx,cy,r:40,fill:gd}));c.appendChild(el('text',{x:cx,y:cy+8,'text-anchor':'middle','font-size':'26','font-weight':'700',fill:'#fff'},'?'));
+  c.onclick=()=>{selB=-1;drawMap();$('#mapOut').innerHTML='<b>Dallar birlikte çalışır.</b> Deprem: fay kırılması (mekanik) → P/S dalgaları (dalgalar) → sismograf bobini (elektromanyetizma) → bina rezonansı (mekanik). MR: mıknatıs (katıhal+manyetizma) + radyo dalgası (EM dalga) + çekirdek (nükleer).';};
+  svg.appendChild(c);}
+/* --- Zaman çizelgesi --- */
+const TL=[
+ {y:'MÖ 250',n:'Arşimet',w:'Kaldırma kuvveti ve kaldıraç ilkesi.',c:'Fiziği matematikle yazan ilk kişi: "bana bir dayanak noktası verin."'},
+ {y:'1021',n:'İbn-i Heysem',w:'Görme, gözden çıkan ışınla değil, cisimden gelen ışıkla olur; karanlık oda deneyi.',c:'Deneyi kanıtın merkezine koydu: bilimsel yöntemin öncüsü.'},
+ {y:'1638',n:'Galileo',w:'Düşme ivmesi kütleden bağımsız; eylemsizlik; teleskopla Jüpiter\'in uyları.',c:'Aristo\'nun 2000 yıllık otoritesini ölçümle devirdi.'},
+ {y:'1687',n:'Newton',w:'Üç hareket yasası ve evrensel kütle çekim.',c:'Yerdeki elma ile gökteki Ay\'ı aynı yasayla açıkladı.'},
+ {y:'1831',n:'Faraday → Maxwell',w:'Elektromanyetik indüksiyon (Faraday); elektrik+manyetizma+ışık tek kuramda (Maxwell, 1865).',c:'Jeneratör, motor ve radyo bu kuramdan doğdu.'},
+ {y:'1898',n:'Marie Curie',w:'Polonyum ve radyum; radyoaktivite kavramı.',c:'İki farklı dalda Nobel alan tek kişi; nükleer fizik ve tıbbi görüntülemenin kapısı.'},
+ {y:'1905-1915',n:'Einstein',w:'Özel ve genel görelilik; fotoelektrik olay.',c:'Uzay-zaman, E=mc², GPS düzeltmesi, güneş paneli ilkesi.'},
+ {y:'1913-1927',n:'Bohr, Heisenberg, Schrödinger',w:'Kuantum mekaniği.',c:'Yarı iletken, lazer, MR ve tüm modern elektronik.'},
+ {y:'1960\'lar',n:'Feza Gürsey',w:'Parçacık fiziğinde simetri kuramları (SU(3), E8).',c:'Türkiye\'den dünya fiziğine katkı; adı Feza Gürsey Enstitüsü\'nde yaşıyor.'}];
+let T={i:0,timer:null};
+function tlStop(){if(T.timer){clearInterval(T.timer);T.timer=null;}$('#tlPlay').textContent='▶ Oynat';}
+function drawTL(){const svg=$('#tlSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  svg.appendChild(el('line',{x1:30,y1:60,x2:690,y2:60,stroke:ink,'stroke-width':2}));
+  TL.forEach((t,i)=>{const x=50+i*(640/(TL.length-1));svg.appendChild(el('circle',{cx:x,cy:60,r:i===T.i?11:7,fill:i<T.i?nv:i===T.i?gd:css('--line'),stroke:nv}));
+    svg.appendChild(el('text',{x,y:i%2?100:38,'text-anchor':'middle','font-size':'11',fill:i===T.i?gd:css('--ink2'),'font-weight':i===T.i?'700':'400'},t.y));});
+  const t=TL[T.i];$('#tlCard').innerHTML='<b style="color:var(--navy);font-size:19px">'+t.n+' · '+t.y+'</b><p><b>Ne yaptı?</b> '+t.w+'</p><p><b>Ne değişti?</b> '+t.c+'</p>';}
+function tlStep(){if(T.i>=TL.length-1)return tlStop();T.i++;drawTL();}
+$('#tlPlay').onclick=()=>{if(T.timer)return tlStop();if(!motionOn()){tlStep();return;}$('#tlPlay').textContent='⏸ Duraklat';T.timer=setInterval(tlStep,4000/ +$('#tlSpeed').value);};
+$('#tlStep').onclick=tlStep;$('#tlBack').onclick=()=>{if(T.i>0){T.i--;drawTL();}};$('#tlReset').onclick=()=>{T.i=0;tlStop();drawTL();};
+/* --- Sınıflandırma oyunu --- */
+const GB=['Mekanik','Elektrik & Manyetizma','Termodinamik','Optik','Dalgalar & Akustik','Atom/Nükleer','Katıhal'];
+const GQ=[
+ ['Gökkuşağının oluşması',3,'Su damlasında ışığın kırılıp yansıması.'],
+ ['Buzdolabının arkasının sıcak olması',2,'Isı pompası: içeriden alınan ısı dışarı atılır.'],
+ ['Kaleciye doğru gelen falsolu top',0,'Dönen top üzerindeki basınç farkı (Magnus etkisi) — akışkanlar mekaniği.'],
+ ['Kulaklıkta bas sesin hissedilmesi',4,'Düşük frekanslı ses dalgaları.'],
+ ['Güneş panelinin elektrik üretmesi',6,'Yarı iletkende fotonun elektron koparması.'],
+ ['Mıknatısın buzdolabına yapışması',1,'Manyetik alan ve ferromanyetik madde.'],
+ ['Nükleer santralde enerji üretimi',5,'Uranyum çekirdeğinin bölünmesi (fisyon).'],
+ ['Köprünün rüzgârda salınması',0,'Yapısal titreşim ve rezonans — mekanik.'],
+ ['Kablosuz şarjın telefonu ısıtması',1,'İndüksiyonla enerji aktarımı; kayıp ısıya döner (ikincil: termodinamik).'],
+ ['Röntgen filminde kemiğin görünmesi',5,'X-ışınları atomlarla farklı soğurulur.'],
+ ['Gözlük camının görüntüyü netleştirmesi',3,'Merceğin kırıcılığı.'],
+ ['Termosta çayın sıcak kalması',2,'Vakum ve yansıtıcı yüzeyle ısı aktarımının azaltılması.']];
+let GM={i:0,score:0,log:[]};
+function drawGame(){const box=$('#game');if(GM.i>=GQ.length){box.innerHTML='<div class="readout">Puan: '+GM.score+' / '+GQ.length+'</div>'+GM.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ Doğru: <b>'+l.d+'</b> · ')+l.e+'</div></div>').join('');return;}
+  const q=GQ[GM.i];box.innerHTML='<div class="readout">'+(GM.i+1)+' / '+GQ.length+' · Puan '+GM.score+'</div><div class="q"><div class="stem">'+q[0]+'</div><div class="opts">'+GB.map((b,j)=>'<label><input type="radio" name="gm"> <span>'+b+'</span></label>').join('')+'</div><div class="fb" id="gmFb"></div></div>';
+  box.querySelectorAll('input').forEach((r,j)=>r.onchange=()=>{const ok=j===q[1];if(ok)GM.score++;GM.log.push({q:q[0],ok,d:GB[q[1]],e:q[2]});const d=box.querySelector('.q');d.classList.add(ok?'right':'wrong');$('#gmFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru cevap: <b>'+GB[q[1]]+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="gmNext">Sonraki →</button>';$('#gmNext').onclick=()=>{GM.i++;drawGame();};box.querySelectorAll('input').forEach(x=>x.disabled=true);});}
+$('#gmReset').onclick=()=>{GM={i:0,score:0,log:[]};drawGame();};
+function stopAll(){tlStop();clearInterval(DR.timer);DR.timer=null;}
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawDrop();drawMap();drawTL();drawGame();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

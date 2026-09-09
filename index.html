@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fen Lisesi 9 · Öğrenme Platformu</title><meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#f4f6fb;--paper:#fff;--ink:#141a2e;--ink2:#4a5472;--line:#dbe0ec;--acc:#1b2f6e;--acc2:#2f4aa8;--gold:#d9930d;--ok:#1f7a4d;--bad:#b3261e;
+ --mat:#2f4aa8;--fiz:#d9540f;--kim:#1f8a4c;--biy:#0e8a9a;--tde:#8b1e3f;--ing:#6a3fb5;--r:14px;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+[data-theme="dark"]{--bg:#0f1526;--paper:#182036;--ink:#e9edf7;--ink2:#b8c2dc;--line:#2b3654;--acc:#9fb3ff;--acc2:#7d95f0;--gold:#f0b642}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:clamp(26px,5vw,36px);margin:0 0 4px;line-height:1.1}h2{font-size:20px;margin:26px 0 10px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:12px 0}
+.btn{background:var(--acc2);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-size:16px;cursor:pointer;min-height:44px}
+.btn.alt{background:var(--paper);color:var(--acc);border:1.5px solid var(--acc2)}.btn.sm{padding:6px 12px;min-height:36px;font-size:14px}
+input{font:inherit;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);width:100%}
+label{display:block;font-size:14px;color:var(--ink2);margin:10px 0 4px}
+.err{color:var(--bad);font-size:14px;margin-top:8px;min-height:18px}
+/* giriş */
+#login{max-width:420px;margin:40px auto}
+#login .logo{text-align:center;margin-bottom:12px}.logo b{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;margin:12px 0}.seg button{flex:1;border:0;background:none;padding:10px;font:inherit;cursor:pointer;color:var(--ink2)}.seg button.on{background:var(--acc2);color:#fff}
+/* hero */
+.hero{background:linear-gradient(135deg,var(--acc) 0%,#3a55b8 100%);color:#fff;border-radius:var(--r);padding:18px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+[data-theme="dark"] .hero{background:linear-gradient(135deg,#1c2a5e,#2a3f8f)}
+.hero .name{font-size:24px;font-weight:700}.hero .lvl{opacity:.9;font-size:14px}
+.xpbar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden;margin:8px 0 4px}.xpbar i{display:block;height:100%;background:var(--gold);width:0;transition:width .6s}
+.stats{display:flex;gap:14px;flex-wrap:wrap;font-size:14px}.stats b{font-size:20px;display:block}
+.streak{background:rgba(255,255,255,.15);border-radius:12px;padding:10px 14px;text-align:center;min-width:90px}.streak b{font-size:28px;display:block}
+/* haftalar */
+.week{border:1px solid var(--line);border-radius:var(--r);margin:12px 0;background:var(--paper);overflow:hidden}
+.week>button{width:100%;text-align:left;background:none;border:0;padding:14px 16px;font:inherit;font-size:17px;font-weight:700;cursor:pointer;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.week .pct{font-size:13px;font-weight:600;color:var(--ink2)}.week .body{display:none;padding:0 12px 12px}.week.open .body{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.tile{border:1.5px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:6px}
+.tile .t{font-weight:700}.tile .m{font-size:13px;color:var(--ink2)}.tile .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}.tile .bar i{display:block;height:100%;background:var(--c)}
+.tile .score{font-weight:700;color:var(--c)}.tile a{margin-top:auto;text-decoration:none}
+.tile.locked{opacity:.6}
+/* rozet / lider */
+.badges{display:flex;flex-wrap:wrap;gap:8px}.badge{border:1.5px solid var(--gold);background:#fff8e6;color:#6a4500;border-radius:20px;padding:6px 12px;font-size:14px}[data-theme="dark"] .badge{background:#3a2d0f;color:#f0d59b}
+.badge.off{border-color:var(--line);background:var(--paper);color:var(--ink2);opacity:.7}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}tr.me td{background:#fff3cf;font-weight:700}[data-theme="dark"] tr.me td{background:#3a2d0f}
+.top3{display:inline-block;width:26px}
+.goal{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}.topbar .r{display:flex;gap:6px}
+.note{font-size:13px;color:var(--ink2)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--acc2);border-radius:50%;animation:sp 1s linear infinite;vertical-align:middle}@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:560px){.hero{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="topbar"><div class="logo"><b>Fen Lisesi Öğrenme Platformu · 9. Sınıf</b></div><div class="r"><button class="btn alt sm" id="themeBtn">☾</button><button class="btn alt sm" id="logoutBtn" style="display:none">Çıkış</button></div></div>
+
+<div id="login">
+  <div class="card">
+    <h1 style="text-align:center">Öğrenme Platformu</h1>
+    <p class="note" style="text-align:center">Haftalık paketler, puan, seviye ve liderlik tablosu. Takma adın ve 4 haneli PIN'inle gir.</p>
+    <div class="seg"><button class="on" data-mode="login">Giriş</button><button data-mode="register">Yeni kayıt</button></div>
+    <div id="formBox">
+    <label id="adL">Takma ad veya e-posta</label><input id="ad" maxlength="60" autocomplete="username" placeholder="örn. Yildiz42">
+    <div id="regFields" style="display:none">
+      <label>Kendi e-posta adresin</label><input id="ep" type="email" autocomplete="email" placeholder="ornek@eposta.com">
+      <label>Velinin e-posta adresi</label><input id="vep" type="email" placeholder="veli@eposta.com">
+    </div>
+    <label>PIN (4 rakam)</label><input id="pin" inputmode="numeric" pattern="\d*" maxlength="4" type="password" autocomplete="current-password" placeholder="••••">
+    <div class="err" id="err"></div>
+    <button class="btn" id="go" style="width:100%;margin-top:6px">Giriş yap</button>
+    <p class="note" style="margin-top:10px"><a href="#" id="forgotLink" style="color:var(--acc)">PIN'imi unuttum</a></p>
+    <p class="note" style="margin-top:6px" id="hint">Takma ad herkese görünür; gerçek soyadını yazma. PIN'ini unutursan öğretmenine söyle.</p>
+    </div>
+    <div id="forgotBox" style="display:none">
+      <h2 style="margin-top:0">PIN sıfırlama</h2>
+      <p class="note">Kayıtlı e-postanı yaz; varsa 20 dakika geçerli bir sıfırlama bağlantısı gönderilir.</p>
+      <label>E-posta</label><input id="fEp" type="email" autocomplete="email">
+      <div class="err" id="ferr"></div>
+      <div style="display:flex;gap:8px"><button class="btn" id="fGo">Bağlantı gönder</button><button class="btn alt" id="fBack">Geri</button></div>
+    </div>
+    <div id="resetBox" style="display:none">
+      <h2 style="margin-top:0">Yeni PIN belirle</h2>
+      <label>Yeni PIN (4 rakam)</label><input id="rPin" inputmode="numeric" maxlength="4" type="password">
+      <label>Tekrar</label><input id="rPin2" inputmode="numeric" maxlength="4" type="password">
+      <div class="err" id="rerr"></div>
+      <button class="btn" id="rGo" style="width:100%">Kaydet</button>
+    </div>
+    <div id="verifyBox" style="display:none">
+      <h2 style="margin-top:0">Son iki adım</h2>
+      <div class="card" style="margin:8px 0"><b>1 · E-postanı doğrula</b><div class="note" id="vEp"></div>
+        <div id="codeRow" style="display:flex;gap:8px;margin-top:8px"><input id="kod" inputmode="numeric" maxlength="6" placeholder="6 haneli kod" style="letter-spacing:4px;font-size:20px"><button class="btn" id="kodGo">Doğrula</button></div>
+        <div id="epOk" style="display:none;color:var(--ok);font-weight:700;margin-top:6px">✔ E-posta doğrulandı</div></div>
+      <div class="card" style="margin:8px 0"><b>2 · Veli onayı</b><div class="note" id="vVep"></div>
+        <div id="vepWait" style="margin-top:6px"><span class="spin"></span> Velinin e-postasındaki <b>Onaylıyorum</b> bağlantısına tıklaması bekleniyor…</div>
+        <div id="vepOk" style="display:none;color:var(--ok);font-weight:700;margin-top:6px">✔ Veli onayladı</div></div>
+      <div class="err" id="verr"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn alt sm" id="resend">Kodu / bağlantıyı yeniden gönder</button><button class="btn alt sm" id="cancelReg">Vazgeç</button></div>
+      <p class="note">Kod ve bağlantı 20 dakika geçerli. Mail gelmediyse spam/gereksiz klasörüne bak.</p>
+    </div>
+  </div>
+</div>
+
+<div id="dash" style="display:none">
+  <div class="hero">
+    <div><div class="name" id="hName"></div><div class="lvl" id="hLevel"></div>
+      <div class="xpbar"><i id="xpBar"></i></div><div class="lvl" id="xpText"></div>
+      <div class="stats" style="margin-top:10px"><div><b id="sXp">0</b>puan</div><div><b id="sRank">–</b>sıra</div><div><b id="sMin">0</b>dakika</div><div><b id="sBadge">0</b>rozet</div></div>
+    </div>
+    <div class="streak"><b id="sStreak">0</b>gün seri 🔥</div>
+  </div>
+
+  <div class="card goal"><div><b id="goalT">Bugünün hedefi</b><div class="note" id="goalD"></div></div><a class="btn sm" id="goalBtn" href="#">Başla →</a></div>
+
+  <h2>Haftalık paketler</h2>
+  <div id="weeks"></div>
+
+  <h2>Rozetler</h2>
+  <div class="card"><div class="badges" id="badges"></div></div>
+
+  <h2>Liderlik tablosu</h2>
+  <div class="card"><table id="board"></table><p class="note">Puan: bölüm başına 10 · test yüzdesi kadar puan · bağlam sorusu başına +5 · haftada 4 dersi bitirene +50. Seviyeler: Çırak 0 · Kalfa 200 · Usta 600 · Şampiyon 1200.</p></div>
+  <p class="note" style="text-align:center;margin-top:20px"><span id="sync"></span> · <a href="veli.html" style="color:var(--ink2)">veli</a></p>
+</div>
+</div>
+<script>
+(function(){
+"use strict";
+const API='https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+/* ==== Paket kataloğu: yeni hafta ekleyince buraya satır ekle ==== */
+const CATALOG=[
+ {hafta:1,baslik:'1. Hafta · Giriş ve temeller',paketler:[
+   {id:'mat-h01',ders:'Matematik',c:'var(--mat)',konu:'Üslü ve köklü gösterimler',dosya:'mat-h01.html',dk:240},
+   {id:'fiz-h01',ders:'Fizik',c:'var(--fiz)',konu:'Fizik bilimi ve kariyer keşfi',dosya:'fiz-h01.html',dk:80},
+   {id:'kim-h01',ders:'Kimya',c:'var(--kim)',konu:'Kimya hayattır · güvenlik',dosya:'kim-h01.html',dk:80},
+   {id:'biy-h01',ders:'Biyoloji',c:'var(--biy)',konu:'Yaşam · bilimin doğası',dosya:'biy-h01.html',dk:80}]},
+ {hafta:2,baslik:'2. Hafta · Aralıklar, ölçme, atom, sınıflandırma',paketler:[
+   {id:'mat-h02',ders:'Matematik',c:'var(--mat)',konu:'Gerçek sayı aralıkları',dosya:'mat-h02.html',dk:240},
+   {id:'fiz-h02',ders:'Fizik',c:'var(--fiz)',konu:'Ölçme, birimler, hata',dosya:'fiz-h02.html',dk:80},
+   {id:'kim-h02',ders:'Kimya',c:'var(--kim)',konu:'Atom teorileri I',dosya:'kim-h02.html',dk:80},
+   {id:'biy-h02',ders:'Biyoloji',c:'var(--biy)',konu:'Canlıların sınıflandırılması',dosya:'biy-h02.html',dk:80}]},
+ {hafta:3,baslik:'3. Hafta · Yakında',paketler:[
+   {id:'mat-h03',ders:'Matematik',c:'var(--mat)',konu:'Sayı kümeleri ve işlem özellikleri',dosya:'',dk:240},
+   {id:'fiz-h03',ders:'Fizik',c:'var(--fiz)',konu:'Skaler ve vektörel nicelikler',dosya:'',dk:80},
+   {id:'kim-h03',ders:'Kimya',c:'var(--kim)',konu:'Atom teorileri II, atom altı parçacıklar',dosya:'',dk:80},
+   {id:'biy-h03',ders:'Biyoloji',c:'var(--biy)',konu:'Üç üst âlem ve bakteriler',dosya:'',dk:80}]}];
+const ALLBADGES=[['ilk-adim','İlk Adım'],['tuzak-avcisi','Tuzak Avcısı'],['dort-dortluk','Dört Dörtlük'],['seri','Seri Çalışan'],['maratoncu','Maratoncu'],['sinav-kurdu','Sınav Kurdu']];
+const $=s=>document.querySelector(s);
+let S=JSON.parse(localStorage.getItem('ah9-student')||'null'), P=null, mode='login';
+/* tema */
+const th=localStorage.getItem('ah9-theme')||'light';document.body.dataset.theme=th;$('#themeBtn').textContent=th==='dark'?'☀':'☾';
+$('#themeBtn').onclick=()=>{const t=document.body.dataset.theme==='dark'?'light':'dark';document.body.dataset.theme=t;localStorage.setItem('ah9-theme',t);$('#themeBtn').textContent=t==='dark'?'☀':'☾';};
+/* JSONP */
+function api(obj){return new Promise((res,rej)=>{const cb='cb'+Date.now()+Math.floor(Math.random()*1e6);const s=document.createElement('script');
+  const t=setTimeout(()=>{cleanup();rej(new Error('Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.'));},20000);
+  function cleanup(){clearTimeout(t);delete window[cb];s.remove();}
+  window[cb]=r=>{cleanup();res(r);};s.onerror=()=>{cleanup();rej(new Error('Sunucuya ulaşılamadı.'));};
+  s.src=API+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(obj));document.body.appendChild(s);});}
+/* giriş */
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.mode;$('#go').textContent=mode==='login'?'Giriş yap':'Kayıt ol';$('#err').textContent='';
+  $('#regFields').style.display=mode==='register'?'':'none';$('#adL').textContent=mode==='register'?'Takma ad (herkese görünür)':'Takma ad veya e-posta';$('#ad').placeholder=mode==='register'?'örn. Yildiz42':'Takma adın veya e-postan';
+  $('#hint').textContent=mode==='register'?'Kendi e-postana doğrulama kodu, velinin e-postasına onay bağlantısı gider. Hesap ikisi de tamamlanınca açılır.':'Takma ad herkese görünür; gerçek soyadını yazma. PIN\'ini unutursan öğretmenine söyle.';});
+$('#pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('#go').click();});
+$('#go').onclick=async()=>{const ad=$('#ad').value.trim(),pin=$('#pin').value.trim();$('#err').textContent='';
+  if(ad.length<2){$('#err').textContent='Takma ad en az 2 karakter.';return;}if(!/^\d{4}$/.test(pin)){$('#err').textContent='PIN 4 rakam olmalı.';return;}
+  $('#go').innerHTML='<span class="spin"></span>';$('#go').disabled=true;
+  try{const req={action:mode,ad,pin};if(mode==='register'){req.eposta=$('#ep').value.trim();req.veliEposta=$('#vep').value.trim();if(!req.eposta||!req.veliEposta){throw new Error('İki e-posta adresi de gerekli.');}}
+    const r=await api(req);if(!r.ok)throw new Error(r.error);
+    if(r.pending){REG={id:r.id,ad,pin,eposta:r.eposta,veliEposta:r.veliEposta};sessionStorage.setItem('ah9-reg',JSON.stringify(REG));showVerify();}
+    else{S={id:r.id,ad:r.ad,pin};localStorage.setItem('ah9-student',JSON.stringify(S));P=r;show();}}
+  catch(e){$('#err').textContent=e.message;}
+  $('#go').textContent=mode==='login'?'Giriş yap':'Kayıt ol';$('#go').disabled=false;};
+$('#logoutBtn').onclick=()=>{localStorage.removeItem('ah9-student');S=null;P=null;$('#dash').style.display='none';$('#login').style.display='';$('#logoutBtn').style.display='none';};
+/* PIN unuttum / sıfırla */
+const RESET_TOKEN=new URLSearchParams(location.search).get('sifirla');
+$('#forgotLink').onclick=e=>{e.preventDefault();$('#formBox').style.display='none';$('#forgotBox').style.display='';};
+$('#fBack').onclick=()=>{$('#forgotBox').style.display='none';$('#formBox').style.display='';};
+$('#fGo').onclick=async()=>{const ep=$('#fEp').value.trim();if(!ep){$('#ferr').textContent='E-posta gerekli.';return;}$('#fGo').disabled=true;$('#ferr').style.color='';
+  try{const r=await api({action:'forgot',eposta:ep});if(!r.ok)throw new Error(r.error);$('#ferr').style.color='var(--ok)';$('#ferr').textContent=r.message;}catch(e){$('#ferr').textContent=e.message;}setTimeout(()=>$('#fGo').disabled=false,30000);};
+if(RESET_TOKEN){$('#formBox').style.display='none';$('#resetBox').style.display='';}
+$('#rGo').onclick=async()=>{const p=$('#rPin').value.trim(),p2=$('#rPin2').value.trim();if(!/^\d{4}$/.test(p)){$('#rerr').textContent='PIN 4 rakam olmalı.';return;}if(p!==p2){$('#rerr').textContent='PIN\'ler aynı değil.';return;}$('#rGo').disabled=true;
+  try{const r=await api({action:'resetpin',token:RESET_TOKEN,pin:p});if(!r.ok)throw new Error(r.error);$('#rerr').style.color='var(--ok)';$('#rerr').textContent='PIN güncellendi. Şimdi giriş yapabilirsin.';setTimeout(()=>{history.replaceState(null,'',location.pathname);$('#resetBox').style.display='none';$('#formBox').style.display='';if(r.ad)$('#ad').value=r.ad;},1500);}
+  catch(e){$('#rerr').textContent=e.message;$('#rGo').disabled=false;}};
+/* doğrulama ekranı */
+let REG=JSON.parse(sessionStorage.getItem('ah9-reg')||'null'),pollT=null;
+function showVerify(){$('#formBox').style.display='none';$('#verifyBox').style.display='';$('#vEp').textContent='Kod gönderildi: '+REG.eposta;$('#vVep').textContent='Onay bağlantısı gönderildi: '+REG.veliEposta;$('#verr').textContent='';poll();}
+function hideVerify(){$('#formBox').style.display='';$('#verifyBox').style.display='none';clearTimeout(pollT);}
+async function poll(){clearTimeout(pollT);try{const r=await api({action:'status',id:REG.id});if(!r.ok)throw new Error(r.error);
+  if(r.done){return finishReg();}
+  if(r.epostaOnay){$('#codeRow').style.display='none';$('#epOk').style.display='';}
+  if(r.veliOnay){$('#vepWait').style.display='none';$('#vepOk').style.display='';}
+  if(r.expired)$('#verr').textContent='Süre doldu; "yeniden gönder"e bas.';
+  }catch(e){$('#verr').textContent=e.message;}
+  pollT=setTimeout(poll,8000);}
+async function finishReg(){clearTimeout(pollT);$('#vepWait').style.display='none';$('#vepOk').style.display='';$('#codeRow').style.display='none';$('#epOk').style.display='';
+  try{const r=await api({action:'login',id:REG.id,pin:REG.pin});if(!r.ok)throw new Error(r.error);S={id:r.id,ad:r.ad,pin:REG.pin};localStorage.setItem('ah9-student',JSON.stringify(S));sessionStorage.removeItem('ah9-reg');REG=null;P=r;hideVerify();show();}catch(e){$('#verr').textContent=e.message;}}
+$('#kodGo').onclick=async()=>{const kod=$('#kod').value.trim();if(kod.length!==6){$('#verr').textContent='6 haneli kodu gir.';return;}$('#verr').textContent='';$('#kodGo').disabled=true;
+  try{const r=await api({action:'verify',id:REG.id,kod});if(!r.ok)throw new Error(r.error);$('#codeRow').style.display='none';$('#epOk').style.display='';if(r.done)finishReg();else poll();}catch(e){$('#verr').textContent=e.message;}$('#kodGo').disabled=false;};
+$('#kod').addEventListener('keydown',e=>{if(e.key==='Enter')$('#kodGo').click();});
+$('#resend').onclick=async()=>{$('#resend').disabled=true;try{const r=await api({action:'resend',id:REG.id});if(!r.ok)throw new Error(r.error);$('#verr').style.color='var(--ok)';$('#verr').textContent='Gönderildi.';setTimeout(()=>{$('#verr').textContent='';$('#verr').style.color='';},3000);}catch(e){$('#verr').textContent=e.message;}setTimeout(()=>$('#resend').disabled=false,30000);};
+$('#cancelReg').onclick=()=>{sessionStorage.removeItem('ah9-reg');REG=null;hideVerify();};
+if(REG){showVerify();}
+/* panel */
+function show(){$('#login').style.display='none';$('#dash').style.display='';$('#logoutBtn').style.display='';render();}
+function pct(pk){const p=P.progress[pk.id];if(!p)return 0;return Math.round(100*Math.min(8,p.done.length)/8);}
+function render(){$('#hName').textContent=P.ad;$('#hLevel').textContent=P.level+(P.streak>=3?' · alev almış 🔥':'');
+  const base=[0,200,600,1200].filter(x=>x<=P.xp).pop(),next=P.next;const w=next?Math.round(100*(P.xp-base)/(next-base)):100;$('#xpBar').style.width=w+'%';
+  $('#xpText').textContent=next?(next-P.xp)+' puan sonra bir üst seviye':'En üst seviyedesin!';
+  $('#sXp').textContent=P.xp;$('#sMin').textContent=P.totalMin;$('#sBadge').textContent=P.badges.length;$('#sStreak').textContent=P.streak;
+  const rank=P.board.findIndex(b=>b.id===P.id);$('#sRank').textContent=rank>=0?(rank+1)+'.':'–';
+  /* haftalar */
+  const wk=$('#weeks');wk.innerHTML='';let firstOpenSet=false;
+  CATALOG.forEach((w,wi)=>{const avail=w.paketler.filter(p=>p.dosya);const done=avail.length?Math.round(avail.reduce((a,p)=>a+pct(p),0)/avail.length):0;
+    const prev=wi>0?CATALOG[wi-1]:null;const prevDone=prev?Math.round(prev.paketler.filter(p=>p.dosya).reduce((a,p)=>a+pct(p),0)/Math.max(1,prev.paketler.filter(p=>p.dosya).length)):100;
+    const soft=prev&&prevDone<70;
+    const d=document.createElement('div');d.className='week'+((!firstOpenSet&&done<100&&avail.length)?' open':'');if(d.classList.contains('open'))firstOpenSet=true;
+    d.innerHTML='<button aria-expanded="'+d.classList.contains('open')+'"><span>'+w.baslik+'</span><span class="pct">'+(avail.length?'%'+done+' tamamlandı':'henüz yayınlanmadı')+' ▾</span></button><div class="body"></div>';
+    d.querySelector('button').onclick=()=>{d.classList.toggle('open');d.querySelector('button').setAttribute('aria-expanded',d.classList.contains('open'));};
+    const body=d.querySelector('.body');
+    w.paketler.forEach(pk=>{const p=P.progress[pk.id];const pc=pct(pk);const t=document.createElement('div');t.className='tile'+(pk.dosya?'':' locked');t.style.setProperty('--c',pk.c);
+      const sc=p&&p.quizSubmitted?'<span class="score">Test: '+p.quizScore+'/'+p.quizOf+' 🔒</span>':'<span class="m">Test: kaydedilmedi</span>';
+      t.innerHTML='<div class="t">'+pk.ders+'</div><div class="m">'+pk.konu+' · ~'+pk.dk+' dk</div><div class="bar"><i style="width:'+pc+'%"></i></div><div class="m">%'+pc+' · '+(p?p.xp:0)+' puan</div>'+sc+
+        (pk.dosya?'<a class="btn sm" href="'+pk.dosya+'">'+(pc===0?'Başla':pc===100?'Tekrar et':'Devam et')+' →</a>':'<span class="m">Yakında</span>');
+      body.appendChild(t);});
+    if(soft&&avail.length){const n=document.createElement('div');n.className='note';n.style.gridColumn='1/-1';n.textContent='Öneri: önce '+prev.baslik.split(' ·')[0]+'\'yı %70\'in üzerine çıkar.';body.prepend(n);}
+    wk.appendChild(d);});
+  /* hedef */
+  const nextPk=CATALOG.flatMap(w=>w.paketler).find(p=>p.dosya&&pct(p)<100);
+  if(nextPk){const p=P.progress[nextPk.id];const left=8-(p?Math.min(8,p.done.length):0);$('#goalT').textContent='Bugünün hedefi: '+nextPk.ders+' · '+nextPk.konu;$('#goalD').textContent=left+' bölüm kaldı; 25 dakikada 1-2 bölüm bitir, +10 puan/bölüm.';$('#goalBtn').href=nextPk.dosya;}
+  else{$('#goalT').textContent='Tüm yayınlanan paketler tamam!';$('#goalD').textContent='Testlerde %90 üstü için tekrar edebilirsin.';$('#goalBtn').style.display='none';}
+  /* rozetler */
+  const have=new Set(P.badges.map(b=>b.k));$('#badges').innerHTML=ALLBADGES.map(([k,n])=>{const b=P.badges.find(x=>x.k===k);return '<span class="badge'+(b?'':' off')+'" title="'+(b?b.d:'')+'">'+(b?'🏅 ':'🔒 ')+n+'</span>';}).join('');
+  /* liderlik */
+  $('#board').innerHTML='<tr><th>#</th><th>Öğrenci</th><th>Seviye</th><th>Puan</th><th>Seri</th></tr>'+P.board.map((b,i)=>'<tr'+(b.id===P.id?' class="me"':'')+'><td><span class="top3">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.')+'</span></td><td>'+esc(b.ad)+'</td><td>'+b.level+'</td><td>'+b.xp+'</td><td>'+(b.streak?b.streak+'🔥':'')+'</td></tr>').join('');
+  $('#sync').textContent='Güncellendi '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}
+function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+/* otomatik giriş */
+(async()=>{if(S){$('#go').innerHTML='<span class="spin"></span>';try{const r=await api({action:'login',id:S.id,pin:S.pin});if(r.ok){P=r;show();return;}}catch(e){}$('#go').textContent='Giriş yap';}})();
+document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&S&&P){try{const r=await api({action:'login',id:S.id,pin:S.pin});if(r.ok){P=r;render();}}catch(e){}}});
+})();
+</script>
+</body>
+</html>

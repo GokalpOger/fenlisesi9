@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biyoloji 9 · Hafta 1 · Yaşam</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#0f4c5c;--navy2:#0e8a9a;--sky:#d6f1f4;--gold:#b5541d;--gold2:#ffe9dc}
+[data-theme="dark"]{--navy:#8fdde8;--navy2:#2fb8c9;--sky:#0f3238;--gold:#f0a06a;--gold2:#3d2214}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Biyoloji · Ünite 1 Yaşam · Hafta 1<b>Biyolojinin önemi, dönüm noktaları, bilimin doğası ve canlıların ortak özellikleri</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>İlerlemen yalnızca bu cihazda kalır ve puan kazanmazsın. <a href="index.html">Ana sayfadan giriş yap</a>, sonra bu sayfaya dön.</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>Bir virüs canlı mıdır? Cevap sandığından zor</h1>
+  <p class="lead">COVID-19 salgınında herkes "virüsü öldürmek"ten söz etti. Oysa virüs beslenmez, solunum yapmaz, büyümez, hücresi yoktur; yalnızca bir hücrenin içine girince çoğalır. Canlı mı, cansız mı? Bu soruyu cevaplamak için "canlı ne demek" sorusunu ölçülebilir hâle getirmek gerekir. Biyoloji tam olarak bunu yapar.</p>
+  <div class="card">
+    <p><b>Biyoloji nedir?</b> Canlıları — yapılarını, işleyişlerini, çeşitliliklerini, evrimini ve çevreleriyle ilişkilerini — inceleyen bilim.</p>
+    <p><b>Bu hafta:</b> biyolojinin neden önemli olduğunu, tarihindeki dönüm noktalarını, bilimin nasıl çalıştığını ve etik sınırlarını, sonra da tüm canlıları birleştiren ortak özellikleri öğreneceğiz.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>1999 depreminden sonra İzmit'te en büyük korkulardan biri salgın hastalıktı; çadır kentlerde su klorlandı, aşı kampanyası yapıldı. Salgın olmadı. Bu kararların arkasında hangi biyolojik bilgi var? Cevap 4. sekmede.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Yaşam)</div>Biyolojinin önemini ve uygulama alanlarını örneklemek · biyolojinin gelişimindeki dönüm noktalarını açıklamak · bilimin doğasını ve biyolojide etik ilkeleri tartışmak · canlıların ortak özelliklerini örneklerle açıklamak.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma: ortaokuldan getirdiklerin</h2>
+  <div class="grid2">
+    <div class="card"><b>Hücre</b><p>Canlıların yapı ve işlev birimi. Bitki hücresinde hücre duvarı ve kloroplast var; hayvan hücresinde yok.</p></div>
+    <div class="card"><b>Fotosentez ve solunum</b><p>Bitki ışıkla besin üretir; tüm canlılar solunumla besinden enerji (ATP) elde eder.</p></div>
+    <div class="card"><b>Sistemler</b><p>Sindirim, dolaşım, solunum, boşaltım… her sistem bir ihtiyacı karşılar; hepsi birlikte iç dengeyi korur.</p></div>
+    <div class="card"><b>DNA ve kalıtım</b><p>DNA çekirdekte, genler özellikleri taşır. Çeşitlilik: mutasyon, eşeyli üreme.</p></div>
+  </div>
+  <h3>Mini test (3 soru)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Biyoloji neden önemli?</h3>
+  <p>Yediğin ekmeğin buğdayı ıslah edildi, içtiğin suyun mikrobu ölçüldü, olduğun aşı bir bağışıklık modelidir, deprem sonrası salgın planı bir epidemiyoloji hesabıdır. Biyoloji "hayvanlar ve bitkiler" değil; <b>sağlık, gıda, çevre, adalet ve teknolojinin</b> temelidir.</p>
+  <div class="grid2">
+    <div class="card"><b>Sağlık</b><p>Aşı, antibiyotik, organ nakli, kanser tedavisi, PCR testi, genetik tanı.</p></div>
+    <div class="card"><b>Gıda ve tarım</b><p>Verimli tohum, biyolojik mücadele, fermente gıdalar (yoğurt, peynir, ekmek).</p></div>
+    <div class="card"><b>Çevre</b><p>Sapanca Gölü'nün su kalitesi, Körfez'in canlanması, orman yangını sonrası yenilenme, iklim modelleri.</p></div>
+    <div class="card"><b>Adalet ve güvenlik</b><p>DNA parmak izi, adli entomoloji, gıda sahteciliği tespiti.</p></div>
+    <div class="card"><b>Teknoloji</b><p>Biyoteknoloji, CRISPR, biyomimetik (kertenkele ayağı → yapışkan bant), biyoyakıt.</p></div>
+    <div class="card"><b>Kariyer</b><p>Hekim, veteriner, eczacı, biyomühendis, moleküler biyolog, çevre bilimci, ziraat mühendisi, biyoinformatikçi, öğretmen.</p></div>
+  </div>
+  <h3>3.2 Dönüm noktaları: bilgi nasıl birikti?</h3>
+  <p>Biyoloji, "görünmezi görünür kılma" tarihidir: mikroskop hücreyi, deney kendiliğinden oluşum masalını, DNA modeli kalıtımın dilini gösterdi.</p>
+  <div class="sim">
+    <h3>Dönüm noktaları zaman çizelgesi</h3>
+    <div class="hint"><kbd>Adım</kbd> ile ilerle, <kbd>Oynat</kbd> otomatik geçer. Her kartta "hangi soru cevaplandı?" var.</div>
+    <div class="ctrl"><button id="tlPlay">▶ Oynat</button><button id="tlStep" class="alt">Adım</button><button id="tlBack" class="alt">Geri</button><button id="tlReset" class="alt">Sıfırla</button><label>Hız <input type="range" id="tlSpeed" min="1" max="5" value="2" style="width:90px"></label></div>
+    <div class="svgwrap"><svg id="tlSvg" viewBox="0 0 720 120" role="img" aria-label="Zaman çizelgesi"></svg></div>
+    <div class="card" id="tlCard" style="margin:8px 0 0"></div>
+  </div>
+  <h3>3.3 Bilimin doğası</h3>
+  <p>Bilim, gözlem → soru → hipotez → deney/kontrollü gözlem → veri → sonuç → paylaşım ve tekrar döngüsüdür. Üç özelliği vardır:</p>
+  <div class="formula"><div class="m">Sınanabilir</div><div class="why">"Ruh vardır" bilim dışı değil, sınanamaz olduğu için bilimin konusu değildir.</div></div>
+  <div class="formula"><div class="m">Yanlışlanabilir ve değişebilir</div><div class="why">Pasteur, 2000 yıllık "kendiliğinden oluşum" fikrini tek deneyle yanlışladı.</div></div>
+  <div class="formula"><div class="m">Tekrarlanabilir ve açık</div><div class="why">Sonuç yayınlanır, başkaları tekrarlar; tekrarlanamayan bulgu bilgi olmaz.</div></div>
+  <div class="sim">
+    <h3>Kontrollü deney laboratuvarı: fide büyütme</h3>
+    <div class="hint">Üç saksıya farklı koşullar ver, <kbd>3 hafta ilerlet</kbd>'e bas. Aynı anda iki değişkeni değiştirirsen sonucu <em>hangi</em> etkenin doğurduğunu söyleyemezsin — simülasyon bunu sana söyler.</div>
+    <div class="ctrl">
+      <label>Işık (saat/gün) <input type="range" id="lgt" min="0" max="16" value="8"><output id="lgto">8</output></label>
+      <label>Gübre <select id="fert" style="font:inherit;padding:6px;border-radius:8px"><option value="0">yok (kontrol)</option><option value="1">A</option><option value="2">B</option></select></label>
+      <label>Su (ml/gün) <input type="range" id="wtr" min="0" max="200" value="100" step="20"><output id="wtro">100</output></label>
+      <button id="expGo">▶ 3 hafta ilerlet</button><button id="expReset" class="alt">Sıfırla</button>
+    </div>
+    <div class="svgwrap"><svg id="expSvg" viewBox="0 0 720 300" role="img" aria-label="Fide deneyi"></svg></div>
+    <div class="readout" id="expOut" style="display:block">Kontrol grubu solda sabit kalır; ortadaki senin denemen, sağdaki bir önceki denemen.</div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Tek bir değişkeni değiştirdiğinde sonucu ona bağlayabilirsin. Işığı <em>ve</em> gübreyi birlikte değiştirirsen fide daha uzun olsa bile nedenini bilemezsin — simülasyon bu durumda seni uyarır. Kontrol grubu (hiç gübre verilmeyen saksı) karşılaştırma çizgisidir; onsuz "daha iyi" demenin anlamı yoktur.</div>
+
+  <div class="box warn"><div class="t">Tuzak: hipotez ≠ tahmin, teori ≠ varsayım</div>Hipotez, sınanabilir ve gerekçeli bir öneridir ("gübre verilen fide daha hızlı uzar"). Teori, çok sayıda deneyle desteklenmiş kapsamlı açıklamadır (hücre teorisi, evrim teorisi). Günlük dildeki "teoride öyle ama…" cümlesi bilimde tersine döner.</div>
+  <div class="box def"><div class="t">Kontrollü deney</div>Yalnızca bir değişken değiştirilir (bağımsız değişken), sonucu ölçülür (bağımlı değişken), diğerleri sabit tutulur (kontrol değişkenleri). Karşılaştırma için değiştirilmeyen bir kontrol grubu şarttır. Gübre deneyinde ışık, su, toprak, tohum türü sabit; gübre değişen; boy ölçülen.</div>
+  <h3>3.4 Biyolojide etik</h3>
+  <p>Biyoloji canlıyla uğraşır; her deney bir sorumluluktur. Temel ilkeler:</p>
+  <table>
+    <tr><th>İlke</th><th>Anlamı</th><th>İhlal örneği</th></tr>
+    <tr><td>Dürüstlük</td><td>Veri uydurulmaz, seçilmez, çalınmaz (intihal).</td><td>Beklenmeyen ölçümü silmek</td></tr>
+    <tr><td>Bilgilendirilmiş onam</td><td>İnsan katılımcı riski bilir, gönüllü katılır, istediğinde ayrılır.</td><td>Habersiz kan örneği almak</td></tr>
+    <tr><td>Hayvan refahı (3R)</td><td>Replace (yerine koy), Reduce (azalt), Refine (iyileştir).</td><td>Gereksiz tekrar deney</td></tr>
+    <tr><td>Çevreye saygı</td><td>Habitat bozulmaz, tür toplanmaz, GDO kontrolsüz salınmaz.</td><td>Endemik çiçeği koleksiyon için sökmek</td></tr>
+    <tr><td>Şeffaflık ve hakemlik</td><td>Yöntem ve veri paylaşılır, başkalarınca denetlenir.</td><td>Yalnızca olumlu sonucu yayınlamak</td></tr>
+  </table>
+  <div class="sim">
+    <h3>Etik karar simülatörü</h3>
+    <div class="hint">Her senaryoda ne yapardın? Seçimini yap; hangi ilkeyi koruduğunu ya da çiğnediğini gör. 5 senaryo.</div>
+    <div id="ethic"></div>
+    <div class="ctrl"><button id="etReset" class="alt">Baştan başla</button></div>
+  </div>
+  <h3>3.5 Canlıların ortak özellikleri</h3>
+  <p>Bakteriden balinaya tüm canlılar şu özellikleri <b>birlikte</b> taşır. Tek tek bakınca cansızlarda da bulunur (kristal büyür, araba yakıt tüketir); ayırt edici olan hepsinin bir arada ve hücre temelinde olmasıdır.</p>
+  <table>
+    <tr><th>Özellik</th><th>Ne demek?</th><th>Örnek</th></tr>
+    <tr><td>Hücresel yapı</td><td>En az bir hücreden oluşur (prokaryot/ökaryot).</td><td>Bakteri tek hücre; sen ~37 trilyon hücre</td></tr>
+    <tr><td>Beslenme</td><td>Madde ve enerji alır: kendi üretir (ototrof) ya da hazır alır (heterotrof).</td><td>Buğday üretir, sen yersin</td></tr>
+    <tr><td>Solunum</td><td>Besinden ATP elde eder (oksijenli/oksijensiz).</td><td>Kas hücresi koşarken oksijensiz solunuma da geçer → laktik asit</td></tr>
+    <tr><td>Metabolizma</td><td>Yapım (anabolizma) + yıkım (katabolizma) tepkimelerinin bütünü.</td><td>Protein sentezi / glikoz yıkımı</td></tr>
+    <tr><td>Boşaltım</td><td>Atık maddeleri uzaklaştırır.</td><td>Terleme, idrar, bitkide yaprak dökümü</td></tr>
+    <tr><td>Hareket</td><td>Yer değiştirme ya da yönelim (bitkide tropizma).</td><td>Ayçiçeğinin güneşe dönmesi</td></tr>
+    <tr><td>Uyarılara tepki</td><td>Çevredeki değişimi algılar, yanıtlar.</td><td>Küstüm otu, göz bebeğinin daralması</td></tr>
+    <tr><td>Homeostazi</td><td>İç dengeyi (sıcaklık, pH, su) sabit tutar.</td><td>Terleme, titreme, kan şekeri ayarı</td></tr>
+    <tr><td>Büyüme ve gelişme</td><td>Hücre sayısı/hacmi artar (büyüme); yapı ve işlev değişir (gelişme).</td><td>Tırtıl → kelebek</td></tr>
+    <tr><td>Üreme</td><td>Kendine benzer birey oluşturur (eşeyli/eşeysiz).</td><td>Bakteri bölünmesi, tohum</td></tr>
+    <tr><td>Uyum (adaptasyon)</td><td>Ortama uygun kalıtsal özellikler; nesiller boyu evrimleşir.</td><td>Kutup ayısı beyaz kürk</td></tr>
+    <tr><td>Organizasyon</td><td>Hücre → doku → organ → sistem → organizma → popülasyon → ekosistem.</td><td>Kalp kası → kalp → dolaşım</td></tr>
+  </table>
+  <div class="box warn"><div class="t">Virüs sorusunun cevabı</div>Virüs hücresel değildir, metabolizması yoktur, tek başına üreyemez; canlıların ortak özelliklerinin çoğunu taşımaz. Bu yüzden "canlı ile cansız arasında" kabul edilir. Sınavda "virüs canlıdır" seçeneği tuzaktır; "konak hücrede çoğalır" doğrudur.</div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · Bisiklette yokuş: homeostazi iş başında</h3>
+    <p><b>Durum:</b> Uzun yokuşta nefesin sıklaşıyor, terliyorsun, bacakların yanıyor.</p>
+    <p><b>Kavramla bağ:</b> Kas hücrelerinin ATP ihtiyacı artar → solunum ve kalp hızı artar (oksijen); oksijen yetmeyince oksijensiz solunum → laktik asit (yanma). Vücut sıcaklığı yükselir → terleme ile buharlaşma soğutur (homeostazi). Susuz kalınca ter azalır, sıcaklık kontrolü bozulur.</p>
+    <p><b>Analiz:</b> 1 saatlik tırmanışta 1-1,5 L ter kaybı olur; 200 mL/15 dk su içmek iç dengeyi korur.</p>
+    <p><b>Sonuç:</b> Sporcu beslenmesi bir homeostazi mühendisliğidir. Özellikler: solunum, boşaltım, homeostazi, uyarılara tepki.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · Deprem sonrası salgın neden olmadı?</h3>
+    <p><b>Durum:</b> 1999'da 200 binden fazla kişi çadırda kaldı; su şebekesi kırıktı.</p>
+    <p><b>Kavramla bağ:</b> Bakteri 20 dakikada ikiye bölünür (üreme); kirli suda kolera ve tifo etkeni hızla çoğalır. Klor, bakteri hücre zarını bozarak (hücresel yapıyı hedefleyerek) çoğalmayı durdurur. Aşı, bağışıklık sistemine "tanıma" öğretir (uyarılara tepki).</p>
+    <p><b>Analiz:</b> 1 bakteri 8 saatte 2²⁴ ≈ 16 milyon olur (matematik 1. haftadaki üstel büyüme!). Suyun klorlanması bu üssü sıfırlar.</p>
+    <p><b>Sonuç:</b> Epidemiyoloji = biyoloji + matematik. Salgın olmaması bir bilim başarısıydı.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Yoğurt mayalamak: bir kontrollü deney</h3>
+    <p><b>Durum:</b> Annen yoğurt mayalarken sütün "parmak yakmayacak kadar" ılık olmasını söylüyor.</p>
+    <p><b>Kavramla bağ:</b> Lactobacillus bakterileri (canlı: beslenir, ürer, metabolizma) laktozu laktik aside çevirir (metabolizma), süt proteini pıhtılaşır. 45 °C'de en hızlı; 60 °C'de bakteri ölür, 20 °C'de çok yavaş.</p>
+    <p><b>Deney tasarımı:</b> Bağımsız değişken sıcaklık (30-40-50-60 °C), bağımlı değişken pıhtılaşma süresi; süt miktarı, maya miktarı, kap sabit; kontrol grubu maya konmamış süt.</p>
+    <p><b>Sonuç:</b> Mutfak, bilimin doğasını öğrenmek için en ucuz laboratuvar.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · Sapanca Gölü ve organizasyon basamakları</h3>
+    <p><b>Durum:</b> Kuraklıkta gölün seviyesi düştü, balık ölümleri haberi çıktı.</p>
+    <p><b>Kavramla bağ:</b> Bir sazan (organizma) → sazan sürüsü (popülasyon) → sazan, sazlık, kuşlar, algler (komünite) → göl + su, sıcaklık, oksijen (ekosistem). Su azalınca sıcaklık artar, çözünmüş oksijen düşer; balıkların solunumu bozulur.</p>
+    <p><b>Analiz:</b> 20 °C'de suda ~9 mg/L oksijen çözünür, 30 °C'de ~7,5 mg/L. Sazan için alt sınır ~5 mg/L; alg patlaması geceleri oksijeni tüketince sınırın altına iner.</p>
+    <p><b>Sonuç:</b> Bir kuraklık haberi, organizasyon basamaklarının hepsini aynı anda etkiler.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Canlı mı, cansız mı? Kontrol listesi</h3>
+    <div class="hint">Bir varlık seç, taşıdığını düşündüğün özellikleri işaretle, <kbd>Kontrol et</kbd>. Doğru profil ve açıklama görünür. Virüs ve tohum tuzaklı!</div>
+    <div class="ctrl"><label>Varlık <select id="lvSel" style="font:inherit;padding:6px;border-radius:8px"></select></label><button id="lvCheck">Kontrol et</button></div>
+    <div id="lvGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:8px 0"></div>
+    <div id="lvOut"></div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Tohum neden "canlı ama uyuyan" kabul edilir? &nbsp; 2) Alev büyür, oksijen tüketir, hareket eder — neden canlı değil? &nbsp; 3) Bir robot bir gün kendini kopyalayabilse canlı sayılır mı? Tartışmaya hazır ol.</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · Hangi ortak özellik?</h3><p>a) Küstüm otunun dokununca yapraklarını kapatması b) Kurbağa yavrusunun kuyruğunu kaybedip bacak geliştirmesi c) Bakterinin bölünmesi</p>
+    <ol class="steps"><li>a) Uyarılara tepki. <div class="why">Dokunma uyaranına hızlı yanıt.</div></li><li>b) Gelişme (yapı-işlev değişimi; büyümeyle karıştırma).</li><li>c) Üreme (eşeysiz, ikiye bölünme).</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · Hipotez yaz</h3><p>"Sınıftaki fesleğen pencere kenarında daha iyi büyüyor" gözleminden sınanabilir bir hipotez ve deney öner.</p>
+    <ol class="steps"><li>Hipotez: "Günlük ışık süresi arttıkça fesleğen boyu daha hızlı uzar."</li><li>Deney: aynı saksı, toprak, su, tohum; ışık süresi 4-8-12 saat; 3 haftada boy ölçümü; kontrol: 8 saat (normal). <div class="why">Tek değişken, ölçülebilir sonuç, kontrol grubu.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Pasteur'ün deneyi neyi, nasıl gösterdi?</h3>
+    <ol class="steps"><li>Soru: Et suyu kendiliğinden mi bozulur, havadaki mikroplarla mı?</li><li>Düzenek: kuğu boyunlu şişe — hava girer, toz ve mikrop kıvrımda takılır. Et suyu kaynatılır (steril).</li><li>Sonuç: kıvrım sağlamken aylarca bozulmaz; boyun kırılınca günler içinde bozulur. <div class="why">Tek değişken: mikropların ulaşabilmesi. Hava aynı, sıvı aynı.</div></li><li>Çıkarım: canlı yalnız canlıdan gelir (biyogenez); kendiliğinden oluşum yanlışlandı. Sterilizasyon ve pastörizasyon buradan doğdu.</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Etik değerlendirme</h3><p>Bir öğrenci proje için mahalledeki kedilerden habersiz tüy örneği topluyor ve sonuçların "beklenmeyen" kısmını raporuna koymuyor. Hangi ilkeler ihlal edildi?</p>
+    <ol class="steps"><li>Hayvan refahı: örnekleme stres verebilir; en az müdahale ve gerekçe gerekir (3R).</li><li>Dürüstlük: veri seçmek (cherry-picking) sahtecilik sayılır; tüm veri raporlanır.</li><li>Şeffaflık: yöntem tam yazılmalı ki başkası tekrarlayabilsin.</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Virüs tartışması</h3><p>"Virüsler evrimleşir; evrim canlılara özgüdür; öyleyse virüs canlıdır." Bu akıl yürütmeyi değerlendir.</p>
+    <ol class="steps"><li>Öncül 1 doğru: virüs genomu mutasyonla değişir, seçilim işler (grip aşısı her yıl güncellenir).</li><li>Öncül 2 tartışmalı: evrim, kendini kopyalayan ve hata yapan her sistemde işler; bilgisayar programlarında bile modellenir.</li><li>Sonuç: tek özellik canlılığa yetmez; ölçüt, ortak özelliklerin bütünü ve hücresel yapıdır. Virüs "hücre dışında cansız, hücre içinde canlı gibi davranan" sınır durumu. <div class="why">Fen lisesi seviyesi: kesin cevap yerine ölçüt tartışması beklenir.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Bakteri büyümesi ve klorlama</h3><p>Kirli suda 1 mL'de 100 bakteri var; 20 dakikada bir bölünüyorlar. Klor, çoğalmayı 4. saatte durduruyor. Bu anda 1 mL'de kaç bakteri olur? Klor 1 saat önce verilseydi?</p>
+    <ol class="steps"><li>4 saat = 12 bölünme → 100 × 2¹² = 100 × 4096 = 409 600 bakteri/mL.</li><li>3 saat = 9 bölünme → 100 × 512 = 51 200 bakteri/mL. <div class="why">1 saat gecikme 8 kat fark: üstel büyümede zaman en pahalı şeydir.</div></li><li>Salgın önleme "hızlı" olmak zorundadır; matematik ve biyoloji birlikte karar verir.</li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 soru. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Biyoloji</b>Canlıların yapı, işlev, çeşitlilik ve çevre ilişkisi. Sağlık, gıda, çevre, adalet, teknoloji.</div>
+    <div class="card"><b>Dönüm noktaları</b>Mikroskop → hücre → biyogenez → evrim → kalıtım → DNA → genom → CRISPR/mRNA.</div>
+    <div class="card"><b>Bilimin doğası</b>Sınanabilir, yanlışlanabilir, tekrarlanabilir. Kontrollü deney: tek değişken + kontrol grubu.</div>
+    <div class="card"><b>Ortak özellikler</b>Hücre · beslenme · solunum · metabolizma · boşaltım · hareket · tepki · homeostazi · büyüme-gelişme · üreme · uyum · organizasyon.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>Virüsü canlı saymak. Hücresiz ve metabolizmasız; sınır durum.</li>
+    <li>Büyüme ile gelişmeyi karıştırmak. Büyüme nicel (boy, hücre sayısı), gelişme nitel (işlev).</li>
+    <li>Hipotezi "tahmin", teoriyi "varsayım" sanmak.</li>
+    <li>Kontrol grubu olmadan deney yapmak; iki değişkeni aynı anda değiştirmek.</li>
+    <li>Bitkilerin hareket etmediğini düşünmek. Yönelim (tropizma) harekettir.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Milyonlarca canlı türü var; hepsini nasıl düzenleriz, "tür" ne demek, bakteri ile arke neden ayrı âlem? Gelecek hafta: <b>canlıların sınıflandırılması ve üç üst âlem</b>.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Biyoloji · Ünite 1 · Hafta 1 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='biy-h01', HAFTA=1;
+const BASEKEY='ah9-biy-h01';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Biyoloji 9 · Ünite 1 · Hafta 1 · Yaşam: biyolojinin önemi, bilimin doğası, ortak özellikler';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'Bitki hücresinde olup hayvan hücresinde olmayan yapı hangisidir?',o:['Kloroplast','Çekirdek','Hücre zarı','Sitoplazma'],a:0,e:'Kloroplast ve hücre duvarı bitkiye özgüdür.'},
+ {s:'Hücrelerin besinden enerji elde ettiği olay hangisidir?',o:['Solunum','Fotosentez','Boşaltım','Sindirim'],a:0,e:'Fotosentez besin üretir; solunum besinden ATP çıkarır.'},
+ {s:'Kalıtsal bilgiyi taşıyan molekül hangisidir?',o:['DNA','Protein','Glikoz','Su'],a:0,e:'DNA, çekirdekte genleri taşır.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,false)));}
+/* ana test */
+const QUIZ=[
+ {s:'Aşağıdakilerden hangisi canlıların ortak özelliklerinden değildir?',o:['Fotosentez yapma','Solunum','Boşaltım','Üreme'],a:0,e:'Fotosentez yalnız ototroflarda vardır; ortak olan beslenmedir.'},
+ {s:'Kuğu boyunlu şişe deneyiyle kendiliğinden oluşum görüşünü yanlışlayan bilim insanı kimdir?',o:['Pasteur','Hooke','Darwin','Mendel'],a:0,e:'Pasteur, 1862; biyogenez ilkesi.'},
+ {tag:'bağlam',s:'Bir bisikletli yokuş çıkarken terliyor ve nefesi sıklaşıyor. Terleme hangi ortak özelliğin, nefesin sıklaşması hangisinin örneğidir?',o:['Homeostazi – solunum','Üreme – hareket','Büyüme – boşaltım','Uyum – gelişme'],a:0,e:'Terleme sıcaklık dengesini korur; artan solunum oksijen ihtiyacını karşılar.'},
+ {s:'Bir deneyde yalnızca sıcaklık değiştirilip yoğurdun pıhtılaşma süresi ölçülüyor. Bağımlı değişken hangisidir?',o:['Pıhtılaşma süresi','Sıcaklık','Süt miktarı','Kap türü'],a:0,e:'Ölçülen sonuç bağımlı, değiştirilen sıcaklık bağımsız değişkendir.'},
+ {s:'Virüsler için doğru ifade hangisidir?',o:['Hücresel yapıları yoktur, yalnız konak hücrede çoğalırlar','Kendi metabolizmalarıyla beslenirler','İkiye bölünerek ürerler','Tüm ortak özellikleri taşırlar'],a:0,e:'Virüs sınır durumdur; hücre dışında cansız gibidir.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Klor, bakterinin hücre zarını ve enzimlerini bozarak çoğalmasını engeller; bu yüzden içme suyu dezenfeksiyonunda kullanılır.<br>Deprem sonrası çadır kentte içme suyu klorlanıyor. Bu uygulamanın biyolojik amacı hangisidir?',o:['Bakterilerin üremesini durdurmak','Suyun tadını iyileştirmek','Suyun oksijenini artırmak','Suyu soğutmak'],a:0,e:'Klor hücre zarını bozarak çoğalmayı engeller; salgın önlenir.'},
+ {s:'Hücre teorisinin ilk adımını atan, mantar kesitinde odacıklar görüp "hücre" adını veren kişi kimdir?',o:['Robert Hooke','Antonie van Leeuwenhoek','Charles Darwin','Gregor Mendel'],a:0,e:'Hooke 1665; Leeuwenhoek canlı mikroorganizmaları gördü.'},
+ {s:'Bir araştırmacının beklemediği ölçümleri raporundan çıkarması hangi etik ilkeyi çiğner?',o:['Dürüstlük','Hayvan refahı','Bilgilendirilmiş onam','Çevreye saygı'],a:0,e:'Veri seçmek bilimsel sahteciliktir.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Bakteriler ikiye bölünerek çoğalır; her bölünmede sayı iki katına çıkar. Bölünme süresi bilinirse toplam bölünme sayısı, sürenin bölünme süresine oranıdır.<br>Kirli suda 1 mL\'de 50 bakteri var, 20 dakikada bir bölünüyor. 2 saat sonra 1 mL\'de kaç bakteri olur?',o:['3 200','400','6 400','300'],a:0,e:'2 saat = 6 bölünme → 50 × 2⁶ = 50 × 64 = 3200.'},
+ {s:'Organizasyon basamaklarının doğru sıralaması hangisidir?',o:['Hücre → doku → organ → sistem → organizma','Organ → hücre → doku → sistem → organizma','Doku → hücre → organ → organizma → sistem','Hücre → organ → doku → sistem → organizma'],a:0,e:'Küçükten büyüğe: hücre, doku, organ, sistem, organizma.'},
+ {open:true,s:'Alevin büyüdüğünü, oksijen tükettiğini ve hareket ettiğini savunarak "canlıdır" diyen bir arkadaşına ortak özellikler tablosunu kullanarak cevap ver.',ans:'Alev hücresel değildir, metabolizması, üremesi (kendine benzer birey), homeostazisi ve kalıtsal uyumu yoktur; ortak özelliklerin bütünü aranır.',e:'En az üç eksik özellik ve "bütün" vurgusu beklenir.'},
+ {open:true,s:'Okul bahçesinde iki farklı gübrenin fide boyuna etkisini ölçmek için kontrollü bir deney tasarla: değişkenleri ve kontrol grubunu belirt.',ans:'Bağımsız: gübre türü (A, B, yok=kontrol); bağımlı: boy; sabit: ışık, su, toprak, tohum, saksı; süre 3 hafta, her grupta ≥5 fide.',e:'Üç değişken türü ve kontrol grubu yazılmalı.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+/* --- Kontrollü deney laboratuvarı --- */
+let EX={prev:null,last:null};
+function growth(l,f,w){let h=2+l*1.15;if(w<40)h*=0.45;else if(w>160)h*=0.7;h*=[1,1.35,1.15][f];if(l===0)h=1.5;return Math.round(h*10)/10;}
+function drawExp(){const svg=$('#expSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold'),ok=css('--ok');
+  const l=+$('#lgt').value,f=+$('#fert').value,w=+$('#wtr').value;$('#lgto').value=l;$('#wtro').value=w;
+  const ctrl={l:8,f:0,w:100,h:growth(8,0,100),lbl:'Kontrol · 8 sa · gübresiz'};
+  const pots=[ctrl];
+  if(EX.prev)pots.push(EX.prev); if(EX.last)pots.push(EX.last);
+  const maxh=Math.max(22,...pots.map(p=>p.h));
+  svg.appendChild(el('line',{x1:40,y1:250,x2:680,y2:250,stroke:ink,'stroke-width':2}));
+  pots.forEach((p,i)=>{const x=140+i*200,hh=p.h/maxh*180;
+    svg.appendChild(el('path',{d:'M'+(x-34)+' 250 l8 -34 h52 l8 34 z',fill:'#a9714b'}));
+    svg.appendChild(el('line',{x1:x,y1:216,x2:x,y2:216-hh,stroke:i===0?ok:nv,'stroke-width':5}));
+    for(let k=1;k<=3;k++){const y=216-hh*k/3.5;svg.appendChild(el('ellipse',{cx:x+(k%2?16:-16),cy:y,rx:15,ry:7,fill:i===0?ok:nv,transform:'rotate('+(k%2?25:-25)+' '+(x+(k%2?16:-16))+' '+y+')'}));}
+    svg.appendChild(el('text',{x,y:196-hh,'text-anchor':'middle','font-size':'15','font-weight':'700',fill:gd},p.h.toFixed(1)+' cm'));
+    svg.appendChild(el('text',{x,y:272,'text-anchor':'middle','font-size':'12',fill:css('--ink2')},p.lbl));});}
+$('#expGo').onclick=()=>{const l=+$('#lgt').value,f=+$('#fert').value,w=+$('#wtr').value;
+  const p={l,f,w,h:growth(l,f,w),lbl:l+' sa · '+['gübresiz','gübre A','gübre B'][f]+' · '+w+' ml'};
+  EX.prev=EX.last;EX.last=p;drawExp();
+  let msg='<b>Sonuç: '+p.h.toFixed(1)+' cm</b> (kontrol '+growth(8,0,100).toFixed(1)+' cm). ';
+  if(EX.prev){const d=[];if(EX.prev.l!==p.l)d.push('ışık');if(EX.prev.f!==p.f)d.push('gübre');if(EX.prev.w!==p.w)d.push('su');
+    if(d.length>1)msg+='<span style="color:var(--bad)">Bir önceki denemene göre '+d.join(' ve ')+' aynı anda değişti — farkın nedenini söyleyemezsin. Tek değişken değiştir.</span>';
+    else if(d.length===1)msg+='<span style="color:var(--ok)">Yalnızca <b>'+d[0]+'</b> değişti: aradaki fark bu değişkene bağlanabilir. Bağımsız değişken '+d[0]+', bağımlı değişken boy.</span>';
+    else msg+='Aynı koşulu tekrarladın — tekrarlanabilirlik testi, iyi bir refleks.';}
+  else msg+='Şimdi tek bir ayarı değiştirip tekrar dene.';
+  if(p.l===0)msg+=' Işıksız fide fotosentez yapamaz; boy artışı sararmış ve zayıftır.';
+  $('#expOut').innerHTML=msg;};
+$('#expReset').onclick=()=>{EX={prev:null,last:null};drawExp();$('#expOut').textContent='Kontrol grubu solda sabit kalır; ortadaki senin denemen, sağdaki bir önceki denemen.';};
+['#lgt','#wtr','#fert'].forEach(x=>$(x).addEventListener('input',drawExp));
+/* --- Zaman çizelgesi --- */
+const TL=[
+ {y:'1665',n:'Robert Hooke',w:'Mantar kesitinde odacıklar gördü, "hücre" dedi.',c:'Canlının bir yapı birimi olduğu fikri doğdu.'},
+ {y:'1674',n:'Leeuwenhoek',w:'El yapımı mikroskopla bakteri ve tek hücrelileri gözledi.',c:'Görünmez bir canlı dünyası ortaya çıktı.'},
+ {y:'1735',n:'Linnaeus',w:'İkili adlandırma (Homo sapiens) ve sınıflandırma sistemi.',c:'Bilim insanları aynı canlıdan aynı adla söz edebildi.'},
+ {y:'1838-39',n:'Schleiden & Schwann',w:'Tüm bitki ve hayvanlar hücrelerden oluşur.',c:'Hücre teorisinin ilk iki ilkesi.'},
+ {y:'1859',n:'Darwin',w:'Doğal seçilimle evrim.',c:'Çeşitliliğin mekanizması açıklandı; biyolojinin birleştirici kuramı.'},
+ {y:'1862',n:'Pasteur',w:'Kuğu boyunlu şişe: kendiliğinden oluşum yok.',c:'Biyogenez; sterilizasyon, aşı ve pastörizasyon.'},
+ {y:'1866',n:'Mendel',w:'Bezelyeyle kalıtım yasaları.',c:'Genetiğin matematiği; 34 yıl fark edilmedi.'},
+ {y:'1928',n:'Fleming',w:'Penisilin: küf bakteriyi öldürüyor.',c:'Antibiyotik çağı; milyonlarca hayat.'},
+ {y:'1953',n:'Watson, Crick, Franklin, Wilkins',w:'DNA çift sarmal yapısı.',c:'Kalıtımın moleküler dili çözüldü.'},
+ {y:'1983',n:'Mullis',w:'PCR: DNA\'yı milyonlarca kez kopyalama.',c:'Adli tıp, tanı, COVID testleri.'},
+ {y:'2003',n:'İnsan Genom Projesi',w:'3 milyar bazlık insan DNA dizisi tamamlandı.',c:'Kişiye özel tıp ve biyoinformatik.'},
+ {y:'2012',n:'CRISPR (Doudna & Charpentier)',w:'Programlanabilir gen düzenleme.',c:'Genetik hastalık tedavisi; etik tartışmaların merkezi.'},
+ {y:'2020',n:'mRNA aşıları',w:'Hücreye protein tarifi gönderen aşı.',c:'Salgında 1 yılda geliştirilen aşı; Türk bilim insanı Uğur Şahin.'}];
+let T={i:0,timer:null};
+function tlStop(){if(T.timer){clearInterval(T.timer);T.timer=null;}$('#tlPlay').textContent='▶ Oynat';}
+function drawTL(){const svg=$('#tlSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  svg.appendChild(el('line',{x1:30,y1:60,x2:690,y2:60,stroke:ink,'stroke-width':2}));
+  TL.forEach((t,i)=>{const x=40+i*(640/(TL.length-1));svg.appendChild(el('circle',{cx:x,cy:60,r:i===T.i?10:6,fill:i<T.i?nv:i===T.i?gd:css('--line'),stroke:nv}));
+    svg.appendChild(el('text',{x,y:i%2?100:38,'text-anchor':'middle','font-size':'10',fill:i===T.i?gd:css('--ink2'),'font-weight':i===T.i?'700':'400'},t.y));});
+  const t=TL[T.i];$('#tlCard').innerHTML='<b style="color:var(--navy);font-size:19px">'+t.n+' · '+t.y+'</b><p><b>Ne yaptı?</b> '+t.w+'</p><p><b>Ne değişti?</b> '+t.c+'</p>';}
+function tlStep(){if(T.i>=TL.length-1)return tlStop();T.i++;drawTL();}
+$('#tlPlay').onclick=()=>{if(T.timer)return tlStop();if(!motionOn()){tlStep();return;}$('#tlPlay').textContent='⏸ Duraklat';T.timer=setInterval(tlStep,4000/ +$('#tlSpeed').value);};
+$('#tlStep').onclick=tlStep;$('#tlBack').onclick=()=>{if(T.i>0){T.i--;drawTL();}};$('#tlReset').onclick=()=>{T.i=0;tlStop();drawTL();};
+/* --- Etik simülatörü --- */
+const ET=[
+ {s:'Proje için gölden su örneği alacaksın. Kıyıda nadir bir nilüfer var; örneği onun dibinden almak daha kolay.',o:[['Nilüferi rahatsız etmeden başka noktadan alırım','✔ Çevreye saygı: habitat bozulmaz.',1],['Nilüferi söküp yanında alırım, daha çok veri','✘ Habitat ve tür koruma ihlali.',0]]},
+ {s:'Deneyde 3 ölçüm hipotezine uymuyor.',o:[['Hepsini raporlar, sapmayı tartışırım','✔ Dürüstlük ve şeffaflık.',1],['Uymayanları "hatalı" deyip silerim','✘ Veri seçmek sahteciliktir.',0]]},
+ {s:'Anket için sınıf arkadaşlarının uyku sürelerini toplayacaksın.',o:[['Amacı anlatır, isteyenin katılmasını sağlar, isimleri gizlerim','✔ Bilgilendirilmiş onam ve gizlilik.',1],['Öğretmenden listeyi alıp habersiz kullanırım','✘ Onam alınmadı.',0]]},
+ {s:'Sıçanlarda ilaç etkisi için 40 hayvan planlandı; istatistik 12 hayvanın yeterli olduğunu gösteriyor.',o:[['12 hayvanla yaparım','✔ 3R – Reduce (azalt).',1],['40 daha güvenli, hepsini kullanırım','✘ Gereksiz hayvan kullanımı.',0]]},
+ {s:'İnternette bulduğun bir grafiği raporuna koyacaksın.',o:[['Kaynağı belirtip alıntılarım','✔ İntihalden kaçınma.',1],['Kendi çizimim gibi eklerim','✘ İntihal.',0]]}];
+let E={i:0,s:0};
+function drawET(){const box=$('#ethic');if(E.i>=ET.length){box.innerHTML='<div class="readout">'+E.s+' / '+ET.length+' kararda etik ilkeleri korudun.</div>';return;}
+  const q=ET[E.i];const ord=Math.random()<.5?[0,1]:[1,0];box.innerHTML='<div class="readout">Senaryo '+(E.i+1)+' / '+ET.length+'</div><div class="q"><div class="stem">'+q.s+'</div><div class="opts">'+ord.map(k=>'<label><input type="radio" name="et" value="'+k+'"> <span>'+q.o[k][0]+'</span></label>').join('')+'</div><div class="fb" id="etFb"></div></div>';
+  box.querySelectorAll('input').forEach(r=>r.onchange=()=>{const k=+r.value,ok=q.o[k][2]===1;if(ok)E.s++;box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('input').forEach(x=>x.disabled=true);$('#etFb').innerHTML=q.o[k][1]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="etNext">Sonraki →</button>';$('#etNext').onclick=()=>{E.i++;drawET();};});}
+$('#etReset').onclick=()=>{E={i:0,s:0};drawET();};
+/* --- Canlı mı? --- */
+const FEAT=['Hücresel yapı','Beslenme','Solunum','Metabolizma','Boşaltım','Hareket','Uyarılara tepki','Homeostazi','Büyüme-gelişme','Üreme','Uyum','Organizasyon'];
+const LV=[
+ {n:'Bakteri',f:[1,1,1,1,1,1,1,1,1,1,1,1],v:'Canlı',e:'Tek hücre, tüm özellikler.'},
+ {n:'Virüs',f:[0,0,0,0,0,0,0,0,0,0,1,0],v:'Sınır durum (canlı sayılmaz)',e:'Hücresiz, metabolizmasız; yalnız konak hücrede çoğalır ve evrimleşir.'},
+ {n:'Tohum (kuru)',f:[1,0,1,1,0,0,1,1,1,1,1,1],v:'Canlı (uyku hâlinde)',e:'Metabolizma çok yavaş ama var; su alınca çimlenir. Beslenme ve boşaltım askıda.'},
+ {n:'Alev',f:[0,0,0,0,0,1,0,0,0,0,0,0],v:'Cansız',e:'Büyür gibi görünür, oksijen tüketir; ama hücre, kalıtım, homeostazi yok.'},
+ {n:'Tuz kristali',f:[0,0,0,0,0,0,0,0,0,0,0,0],v:'Cansız',e:'Büyür ama çözelti sayesinde; metabolizma ve üreme yok.'},
+ {n:'Robot süpürge',f:[0,0,0,0,0,1,1,0,0,0,0,0],v:'Cansız',e:'Hareket eder, engele tepki verir; ama hücre, üreme, metabolizma yok.'},
+ {n:'Ayçiçeği',f:[1,1,1,1,1,1,1,1,1,1,1,1],v:'Canlı',e:'Hareket: güneşe yönelim; beslenme: ototrof.'},
+ {n:'Kırmızı kan hücresi (insan)',f:[1,1,1,1,1,1,1,1,0,0,1,1],v:'Canlı (ama üremez)',e:'Çekirdeksiz, bölünmez, 120 gün yaşar; organizmanın parçası olarak canlıdır.'}];
+function drawLV(){const sel=$('#lvSel');sel.innerHTML=LV.map((l,i)=>'<option value="'+i+'">'+l.n+'</option>').join('');const g=$('#lvGrid');g.innerHTML=FEAT.map((f,i)=>'<label class="card" style="margin:0;padding:8px;display:flex;gap:6px;font-size:14px"><input type="checkbox" data-f="'+i+'"> '+f+'</label>').join('');$('#lvOut').innerHTML='';
+  sel.onchange=()=>{g.querySelectorAll('input').forEach(c=>c.checked=false);g.querySelectorAll('label').forEach(l=>l.style.background='');$('#lvOut').innerHTML='';};}
+$('#lvCheck').onclick=()=>{const l=LV[+$('#lvSel').value];let ok=0;$('#lvGrid').querySelectorAll('label').forEach((lab,i)=>{const c=lab.querySelector('input').checked,t=l.f[i]===1;lab.style.background=c===t?'var(--ok2)':'var(--bad2)';if(c===t)ok++;});
+  $('#lvOut').innerHTML='<div class="readout" style="display:block">'+ok+' / 12 özellik doğru · <b>'+l.n+': '+l.v+'</b><br>'+l.e+'</div>';};
+function stopAll(){tlStop();}
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawExp();drawTL();drawET();drawLV();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

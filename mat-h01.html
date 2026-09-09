@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matematik 9 · Hafta 1 · Üslü ve Köklü Gösterimler</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Matematik · Ünite 1 Sayılar · Hafta 1<b>Gerçek sayıların üslü ve köklü gösterimleri</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>İlerlemen yalnızca bu cihazda kalır ve puan kazanmazsın. <a href="index.html">Ana sayfadan giriş yap</a>, sonra bu sayfaya dön.</div>
+<!-- 1 NEDEN -->
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>Bir kâğıdı 42 kez katlayabilsen Ay'a ulaşırdın</h1>
+  <p class="lead">Kâğıt 0,1 mm kalınlığında. Her katlamada kalınlık ikiye katlanıyor. 42 katlamada kalınlık 2<sup>42</sup> × 0,1 mm ≈ 440 000 km olur; Ay ortalama 384 400 km uzakta. Bu "ikiye katlama" işi, üslü ifadelerin ta kendisi.</p>
+  <div class="card">
+    <p>Bu hafta iki gösterimi öğreniyoruz:</p>
+    <p><b>Üslü gösterim</b> — aynı sayıyı tekrar tekrar çarpmanın kısa yolu: 2·2·2·2·2 yerine 2<sup>5</sup>. Telefonunun 256 GB'ı, bakterilerin çoğalması, deprem enerjisi, bilgisayarların sayı sistemi… hepsi üslü.</p>
+    <p><b>Köklü gösterim</b> — üslü işlemin tersi: "Karesi 50 olan sayı kaç?" sorusunun cevabı <span class="rad"><i>50</i></span>. Kare bahçenin kenarı, ekranın köşegeni, bir cismin düşme süresi… hepsi köklü.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>
+    Kocaeli'de 1999'da 7,4 büyüklüğünde deprem oldu. 6,4 büyüklüğünde bir deprem "bir küçük" gibi görünür. Oysa açığa çıkan enerji yaklaşık <b>32 kat</b> daha az. Bu 32 nereden geliyor? Cevap 4. sekmede: 10<sup>1,5</sup>.
+  </div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Sayılar)</div>
+    Üslü ifadelerin özelliklerini gerekçeleriyle kullanmak · negatif ve rasyonel üsleri yorumlamak · köklü ifadeleri üslü biçime çevirmek · köklü ifadelerle dört işlem ve paydayı rasyonel yapmak · bilimsel gösterimle çok büyük/küçük sayıları ifade etmek.
+  </div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+
+<!-- 2 HATIRLATMA -->
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma: ortaokuldan getirdiklerin</h2>
+  <div class="grid2">
+    <div class="card"><b>Üslü sayı</b><p>a<sup>n</sup> = a · a · … · a (n tane). a: taban, n: üs. 3<sup>4</sup> = 81.</p></div>
+    <div class="card"><b>Tam kare ve tam küp</b><p>1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144 … ve 1, 8, 27, 64, 125, 216. Bunları ezbere bilmek kök işlemlerini 3 kat hızlandırır.</p></div>
+    <div class="card"><b>Karekök</b><p><span class="rad"><i>a</i></span>, karesi a olan <em>negatif olmayan</em> sayıdır. <span class="rad"><i>49</i></span> = 7, −7 değil.</p></div>
+    <div class="card"><b>İşaret</b><p>Negatif sayının çift kuvveti pozitif, tek kuvveti negatiftir: (−2)<sup>4</sup> = 16, (−2)<sup>3</sup> = −8.</p></div>
+  </div>
+  <h3>Mini test (3 soru)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+
+<!-- 3 KONU -->
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+
+  <h3>3.1 Üslü ifade nedir, neden var?</h3>
+  <p>Matematikte yeni bir gösterim, her zaman bir tekrarı kısaltmak için doğar. 2·2·2·2·2·2·2·2·2·2 yazmak yerine 2<sup>10</sup> yazarız ve "2'nin 10. kuvveti" deriz. Değeri 1024'tür — telefonundaki "1 GB = 1024 MB" bu yüzden.</p>
+  <div class="box def"><div class="t">Tanım</div>a ∈ ℝ ve n ∈ ℕ<sup>+</sup> için a<sup>n</sup> = a · a · … · a (n çarpan). a'ya <b>taban</b>, n'ye <b>üs</b> (kuvvet) denir.</div>
+
+  <h3>3.2 Kurallar ve gerekçeleri</h3>
+  <p>Kuralları ezberlemek yerine, her birinin "çarpanları sayma" fikrinden nasıl çıktığını gör. Aşağıdaki keşif aracıyla dene.</p>
+
+  <div class="sim">
+    <h3>Keşif: çarpanları say</h3>
+    <div class="hint">Kaydırıcılarla m ve n'yi değiştir; a<sup>m</sup>·a<sup>n</sup> çarpanlarının nasıl birleştiğini izle. Tabanı da değiştirebilirsin.</div>
+    <div class="ctrl">
+      <label>Taban a <input type="number" id="kb" value="2" min="2" max="9" style="width:70px"></label>
+      <label>m <input type="range" id="km" min="1" max="6" value="3"><output id="kmo">3</output></label>
+      <label>n <input type="range" id="kn" min="1" max="6" value="2"><output id="kno">2</output></label>
+    </div>
+    <div class="svgwrap"><svg id="kSvg" viewBox="0 0 720 150" role="img" aria-label="Çarpanların birleşmesi"></svg></div>
+    <div class="readout" id="kOut"></div>
+  </div>
+
+  <div class="formula"><div class="m">a<sup>m</sup> · a<sup>n</sup> = a<sup>m+n</sup></div><div class="why">m çarpanın yanına n çarpan daha koydun; toplam m+n çarpan.</div></div>
+  <div class="formula"><div class="m">a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m−n</sup> &nbsp;(a ≠ 0)</div><div class="why">Paydaki m çarpandan n tanesi paydadakilerle sadeleşir; m−n kalır.</div></div>
+  <div class="formula"><div class="m">(a<sup>m</sup>)<sup>n</sup> = a<sup>m·n</sup></div><div class="why">m çarpanlı bir bloğu n kez yan yana yazdın: m·n çarpan.</div></div>
+  <div class="formula"><div class="m">(a·b)<sup>n</sup> = a<sup>n</sup> · b<sup>n</sup></div><div class="why">Çarpmanın değişme özelliğiyle a'ları ve b'leri ayrı ayrı grupla.</div></div>
+  <div class="formula"><div class="m">(a ÷ b)<sup>n</sup> = a<sup>n</sup> ÷ b<sup>n</sup> &nbsp;(b ≠ 0)</div><div class="why">Kesirlerin çarpımı: paylar çarpılır, paydalar çarpılır.</div></div>
+
+  <div class="sim">
+    <h3>Kural sınayıcı: doğru mu, tuzak mı?</h3>
+    <div class="hint">Bir eşitlik seç, sayıları kaydır ve iki tarafın değerini karşılaştır. Bazı eşitlikler her sayı için doğru, bazıları hiçbiri için. Hangisinin neden bozulduğunu gör.</div>
+    <div class="ctrl">
+      <label>Eşitlik <select id="rSel" style="font:inherit;padding:6px;border-radius:8px;max-width:220px"></select></label>
+      <label>a <input type="range" id="ra" min="-4" max="6" value="2"><output id="rao">2</output></label>
+      <label>b <input type="range" id="rb" min="-4" max="6" value="3"><output id="rbo">3</output></label>
+    </div>
+    <div class="svgwrap"><svg id="ruleSvg" viewBox="0 0 720 150" role="img" aria-label="Kural sınayıcı"></svg></div>
+    <div class="readout" id="ruleOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Bir eşitliğin doğru olması için <em>her</em> değerde tutması gerekir; tek bir karşı örnek onu çürütür. Matematikte ispat da tam olarak bu yüzden gerekli: "birkaç sayıda denedim, tuttu" bir kanıt değildir. Aşağıdaki kuralları ezberlemeden önce burada kırılma noktalarını gör.</div>
+
+  <h3>3.3 Sıfır ve negatif üs: kural değil, zorunluluk</h3>
+  <p>a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m−n</sup> kuralı m = n iken ne verir? a<sup>3</sup> ÷ a<sup>3</sup> hem 1'dir hem de a<sup>0</sup>. Kural bozulmasın diye <b>a<sup>0</sup> = 1</b> (a ≠ 0) tanımlanır. Aynı kuralı m &lt; n için işletirsen a<sup>2</sup> ÷ a<sup>5</sup> = a<sup>−3</sup> = 1/a<sup>3</sup> çıkar:</p>
+  <div class="formula"><div class="m">a<sup>−n</sup> = <span class="frac"><span>1</span><span>a<sup>n</sup></span></span> &nbsp; ve &nbsp; <span class="frac"><span>a</span><span>b</span></span><sup>−n</sup> = <span class="frac"><span>b</span><span>a</span></span><sup>n</sup></div><div class="why">Negatif üs "ters çevir" demektir, "eksi yap" değil. 2<sup>−3</sup> = 1/8, −8 değil!</div></div>
+  <div class="box warn"><div class="t">Tuzak: 0<sup>0</sup></div>0<sup>0</sup> tanımsızdır. 0<sup>n</sup> = 0 der, a<sup>0</sup> = 1 der; ikisi çelişir. Sınavda "0<sup>0</sup> = 1" işaretleme.</div>
+  <div class="box warn"><div class="t">Tuzak: parantez</div>(−3)<sup>2</sup> = 9 ama −3<sup>2</sup> = −(3<sup>2</sup>) = −9. Üs, yalnızca hemen solundakine uygulanır.</div>
+
+  <h3>3.4 Bilimsel gösterim</h3>
+  <p>Çok büyük ya da çok küçük sayılar <b>a × 10<sup>n</sup></b> (1 ≤ |a| &lt; 10, n ∈ ℤ) biçiminde yazılır. Dünya–Güneş uzaklığı 1,5 × 10<sup>8</sup> km; koronavirüs çapı 1,2 × 10<sup>−7</sup> m. Bu biçim, sayıların büyüklük sırasını (kaç basamaklı olduğunu) tek bakışta gösterir ve çarpma/bölmeyi üs toplamaya çevirir.</p>
+
+  <div class="sim">
+    <h3>Bilimsel gösterim çevirici</h3>
+    <div class="hint">Katsayı ve üssü kaydır; sayının açık hâlini ve virgülün kaç basamak kaydığını izle. Hazır örnekleri dene.</div>
+    <div class="ctrl">
+      <label>a <input type="range" id="sa" min="10" max="99" value="15"><output id="sao">1,5</output></label>
+      <label>n <input type="range" id="sn" min="-9" max="12" value="8"><output id="sno">8</output></label>
+      <button class="alt" data-sci="15,8">Güneş uzaklığı (km)</button>
+      <button class="alt" data-sci="12,-7">Virüs çapı (m)</button>
+      <button class="alt" data-sci="27,11">256 GB (bayt)</button>
+    </div>
+    <div class="readout" id="sOut"></div>
+  </div>
+
+  <h3>3.5 Köklü ifadeler: üssün tersi</h3>
+  <p>"Hangi sayının karesi 50?" sorusu, x<sup>2</sup> = 50 denklemidir. Cevap tam sayı değil; ona bir ad veriyoruz: <span class="rad"><i>50</i></span>. Genel olarak:</p>
+  <div class="box def"><div class="t">Tanım</div>n ∈ ℕ, n ≥ 2 olmak üzere x<sup>n</sup> = a denkleminin (n çift ise negatif olmayan) çözümüne a'nın n. dereceden kökü denir: <span class="rad nx"><small>n</small><i>a</i></span>. n çift ise a ≥ 0 olmalı; n tek ise a her gerçek sayı olabilir: <span class="rad n3"><i>−8</i></span> = −2.</div>
+
+  <h3>3.6 Köklü ↔ üslü köprü: rasyonel üs</h3>
+  <p>(a<sup>m</sup>)<sup>n</sup> = a<sup>mn</sup> kuralı yalnız tam sayı üsler için mi geçerli olsun? Kural bozulmasın istersek (a<sup>1/2</sup>)<sup>2</sup> = a<sup>1</sup> = a olmalı. Karesi a olan sayı ise <span class="rad"><i>a</i></span>. Öyleyse:</p>
+  <div class="formula"><div class="m">a<sup>1/n</sup> = <span class="rad nx"><small>n</small><i>a</i></span> &nbsp;·&nbsp; a<sup>m/n</sup> = <span class="rad nx"><small>n</small><i>a<sup>m</sup></i></span> = (<span class="rad nx"><small>n</small><i>a</i></span>)<sup>m</sup></div><div class="why">Payda = kökün derecesi, pay = üs. 8<sup>2/3</sup> = (∛8)<sup>2</sup> = 4.</div></div>
+  <p>Bu köprü sayesinde köklü ifadelerin tüm kuralları üslü kurallardan türer:</p>
+  <div class="formula"><div class="m"><span class="rad"><i>a·b</i></span> = <span class="rad"><i>a</i></span> · <span class="rad"><i>b</i></span> &nbsp;(a,b ≥ 0)</div><div class="why">(ab)<sup>1/2</sup> = a<sup>1/2</sup> b<sup>1/2</sup></div></div>
+  <div class="formula"><div class="m"><span class="rad"><i>a ÷ b</i></span> = <span class="rad"><i>a</i></span> ÷ <span class="rad"><i>b</i></span> &nbsp;(b &gt; 0)</div><div class="why">(a/b)<sup>1/2</sup> = a<sup>1/2</sup> / b<sup>1/2</sup></div></div>
+  <div class="formula"><div class="m"><span class="rad nx"><small>m</small><i><span class="rad nx"><small>n</small><i>a</i></span></i></span> = <span class="rad nx"><small>mn</small><i>a</i></span></div><div class="why">(a<sup>1/n</sup>)<sup>1/m</sup> = a<sup>1/(mn)</sup></div></div>
+  <div class="formula"><div class="m"><span class="rad"><i>a<sup>2</sup></i></span> = |a|</div><div class="why">Karekök negatif olamaz. <span class="rad"><i>(−5)<sup>2</sup></i></span> = <span class="rad"><i>25</i></span> = 5 = |−5|.</div></div>
+
+  <h3>3.7 Kök dışına çıkarma ve benzer kökler</h3>
+  <p><span class="rad"><i>50</i></span> = <span class="rad"><i>25·2</i></span> = <span class="rad"><i>25</i></span>·<span class="rad"><i>2</i></span> = 5<span class="rad"><i>2</i></span>. Kök içindeki sayıyı "en büyük tam kare × kalan" biçiminde ayır. Toplama ve çıkarma yalnız <b>benzer kökler</b> (aynı derece, aynı kök içi) arasında yapılır: 5<span class="rad"><i>2</i></span> + 3<span class="rad"><i>2</i></span> = 8<span class="rad"><i>2</i></span>, ama <span class="rad"><i>2</i></span> + <span class="rad"><i>3</i></span> daha sade yazılamaz.</p>
+  <div class="box warn"><div class="t">En sık yapılan hata</div><span class="rad"><i>a + b</i></span> ≠ <span class="rad"><i>a</i></span> + <span class="rad"><i>b</i></span>. Deneme: <span class="rad"><i>9+16</i></span> = 5 ama 3 + 4 = 7. Kök, toplamın üzerine "dağılmaz".</div>
+
+  <h3>3.8 Paydayı rasyonel yapma</h3>
+  <p>1/<span class="rad"><i>2</i></span> ile <span class="rad"><i>2</i></span>/2 aynı sayıdır, ama ikincisi "1,414…'ün yarısı" diye hemen okunur. Paydadaki kökü yok etmek için pay ve paydayı aynı kökle çarparız. Payda iki terimliyse (<span class="rad"><i>a</i></span> + <span class="rad"><i>b</i></span> gibi) <b>eşleniği</b>yle (<span class="rad"><i>a</i></span> − <span class="rad"><i>b</i></span>) çarparız; iki kare farkı kökleri siler: (<span class="rad"><i>a</i></span>+<span class="rad"><i>b</i></span>)(<span class="rad"><i>a</i></span>−<span class="rad"><i>b</i></span>) = a − b.</p>
+  <div class="formula"><div class="m"><span class="frac"><span>1</span><span><span class="rad"><i>3</i></span>−1</span></span> = <span class="frac"><span><span class="rad"><i>3</i></span>+1</span><span>(<span class="rad"><i>3</i></span>−1)(<span class="rad"><i>3</i></span>+1)</span></span> = <span class="frac"><span><span class="rad"><i>3</i></span>+1</span><span>2</span></span></div><div class="why">Payda: 3 − 1 = 2. İki kare farkı, önümüzdeki haftaların ana aracı.</div></div>
+
+  <h3>3.9 Kök nerede duruyor? Sıkıştırma</h3>
+  <p><span class="rad"><i>50</i></span> hangi iki tam sayı arasında? 49 &lt; 50 &lt; 64 olduğundan 7 &lt; <span class="rad"><i>50</i></span> &lt; 8. Bu "sıkıştırma" fikri, sayı doğrusunda yer bulmanın ve sınavda hızlı tahmin yapmanın anahtarı. Aşağıda canlı izle.</p>
+  <div class="sim">
+    <h3>Sayı doğrusunda kökü sıkıştır</h3>
+    <div class="hint">Bir sayı seç. Önce iki tam kare arasına, sonra <kbd>Adım</kbd> ile her seferinde aralığı ikiye bölerek kökü köşeye sıkıştır. <kbd>Oynat</kbd> bunu kendiliğinden yapar.</div>
+    <div class="ctrl">
+      <label>Kök içi <input type="range" id="rn" min="2" max="99" value="50"><output id="rno">50</output></label>
+      <button id="rPlay">▶ Oynat</button><button id="rStep" class="alt">Adım</button><button id="rReset" class="alt">Sıfırla</button>
+      <label>Hız <input type="range" id="rSpeed" min="1" max="5" value="3" style="width:90px"></label>
+    </div>
+    <div class="svgwrap"><svg id="rSvg" viewBox="0 0 720 200" role="img" aria-label="Sayı doğrusunda kök sıkıştırma"></svg></div>
+    <div class="readout" id="rOut"></div>
+  </div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<!-- 4 GÜNLÜK YAŞAM -->
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0">1 · Telefonun 256 GB'ı neden 256?</h3>
+    <p><b>Durum:</b> Depolama kapasiteleri hep 32, 64, 128, 256, 512 GB. Neden 100 ya da 300 değil?</p>
+    <p><b>Kavramla bağ:</b> Bilgisayar ikili sistemle çalışır; her adres biti seçenek sayısını ikiye katlar. Kapasiteler 2'nin kuvvetleridir: 256 = 2<sup>8</sup>.</p>
+    <p><b>Hesap:</b> 1 GB = 2<sup>30</sup> bayt. 256 GB = 2<sup>8</sup> · 2<sup>30</sup> = 2<sup>38</sup> bayt ≈ 2,75 × 10<sup>11</sup> bayt. Bir fotoğraf 4 MB = 2<sup>22</sup> bayt ise sığan fotoğraf sayısı 2<sup>38</sup> ÷ 2<sup>22</sup> = 2<sup>16</sup> = 65 536.</p>
+    <p><b>Sonuç:</b> Üs kuralları (çarpma → üs toplama, bölme → üs çıkarma) bu hesabı 11 basamaklı sayılarla uğraşmadan bitirdi.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">2 · 1999 Gölcük depremi: 7,4 ile 6,4 arasında ne fark var?</h3>
+    <p><b>Durum:</b> Deprem büyüklüğü (M<sub>w</sub>) 1 artınca "biraz daha güçlü" mü olur?</p>
+    <p><b>Kavramla bağ:</b> Açığa çıkan enerji E, büyüklükle üslü olarak bağlıdır: E ∝ 10<sup>1,5·M</sup>. Yani büyüklük ölçeği doğrusal değil, üslüdür.</p>
+    <p><b>Hesap:</b> E<sub>7,4</sub> ÷ E<sub>6,4</sub> = 10<sup>1,5·7,4</sup> ÷ 10<sup>1,5·6,4</sup> = 10<sup>1,5·(7,4−6,4)</sup> = 10<sup>1,5</sup> = 10 · 10<sup>1/2</sup> = 10<span class="rad"><i>10</i></span> ≈ 31,6.</p>
+    <p><b>Sonuç:</b> Bir birim büyüklük farkı yaklaşık 32 kat enerji demek. Rasyonel üs (10<sup>1/2</sup>) ve bölme kuralı, gerçek bir afet ölçeğini okumanı sağladı.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">3 · Bahçedeki kare sebze yatağı</h3>
+    <p><b>Durum:</b> 50 m² lik bir alanı kare şeklinde çevirmek istiyorsun. Kenar kaç metre, tel kaç metre?</p>
+    <p><b>Kavramla bağ:</b> Kenar = <span class="rad"><i>50</i></span>. Tam sayı değil; kök dışına çıkararak sadeleştir.</p>
+    <p><b>Hesap:</b> <span class="rad"><i>50</i></span> = 5<span class="rad"><i>2</i></span> ≈ 5 · 1,414 = 7,07 m. Çevre = 4 · 5<span class="rad"><i>2</i></span> = 20<span class="rad"><i>2</i></span> ≈ 28,3 m. Sıkıştırma ile de kontrol: 49 &lt; 50 &lt; 64 → 7 &lt; kenar &lt; 8 ✓.</p>
+    <p><b>Sonuç:</b> Nalburdan 29 m tel alırsın. Kök dışına çıkarma, hesap makinesi olmadan iki basamak hassasiyet verdi.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">4 · Bakteriler ve kâğıt katlama: aynı matematik</h3>
+    <p><b>Durum:</b> Bir bakteri her 20 dakikada bölünüyor. Öğle yemeğinde tezgâhta kalan 1 bakteri akşam 6'ya kadar (6 saat) kaç olur?</p>
+    <p><b>Hesap:</b> 6 saat = 18 bölünme → 2<sup>18</sup> = 262 144 bakteri. 8 saatte 2<sup>24</sup> ≈ 1,7 × 10<sup>7</sup>.</p>
+    <p><b>Sonuç:</b> Üstel büyüme başta yavaş, sonra patlar; bu yüzden yemek dışarıda 2 saatten fazla bekletilmez. Bir sonraki sekmede bu büyümeyi canlı izle.</p>
+  </div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+
+<!-- 5 ETKİLEŞİM -->
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <p>Konu anlatımındaki üç araca (çarpan sayma, bilimsel gösterim, kök sıkıştırma) ek olarak burada üstel büyümeyi izle.</p>
+  <div class="sim">
+    <h3>Üstel büyüme: bakteri bölünmesi</h3>
+    <div class="hint">Her adımda nokta sayısı ikiye katlanır. Grafik, sayının nasıl "aniden" fırladığını gösterir. <kbd>Adım</kbd> ile tek tek, <kbd>Oynat</kbd> ile otomatik ilerle.</div>
+    <div class="ctrl">
+      <button id="gPlay">▶ Oynat</button><button id="gStep" class="alt">Adım</button><button id="gReset" class="alt">Sıfırla</button>
+      <label>Hız <input type="range" id="gSpeed" min="1" max="5" value="3" style="width:90px"></label>
+      <label>Taban <select id="gBase" style="font:inherit;padding:6px;border-radius:8px"><option value="2">2 (bölünme)</option><option value="3">3</option></select></label>
+    </div>
+    <div class="svgwrap"><svg id="gSvg" viewBox="0 0 720 300" role="img" aria-label="Üstel büyüme grafiği"></svg></div>
+    <div class="readout" id="gOut"></div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>
+    1) 10. adımda kaç bakteri var? 2<sup>10</sup>'u önce tahmin et, sonra kontrol et. &nbsp; 2) Taban 3 iken 5. adım, taban 2 iken kaçıncı adıma denk gelir? (3<sup>5</sup> = 243 ile 2<sup>8</sup> = 256'yı karşılaştır.) &nbsp; 3) Grafik neden başta "düz" görünüyor?
+  </div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+
+<!-- 6 ÇÖZÜMLÜ -->
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+
+  <div class="card"><h3 style="margin-top:0">Temel · 2<sup>5</sup> · 4<sup>3</sup> ÷ 8<sup>2</sup> = ?</h3>
+    <ol class="steps">
+      <li>Tabanları aynı yap: 4 = 2<sup>2</sup>, 8 = 2<sup>3</sup>. <div class="why">Neden: kurallar yalnız aynı tabanlar arasında çalışır.</div></li>
+      <li>4<sup>3</sup> = (2<sup>2</sup>)<sup>3</sup> = 2<sup>6</sup>, 8<sup>2</sup> = (2<sup>3</sup>)<sup>2</sup> = 2<sup>6</sup>. <div class="why">Üssün üssü: çarp.</div></li>
+      <li>2<sup>5</sup> · 2<sup>6</sup> ÷ 2<sup>6</sup> = 2<sup>5+6−6</sup> = 2<sup>5</sup> = <b>32</b>.</li>
+    </ol></div>
+
+  <div class="card"><h3 style="margin-top:0">Temel · <span class="rad"><i>72</i></span> − <span class="rad"><i>18</i></span> + <span class="rad"><i>8</i></span> = ?</h3>
+    <ol class="steps">
+      <li>Her kökü "tam kare × kalan" biçimine getir: 72 = 36·2, 18 = 9·2, 8 = 4·2.</li>
+      <li>6<span class="rad"><i>2</i></span> − 3<span class="rad"><i>2</i></span> + 2<span class="rad"><i>2</i></span>. <div class="why">Hepsi <span class="rad"><i>2</i></span>'nin katı: benzer kökler, toplanabilir.</div></li>
+      <li>(6 − 3 + 2)<span class="rad"><i>2</i></span> = <b>5<span class="rad"><i>2</i></span></b>.</li>
+    </ol></div>
+
+  <div class="card"><h3 style="margin-top:0">Orta · 3<sup>x</sup> = 81 ve 2<sup>y−1</sup> = <span class="frac"><span>1</span><span>32</span></span> ise x + y = ?</h3>
+    <ol class="steps">
+      <li>81 = 3<sup>4</sup> → x = 4. <div class="why">Tabanlar eşitse üsler eşittir (a &gt; 0, a ≠ 1 için).</div></li>
+      <li>1/32 = 2<sup>−5</sup> → y − 1 = −5 → y = −4. <div class="why">Negatif üs "ters çevir": 1/2<sup>5</sup> = 2<sup>−5</sup>.</div></li>
+      <li>x + y = 4 + (−4) = <b>0</b>.</li>
+    </ol></div>
+
+  <div class="card"><h3 style="margin-top:0">Orta · <span class="frac"><span>6</span><span><span class="rad"><i>5</i></span> − <span class="rad"><i>2</i></span></span></span> ifadesini paydası rasyonel yaz.</h3>
+    <ol class="steps">
+      <li>Paydanın eşleniği <span class="rad"><i>5</i></span> + <span class="rad"><i>2</i></span>; pay ve paydayı onunla çarp.</li>
+      <li>Payda: (<span class="rad"><i>5</i></span>)<sup>2</sup> − (<span class="rad"><i>2</i></span>)<sup>2</sup> = 5 − 2 = 3. <div class="why">İki kare farkı kökleri yok etti.</div></li>
+      <li>Pay: 6(<span class="rad"><i>5</i></span> + <span class="rad"><i>2</i></span>). Bölünce: <b>2<span class="rad"><i>5</i></span> + 2<span class="rad"><i>2</i></span></b>.</li>
+    </ol></div>
+
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · a = <span class="rad"><i>7 + 4<span class="rad"><i>3</i></span></i></span> sayısını sadeleştir.</h3>
+    <ol class="steps">
+      <li>İç içe kökü (<span class="rad"><i>x</i></span> + <span class="rad"><i>y</i></span>)<sup>2</sup> = x + y + 2<span class="rad"><i>xy</i></span> kalıbına benzet: 4<span class="rad"><i>3</i></span> = 2<span class="rad"><i>12</i></span>. <div class="why">Ortadaki terimi 2√(…) biçimine getirmek kalıbı görünür kılar.</div></li>
+      <li>x + y = 7, x·y = 12 → x = 4, y = 3. <div class="why">Toplamı 7, çarpımı 12 olan çift.</div></li>
+      <li>7 + 4<span class="rad"><i>3</i></span> = (2 + <span class="rad"><i>3</i></span>)<sup>2</sup> → a = |2 + <span class="rad"><i>3</i></span>| = <b>2 + <span class="rad"><i>3</i></span></b>. <div class="why">√(k²) = |k|; burada k pozitif, mutlak değer kalkar.</div></li>
+      <li>Kontrol: (2+<span class="rad"><i>3</i></span>)<sup>2</sup> = 4 + 4<span class="rad"><i>3</i></span> + 3 = 7 + 4<span class="rad"><i>3</i></span> ✓</li>
+    </ol></div>
+
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · x = 2<sup>100</sup>, y = 3<sup>60</sup>, z = 5<sup>40</sup> sayılarını sırala.</h3>
+    <ol class="steps">
+      <li>Üslerin OBEB'i 20. Her sayıyı 20. kuvvet olarak yaz: x = (2<sup>5</sup>)<sup>20</sup> = 32<sup>20</sup>, y = (3<sup>3</sup>)<sup>20</sup> = 27<sup>20</sup>, z = (5<sup>2</sup>)<sup>20</sup> = 25<sup>20</sup>. <div class="why">Aynı üs → tabanlar doğrudan karşılaştırılır (tabanlar pozitif).</div></li>
+      <li>25 &lt; 27 &lt; 32 → <b>z &lt; y &lt; x</b>.</li>
+      <li>Bilimsel gösterimle sağlama: 2<sup>100</sup> ≈ 1,27 × 10<sup>30</sup>, 3<sup>60</sup> ≈ 4,24 × 10<sup>28</sup>, 5<sup>40</sup> ≈ 9,09 × 10<sup>27</sup> ✓</li>
+    </ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+
+<!-- 7 TEST -->
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 soru. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div>
+  <div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+
+<!-- 8 ÖZET -->
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Üs kuralları</b>a<sup>m</sup>a<sup>n</sup> = a<sup>m+n</sup> · a<sup>m</sup>/a<sup>n</sup> = a<sup>m−n</sup> · (a<sup>m</sup>)<sup>n</sup> = a<sup>mn</sup> · (ab)<sup>n</sup> = a<sup>n</sup>b<sup>n</sup></div>
+    <div class="card"><b>Özel üsler</b>a<sup>0</sup> = 1 (a≠0) · a<sup>−n</sup> = 1/a<sup>n</sup> · a<sup>m/n</sup> = <span class="rad nx"><small>n</small><i>a<sup>m</sup></i></span> · 0<sup>0</sup> tanımsız</div>
+    <div class="card"><b>Kök kuralları</b><span class="rad"><i>ab</i></span> = <span class="rad"><i>a</i></span><span class="rad"><i>b</i></span> · <span class="rad"><i>a/b</i></span> = <span class="rad"><i>a</i></span>/<span class="rad"><i>b</i></span> · <span class="rad"><i>a<sup>2</sup></i></span> = |a| · benzer kökler toplanır</div>
+    <div class="card"><b>Teknikler</b>Tabanı eşitle · tam kare × kalan ayır · payda için eşlenikle çarp · sıkıştırma ile tahmin · bilimsel gösterimde üsleri topla</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>−2<sup>2</sup> = 4 sanmak. Doğrusu −4; (−2)<sup>2</sup> = 4.</li>
+    <li>2<sup>−3</sup> = −8 sanmak. Doğrusu 1/8: negatif üs ters çevirir.</li>
+    <li>2<sup>3</sup> · 2<sup>4</sup> = 4<sup>7</sup> yazmak. Taban değişmez: 2<sup>7</sup>.</li>
+    <li><span class="rad"><i>a+b</i></span> = <span class="rad"><i>a</i></span> + <span class="rad"><i>b</i></span> yazmak. Kök toplama dağılmaz.</li>
+    <li><span class="rad"><i>x<sup>2</sup></i></span> = x demek. Doğrusu |x|; x negatifse fark eder.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Bu hafta <span class="rad"><i>50</i></span>'nin 7 ile 8 arasında olduğunu bulduk. Peki "7'den büyük, 8'den küçük tüm sayılar" kümesini nasıl yazar, sayı doğrusunda nasıl gösteririz? Gelecek hafta: <b>gerçek sayı aralıkları</b> ve aralıklarla işlemler.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Matematik · Ünite 1 · Hafta 1 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='mat-h01', HAFTA=1;
+const BASEKEY='ah9-mat-h01';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Matematik 9 · Ünite 1 · Hafta 1 · Üslü ve köklü gösterimler';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'(−1)<sup>99</sup> kaçtır?',o:['−1','1','99','−99'],a:0,e:'Negatif sayının tek kuvveti negatiftir.'},
+ {s:'<span class="rad"><i>144</i></span> kaçtır?',o:['12','±12','72','14'],a:0,e:'Karekök yalnız negatif olmayan değeri verir; ±12 yazılmaz.'},
+ {s:'5<sup>3</sup> kaçtır?',o:['125','15','243','25'],a:0,e:'5·5·5 = 125. 5·3 = 15 yaygın hatadır.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,false)));}
+/* ana test */
+const QUIZ=[
+ {s:'(−3)<sup>2</sup> + (−3)<sup>3</sup> işleminin sonucu kaçtır?',o:['−18','18','0','36'],a:0,e:'9 + (−27) = −18. Çift kuvvet pozitif, tek kuvvet negatif.'},
+ {s:'2<sup>x+2</sup> = 32 ise x kaçtır?',o:['3','5','4','2'],a:0,e:'32 = 2<sup>5</sup> → x + 2 = 5 → x = 3.'},
+ {tag:'bağlam',s:'Bir öğrencinin 128 GB\'lık telefonunda her fotoğraf 8 MB yer kaplıyor. (1 GB = 2<sup>10</sup> MB) Telefona en fazla kaç fotoğraf sığar?',o:['16 384','8 192','32 768','4 096'],a:0,e:'128 GB = 2<sup>7</sup>·2<sup>10</sup> MB = 2<sup>17</sup> MB. 2<sup>17</sup> ÷ 2<sup>3</sup> = 2<sup>14</sup> = 16 384.'},
+ {s:'<span class="rad"><i>75</i></span> + <span class="rad"><i>27</i></span> − <span class="rad"><i>12</i></span> = ?',o:['6<span class="rad"><i>3</i></span>','8<span class="rad"><i>3</i></span>','10<span class="rad"><i>3</i></span>','<span class="rad"><i>90</i></span>'],a:0,e:'5√3 + 3√3 − 2√3 = 6√3. Kökler toplanmadan önce dışarı çıkarılır; √90 yazmak "kök dağılır" hatasıdır.'},
+ {s:'8<sup>2/3</sup> · 4<sup>−1/2</sup> = ?',o:['2','4','8','1/2'],a:0,e:'8<sup>2/3</sup> = (∛8)<sup>2</sup> = 4; 4<sup>−1/2</sup> = 1/√4 = 1/2. Çarpım 2.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Deprem büyüklüğü doğrusal değil üstel bir ölçektir; açığa çıkan enerji E ∝ 10<sup>1,5·M</sup> bağıntısıyla artar. Oran alırken üsler çıkarılır.<br>8,0 büyüklüğündeki bir deprem, 6,0 büyüklüğündekinden kaç kat enerji açığa çıkarır?',o:['1000','100','30','3'],a:0,e:'10<sup>1,5·8</sup> ÷ 10<sup>1,5·6</sup> = 10<sup>1,5·2</sup> = 10<sup>3</sup> = 1000.'},
+ {s:'x = −4 için <span class="rad"><i>x<sup>2</sup></i></span> kaçtır?',o:['4','−4','±4','16'],a:0,e:'√(x²) = |x| = |−4| = 4.'},
+ {s:'<span class="frac"><span>3</span><span><span class="rad"><i>5</i></span> + <span class="rad"><i>2</i></span></span></span> ifadesinin paydası rasyonel hâli hangisidir?',o:['<span class="rad"><i>5</i></span> − <span class="rad"><i>2</i></span>','<span class="rad"><i>5</i></span> + <span class="rad"><i>2</i></span>','3<span class="rad"><i>5</i></span> − 3<span class="rad"><i>2</i></span>','(<span class="rad"><i>5</i></span> − <span class="rad"><i>2</i></span>)/3'],a:0,e:'Eşlenikle çarp: payda 5 − 2 = 3; pay 3(√5 − √2). Sadeleşince √5 − √2.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Her bölünmede bakteri sayısı iki katına çıkar; n bölünme sonunda başlangıç sayısı 2<sup>n</sup> ile çarpılır.<br>Bir bakteri türü her 20 dakikada bir bölünüyor. Tezgâhta 100 bakteriyle başlayan koloni 3 saat sonra kaç bakteri olur?',o:['51 200','25 600','1 800','102 400'],a:0,e:'3 saat = 9 bölünme → 100 · 2<sup>9</sup> = 100 · 512 = 51 200.'},
+ {s:'a = 2<sup>300</sup>, b = 3<sup>200</sup>, c = 5<sup>100</sup> için doğru sıralama hangisidir?',o:['c &lt; a &lt; b','a &lt; b &lt; c','c &lt; b &lt; a','b &lt; a &lt; c'],a:0,e:'Üsleri 100\'e eşitle: a = 8<sup>100</sup>, b = 9<sup>100</sup>, c = 5<sup>100</sup> → c &lt; a &lt; b.'},
+ {open:true,s:'<span class="rad"><i>11 + 6<span class="rad"><i>2</i></span></i></span> ifadesini sadeleştir.',ans:'3 + √2',e:'6√2 = 2√18. Toplamı 11, çarpımı 18 olan sayılar 9 ve 2 → (3 + √2)<sup>2</sup>. Kök alınca |3 + √2| = 3 + √2.'},
+ {open:true,s:'0,00045 sayısını bilimsel gösterimle yaz.',ans:'4,5 × 10<sup>−4</sup>',e:'Virgülü 4 basamak sağa kaydırınca 4,5 elde edilir; sayı küçüldüğü için üs negatif.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+/* --- Kural sınayıcı --- */
+const RULES=[
+ {t:'2^a · 2^b = 2^(a+b)',l:(a,b)=>Math.pow(2,a)*Math.pow(2,b),r:(a,b)=>Math.pow(2,a+b),ok:'Her a, b için doğru: çarpanlar birleşir.'},
+ {t:'2^a · 2^b = 4^(a+b)',l:(a,b)=>Math.pow(2,a)*Math.pow(2,b),r:(a,b)=>Math.pow(4,a+b),ok:'Yanlış: taban değişmez, yalnızca üsler toplanır.'},
+ {t:'(2^a)^b = 2^(a·b)',l:(a,b)=>Math.pow(Math.pow(2,a),b),r:(a,b)=>Math.pow(2,a*b),ok:'Doğru: üssün üssü çarpılır.'},
+ {t:'√(a² + b²) = a + b',l:(a,b)=>Math.sqrt(a*a+b*b),r:(a,b)=>a+b,ok:'Yanlış: kök toplama üzerine dağılmaz. a=3, b=4 dene: 5 ≠ 7.'},
+ {t:'√(a²) = a',l:(a,b)=>Math.sqrt(a*a),r:(a,b)=>a,ok:'Yalnız a ≥ 0 için doğru; negatif a\'da bozulur çünkü √(a²) = |a|.'},
+ {t:'2^(−a) = −2^a',l:(a,b)=>Math.pow(2,-a),r:(a,b)=>-Math.pow(2,a),ok:'Yanlış: negatif üs ters çevirir, işaret değiştirmez.'}];
+function fmtn(x){if(!isFinite(x))return 'tanımsız';const r=Math.round(x*1000)/1000;return r.toLocaleString('tr-TR',{maximumFractionDigits:3});}
+function drawRule(){const i=+$('#rSel').value,a=+$('#ra').value,b=+$('#rb').value,R=RULES[i];
+  $('#rao').value=a;$('#rbo').value=b;
+  const L=R.l(a,b),Rv=R.r(a,b),eq=Math.abs(L-Rv)<1e-9;
+  const svg=$('#ruleSvg');svg.innerHTML='';const ink=css('--ink'),ok=css('--ok'),bad=css('--bad');
+  svg.appendChild(el('text',{x:360,y:36,'text-anchor':'middle','font-size':'20','font-weight':'700',fill:ink},R.t));
+  svg.appendChild(el('rect',{x:120,y:56,width:200,height:52,rx:8,fill:css('--sky')}));
+  svg.appendChild(el('rect',{x:400,y:56,width:200,height:52,rx:8,fill:css('--sky')}));
+  svg.appendChild(el('text',{x:220,y:88,'text-anchor':'middle','font-size':'20',fill:ink},fmtn(L)));
+  svg.appendChild(el('text',{x:500,y:88,'text-anchor':'middle','font-size':'20',fill:ink},fmtn(Rv)));
+  svg.appendChild(el('text',{x:360,y:90,'text-anchor':'middle','font-size':'26','font-weight':'700',fill:eq?ok:bad},eq?'=':'≠'));
+  svg.appendChild(el('text',{x:220,y:132,'text-anchor':'middle','font-size':'13',fill:css('--ink2')},'sol taraf'));
+  svg.appendChild(el('text',{x:500,y:132,'text-anchor':'middle','font-size':'13',fill:css('--ink2')},'sağ taraf'));
+  $('#ruleOut').innerHTML=(eq?'<b style="color:var(--ok)">Bu değerlerde tutuyor.</b> ':'<b style="color:var(--bad)">Karşı örnek bulundu — eşitlik bozuldu.</b> ')+R.ok;}
+$('#rSel').innerHTML=RULES.map((r,i)=>'<option value="'+i+'">'+r.t+'</option>').join('');
+['#rSel','#ra','#rb'].forEach(x=>$(x).addEventListener('input',drawRule));
+/* --- Keşif: çarpan sayma --- */
+function drawK(){const a=+$('#kb').value||2,m=+$('#km').value,n=+$('#kn').value;$('#kmo').value=m;$('#kno').value=n;
+  const svg=$('#kSvg');svg.innerHTML='';const box=(x,y,t,c)=>{svg.appendChild(el('rect',{x,y,width:38,height:38,rx:6,fill:c,stroke:css('--navy2')}));svg.appendChild(el('text',{x:x+19,y:y+25,'text-anchor':'middle','font-size':'18',fill:css('--ink')},t));};
+  let x=20;for(let i=0;i<m;i++){box(x,20,a,css('--sky'));x+=44;}svg.appendChild(el('text',{x:x+6,y:46,'font-size':'22',fill:css('--ink')},'×'));x+=30;
+  for(let i=0;i<n;i++){box(x,20,a,css('--gold2'));x+=44;}
+  svg.appendChild(el('text',{x:20,y:100,'font-size':'15',fill:css('--ink2')},m+' çarpan + '+n+' çarpan = '+(m+n)+' çarpan'));
+  x=20;for(let i=0;i<m+n;i++){box(x,110,a,i<m?css('--sky'):css('--gold2'));x+=44;}
+  $('#kOut').innerHTML=a+'<sup>'+m+'</sup> · '+a+'<sup>'+n+'</sup> = '+a+'<sup>'+(m+n)+'</sup> = '+Math.pow(a,m+n).toLocaleString('tr-TR');}
+['#kb','#km','#kn'].forEach(s=>$(s).addEventListener('input',drawK));
+
+/* --- Bilimsel gösterim --- */
+function sciStr(a,n){const d=String(a);let s;
+  if(n>=0){const ip=d[0]+(n>=1?d.slice(1,1+n).padEnd(n,'0'):''),fp=n>=1?d.slice(1+n):d.slice(1);s=Number(ip).toLocaleString('tr-TR')+(fp&&fp!=='0'?','+fp:'');}
+  else{s='0,'+'0'.repeat(-n-1)+d.replace(/0$/,'');}
+  return s;}
+function drawS(){const a=+$('#sa').value,n=+$('#sn').value;$('#sao').value=(a/10).toLocaleString('tr-TR');$('#sno').value=n;
+  const dir=n>0?'virgül '+n+' basamak sağa':n<0?'virgül '+(-n)+' basamak sola':'virgül yerinde';
+  $('#sOut').innerHTML=(a/10).toLocaleString('tr-TR')+' × 10<sup>'+n+'</sup> = <b>'+sciStr(a,n)+'</b> &nbsp;<span style="font-size:14px;color:var(--ink2)">('+dir+')</span>';}
+['#sa','#sn'].forEach(s=>$(s).addEventListener('input',drawS));
+$$('[data-sci]').forEach(b=>b.onclick=()=>{const [a,n]=b.dataset.sci.split(',');$('#sa').value=a;$('#sn').value=n;drawS();});
+
+/* --- Kök sıkıştırma --- */
+let R={lo:0,hi:0,k:0,n:50,step:0,timer:null};
+function rInit(){R.n=+$('#rn').value;$('#rno').value=R.n;R.k=Math.floor(Math.sqrt(R.n));if(R.k*R.k===R.n)R.k=R.k;R.lo=R.k;R.hi=R.k+1;R.step=0;rStop();drawR();}
+function rStepFn(){if(R.step>=8||R.k*R.k===R.n)return rStop();const mid=(R.lo+R.hi)/2;if(mid*mid<R.n)R.lo=mid;else R.hi=mid;R.step++;drawR();}
+function rStop(){if(R.timer){clearInterval(R.timer);R.timer=null;}$('#rPlay').textContent='▶ Oynat';}
+$('#rPlay').onclick=()=>{if(R.timer)return rStop();if(!motionOn()){rStepFn();return;}$('#rPlay').textContent='⏸ Duraklat';R.timer=setInterval(rStepFn,1400/ +$('#rSpeed').value);};
+$('#rStep').onclick=rStepFn;$('#rReset').onclick=rInit;$('#rn').addEventListener('input',rInit);
+function drawR(){const svg=$('#rSvg');svg.innerHTML='';const k=R.k,n=R.n,s=Math.sqrt(n);
+  const X=v=>60+(v-k)*600,ink=css('--ink'),nv=css('--navy2'),gd=css('--gold'),ok=css('--ok');
+  svg.appendChild(el('rect',{x:X(R.lo),y:70,width:Math.max(2,X(R.hi)-X(R.lo)),height:40,fill:css('--sky'),opacity:.9}));
+  svg.appendChild(el('line',{x1:40,y1:90,x2:680,y2:90,stroke:ink,'stroke-width':2}));
+  for(let i=0;i<=10;i++){const v=k+i/10,x=X(v);svg.appendChild(el('line',{x1:x,y1:i%5?84:78,x2:x,y2:i%5?96:102,stroke:ink}));if(i%5===0)svg.appendChild(el('text',{x,y:125,'text-anchor':'middle','font-size':'15',fill:ink},v.toLocaleString('tr-TR')));}
+  if(k*k===n){svg.appendChild(el('circle',{cx:X(k),cy:90,r:8,fill:ok}));svg.appendChild(el('text',{x:X(k),y:50,'text-anchor':'middle','font-size':'16',fill:ok},'√'+n+' = '+k+' (tam kare)'));$('#rOut').innerHTML=n+' bir tam kare: √'+n+' = '+k+'.';return;}
+  svg.appendChild(el('text',{x:X(k),y:160,'text-anchor':'middle','font-size':'14',fill:css('--ink2')},k+'² = '+k*k));
+  svg.appendChild(el('text',{x:X(k+1),y:160,'text-anchor':'middle','font-size':'14',fill:css('--ink2')},(k+1)+'² = '+(k+1)*(k+1)));
+  svg.appendChild(el('line',{x1:X(R.lo),y1:60,x2:X(R.lo),y2:120,stroke:nv,'stroke-width':3}));svg.appendChild(el('line',{x1:X(R.hi),y1:60,x2:X(R.hi),y2:120,stroke:nv,'stroke-width':3}));
+  svg.appendChild(el('text',{x:X(R.lo),y:50,'text-anchor':'end','font-size':'14',fill:nv},R.lo.toLocaleString('tr-TR',{maximumFractionDigits:4})+' '));
+  svg.appendChild(el('text',{x:X(R.hi),y:50,'text-anchor':'start','font-size':'14',fill:nv},' '+R.hi.toLocaleString('tr-TR',{maximumFractionDigits:4})));
+  svg.appendChild(el('circle',{cx:X(s),cy:90,r:7,fill:gd}));svg.appendChild(el('text',{x:X(s),y:30,'text-anchor':'middle','font-size':'16','font-weight':'700',fill:gd},'√'+n+' ≈ '+s.toLocaleString('tr-TR',{maximumFractionDigits:3})));
+  svg.appendChild(el('text',{x:360,y:190,'text-anchor':'middle','font-size':'14',fill:css('--ink2')},'Adım '+R.step+' · aralık genişliği '+(R.hi-R.lo).toLocaleString('tr-TR',{maximumFractionDigits:4})));
+  $('#rOut').innerHTML=k+'² = '+k*k+' &lt; '+n+' &lt; '+(k+1)*(k+1)+' = '+(k+1)+'² → '+k+' &lt; √'+n+' &lt; '+(k+1)+(R.step?'<br>Sıkıştırma: '+R.lo.toLocaleString('tr-TR',{maximumFractionDigits:4})+' &lt; √'+n+' &lt; '+R.hi.toLocaleString('tr-TR',{maximumFractionDigits:4})+' &nbsp;('+R.lo.toLocaleString('tr-TR',{maximumFractionDigits:4})+'² = '+(R.lo*R.lo).toLocaleString('tr-TR',{maximumFractionDigits:3})+')':'');}
+
+/* --- Üstel büyüme --- */
+let G={step:0,timer:null,b:2};
+const MAXS=10;
+function gStop(){if(G.timer){clearInterval(G.timer);G.timer=null;}$('#gPlay').textContent='▶ Oynat';}
+function gStepFn(){if(G.step>=MAXS)return gStop();G.step++;drawG();}
+$('#gPlay').onclick=()=>{if(G.timer)return gStop();if(!motionOn()){gStepFn();return;}$('#gPlay').textContent='⏸ Duraklat';G.timer=setInterval(gStepFn,1300/ +$('#gSpeed').value);};
+$('#gStep').onclick=gStepFn;$('#gReset').onclick=()=>{G.step=0;gStop();drawG();};
+$('#gBase').onchange=()=>{G.b=+$('#gBase').value;G.step=0;gStop();drawG();};
+function drawG(){const svg=$('#gSvg');svg.innerHTML='';const b=G.b,max=Math.pow(b,MAXS),ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  const X=i=>60+i*40,Y=v=>260-v/max*230;
+  svg.appendChild(el('line',{x1:60,y1:260,x2:470,y2:260,stroke:ink}));svg.appendChild(el('line',{x1:60,y1:20,x2:60,y2:260,stroke:ink}));
+  svg.appendChild(el('text',{x:265,y:290,'text-anchor':'middle','font-size':'14',fill:ink},'adım (bölünme sayısı)'));
+  svg.appendChild(el('text',{x:20,y:28,'font-size':'13',fill:css('--ink2')},max.toLocaleString('tr-TR')));
+  let path='';for(let i=0;i<=G.step;i++){const v=Math.pow(b,i);path+=(i?' L':'M')+X(i)+' '+Y(v);svg.appendChild(el('circle',{cx:X(i),cy:Y(v),r:5,fill:i===G.step?gd:nv}));svg.appendChild(el('text',{x:X(i),y:276,'text-anchor':'middle','font-size':'12',fill:ink},i));}
+  if(G.step)svg.appendChild(el('path',{d:path,fill:'none',stroke:nv,'stroke-width':2.5}));
+  const v=Math.pow(b,G.step),dots=Math.min(v,256),cols=16;
+  for(let i=0;i<dots;i++)svg.appendChild(el('circle',{cx:500+(i%cols)*13,cy:30+Math.floor(i/cols)*13,r:4.5,fill:nv,opacity:.85}));
+  if(v>256)svg.appendChild(el('text',{x:600,y:260,'text-anchor':'middle','font-size':'13',fill:css('--ink2')},'(ilk 256 gösteriliyor)'));
+  $('#gOut').innerHTML='Adım '+G.step+': '+b+'<sup>'+G.step+'</sup> = <b>'+v.toLocaleString('tr-TR')+'</b>'+(b===2?' bakteri':'');}
+function stopAll(){rStop();gStop();}
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawRule();drawK();drawS();rInit();drawG();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

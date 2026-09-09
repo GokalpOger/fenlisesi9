@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kimya 9 · Hafta 1 · Kimya Hayattır</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#14532d;--navy2:#1f8a4c;--sky:#dcf3e4;--gold:#b45309;--gold2:#fff1dc}
+[data-theme="dark"]{--navy:#8ee6b0;--navy2:#3fbf75;--sky:#12331f;--gold:#f5b35a;--gold2:#3a2610}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Kimya · Ünite 1 Etkileşim · Kimya Hayattır · Hafta 1<b>Günlük hayatta kimya, alt disiplinler, kariyer ve güvenlik</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>İlerlemen yalnızca bu cihazda kalır ve puan kazanmazsın. <a href="index.html">Ana sayfadan giriş yap</a>, sonra bu sayfaya dön.</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>Kahvaltı masası bir kimya laboratuvarıdır</h1>
+  <p class="lead">Çayın demlenmesi bir çözünme; ekmeğin kızarması Maillard tepkimesi; yumurtanın katılaşması proteinin denatürasyonu; tereyağının bozulması oksidasyon. Sen daha okula gelmeden onlarca kimyasal olay yaşadın.</p>
+  <div class="card">
+    <p><b>Kimya nedir?</b> Maddenin yapısını, özelliklerini ve bir maddenin başka bir maddeye dönüşümünü inceleyen bilim. Fizik "madde nasıl hareket eder" der; kimya "madde neye dönüşür" der.</p>
+    <p><b>Bu hafta:</b> kimyanın günlük hayattaki yeri, alt disiplinleri, kimya okuyanların meslekleri ve — en önemlisi — laboratuvarda ve evde kimyasal güvenlik: tehlike sembollerini okumayı öğreneceğiz.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>Kocaeli'nin İzmit-Körfez hattında Türkiye'nin en büyük rafinerisi ve onlarca petrokimya tesisi var. Aynı ham petrolden hem benzin hem pet şişe hem de aspirin nasıl çıkıyor? Cevap 3. sekmede: kimya, molekülleri parçalayıp yeniden dizmenin bilimidir.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Etkileşim → Kimya Hayattır)</div>Kimyanın günlük hayattaki ve endüstrideki yerini örneklemek · kimyanın alt disiplinlerini ayırt etmek · kimya temelli meslekleri tanımak · tehlike sembollerini ve laboratuvar güvenlik kurallarını uygulamak.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma: ortaokuldan getirdiklerin</h2>
+  <div class="grid2">
+    <div class="card"><b>Madde ve hâlleri</b><p>Katı, sıvı, gaz; hâl değişimi fiziksel olaydır. Yoğunluk = kütle / hacim.</p></div>
+    <div class="card"><b>Element, bileşik, karışım</b><p>Element tek tür atom (Fe, O), bileşik farklı atomların kimyasal birleşimi (H₂O, NaCl), karışım kimyasal bağ olmadan bir arada (hava, çay).</p></div>
+    <div class="card"><b>Fiziksel / kimyasal değişim</b><p>Kâğıdı yırtmak fiziksel, yakmak kimyasal. Kimyasal değişimde yeni madde oluşur; renk, gaz çıkışı, ısı işaret olabilir.</p></div>
+    <div class="card"><b>Asit ve baz</b><p>Limon, sirke asit (pH &lt; 7); sabun, çamaşır sodası baz (pH &gt; 7). Turnusol: asitte kırmızı, bazda mavi.</p></div>
+  </div>
+  <h3>Mini test (3 soru)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Kimya hayattır: evden sanayiye</h3>
+  <p>Kimyanın işi, atomların yeniden düzenlenmesidir. Aynı karbon atomları kömürde, elmasta, pet şişede ve senin DNA'nda var; fark dizilişte. Bu yüzden ham petrol (uzun karbon zincirleri) rafineride ısıyla parçalanır (<b>kraking</b>), kısa zincirler benzin, orta zincirler mazot olur; etilen gibi küçük moleküller birbirine eklenerek (<b>polimerleşme</b>) plastik olur. İlaç ise başka bir yoldan: küçük molekülleri adım adım birleştirerek (<b>sentez</b>).</p>
+  <div class="sim">
+    <h3>Evdeki kimya</h3>
+    <div class="hint">Mutfak ve banyodaki bir ürüne dokun: içindeki etkin madde, formülü ve kullanım nedeni görünür. Kaç tanesinin formülünü tahmin edebilirsin?</div>
+    <div class="svgwrap"><svg id="homeSvg" viewBox="0 0 720 300" role="img" aria-label="Evdeki kimyasallar"></svg></div>
+    <div class="readout" id="homeOut" style="display:block">Bir ürün seç.</div>
+  </div>
+  <div class="sim">
+    <h3>Rafineri simülatörü: ham petrol nasıl ayrılır?</h3>
+    <div class="hint">Damıtma kulesinin tepe sıcaklığını değiştir; her fraksiyon kendi kaynama aralığında yoğunlaşır. Bir fraksiyona dokununca hangi ürüne dönüştüğünü ve hangi alt disiplinin devreye girdiğini görürsün.</div>
+    <div class="ctrl"><label>Kule tepe sıcaklığı <input type="range" id="temp" min="60" max="400" value="250"><output id="tempo">250</output> °C</label><button id="colReset" class="alt">Sıfırla</button></div>
+    <div class="svgwrap"><svg id="colSvg" viewBox="0 0 720 360" role="img" aria-label="Damıtma kulesi"></svg></div>
+    <div class="readout" id="colOut" style="display:block">Bir fraksiyona dokun.</div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Damıtma <b>fiziksel</b> bir ayırmadır: molekülleri değiştirmez, kaynama noktalarına göre sıralar. Kimyasal dönüşüm sonraki adımlarda olur — kraking uzun zincirleri kırar, polimerleşme küçük molekülleri birbirine ekler. Aynı ham petrolden benzin de pet şişe de aspirin de bu yüzden çıkabiliyor.</div>
+
+  <h3>3.2 Kimyanın alt disiplinleri</h3>
+  <table>
+    <tr><th>Disiplin</th><th>Ne sorar?</th><th>Örnek</th></tr>
+    <tr><td><b>Organik kimya</b></td><td>Karbon temelli bileşikler nasıl kurulur ve dönüşür?</td><td>İlaç, plastik, boya, parfüm, benzin</td></tr>
+    <tr><td><b>Anorganik kimya</b></td><td>Metaller, mineraller, tuzlar, karbon dışı bileşikler</td><td>Çimento, cam, katalizör, pil malzemesi</td></tr>
+    <tr><td><b>Analitik kimya</b></td><td>Bu numunede ne var, ne kadar var?</td><td>Su analizi, doping testi, adli tıp, gıda denetimi</td></tr>
+    <tr><td><b>Fizikokimya</b></td><td>Tepkimeler neden ve ne hızda olur; enerji nereye gider?</td><td>Pil tasarımı, tepkime hızı, termodinamik</td></tr>
+    <tr><td><b>Biyokimya</b></td><td>Canlıdaki moleküller nasıl çalışır?</td><td>Enzim, DNA, aşı, insülin üretimi</td></tr>
+    <tr><td><b>Polimer kimyası</b></td><td>Uzun zincirli moleküller nasıl tasarlanır?</td><td>PET, naylon, kevlar, bisiklet lastiği</td></tr>
+    <tr><td><b>Endüstriyel kimya</b></td><td>Laboratuvardaki tepkime tonlarca nasıl üretilir?</td><td>Rafineri, gübre, deterjan fabrikası</td></tr>
+  </table>
+  <div class="box def"><div class="t">Kimya ve komşuları</div>Fizikle: atom yapısı ve bağ kuantum fiziğidir. Biyolojiyle: yaşam biyokimyadır. Tıpla: her ilaç bir moleküldür. Mühendislikle: kimya mühendisi tepkimeyi fabrikaya taşır. Çevreyle: hava-su-toprak kirliliği analitik ve çevre kimyasının işidir.</div>
+  <h3>3.3 Kimya okuyan ne olur?</h3>
+  <div class="grid2">
+    <div class="card"><b>Kimya mühendisi / proses mühendisi</b><p>Kocaeli'deki rafineri, petrokimya, ilaç ve boya fabrikalarında üretimi tasarlar ve yönetir. Bölgenin en çok aradığı mesleklerden.</p></div>
+    <div class="card"><b>Analist / kalite kontrol</b><p>Gıda, su, ilaç, kozmetik numunelerini test eder. Her fabrikada, her belediyede, her hastanede vardır.</p></div>
+    <div class="card"><b>Ar-Ge kimyacısı</b><p>Yeni ilaç, pil, boya, malzeme geliştirir. TÜBİTAK MAM (Gebze) tam yanı başında.</p></div>
+    <div class="card"><b>Eczacı, adli kimyacı, çevre uzmanı, kimya öğretmeni</b><p>Kimya temelli ama farklı yollardan ilerleyen meslekler.</p></div>
+  </div>
+  <h3>3.4 Güvenlik: tehlike sembolleri (GHS piktogramları)</h3>
+  <p>Kimyasal ürünlerin etiketinde kırmızı çerçeveli, beyaz zeminli 9 uluslararası sembol vardır. Bunları okumak bir sınav konusu olmaktan önce hayatta kalma bilgisidir — evdeki çamaşır suyu ve kireç çözücü de bu sembolleri taşır.</p>
+  <div class="grid2" id="pictoGrid"></div>
+  <div class="box warn"><div class="t">Evde en tehlikeli hata: karıştırmak</div>Çamaşır suyu (sodyum hipoklorit) ile tuz ruhu (hidroklorik asit) ya da amonyaklı temizleyiciler asla karıştırılmaz; zehirli gaz açığa çıkar. "Daha güçlü temizler" düşüncesi her yıl zehirlenmelere yol açıyor. Kural: bir ürün, bir yüzey, açık pencere.</div>
+  <h3>3.5 Laboratuvar kuralları — neden'leriyle</h3>
+  <table>
+    <tr><th>Kural</th><th>Neden?</th></tr>
+    <tr><td>Gözlük ve önlük zorunlu</td><td>Sıçrayan tek damla asit korneayı kalıcı yakar; kıyafet tutuşabilir.</td></tr>
+    <tr><td>Kokla, ama elinle yelpazeleyerek</td><td>Buharı doğrudan içine çekmek solunum yollarını yakar.</td></tr>
+    <tr><td>Asidi suya ekle, suyu aside değil</td><td>Seyrelme çok ısı verir; suyu aside dökersen asit kaynayıp sıçrar.</td></tr>
+    <tr><td>Etiketsiz kap kullanma, etiketleri oku</td><td>Renksiz sıvı su da olabilir, sülfürik asit de.</td></tr>
+    <tr><td>Deney tüpünün ağzını kendine ve arkadaşına çevirme</td><td>Ani kaynama ("bumping") içeriği fırlatır.</td></tr>
+    <tr><td>Laboratuvarda yeme, içme, telefon</td><td>Elde kalan kimyasal ağza taşınır; telefon kontamine olur.</td></tr>
+    <tr><td>Atıkları lavaboya değil, atık kabına</td><td>Çevre kimyası: kanalizasyon arıtmaya, oradan Körfez'e gider.</td></tr>
+  </table>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · Kek neden kabarır? Karbonat vs kabartma tozu</h3>
+    <p><b>Durum:</b> Tarif "1 çay kaşığı karbonat" diyor, sen kabartma tozu koydun; kek kabarmadı.</p>
+    <p><b>Kavramla bağ:</b> Karbonat (sodyum bikarbonat, NaHCO₃) bir bazdır; asitle (yoğurt, limon) tepkimeye girip CO₂ gazı verir: NaHCO₃ + asit → tuz + su + CO₂↑. Kabartma tozu ise karbonat + kuru asit karışımıdır, kendi asidini taşır; tarifte asit varsa fazla, yoksa tam kararındadır.</p>
+    <p><b>Analiz:</b> Yoğurtlu tarife kabartma tozu koyunca CO₂ hamur kıvam almadan fırından önce kaçar; kek çöker. Alt disiplin: organik/gıda kimyası.</p>
+    <p><b>Sonuç:</b> Tarifi anlamak, tepkimeyi anlamaktır.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · Bisiklet zinciri neden paslanır, yağ neden korur?</h3>
+    <p><b>Durum:</b> Yağmurda bırakılan zincir bir haftada kızardı.</p>
+    <p><b>Kavramla bağ:</b> Pas, demirin oksijen ve suyla yükseltgenmesidir: 4Fe + 3O₂ + 6H₂O → 4Fe(OH)₃ (kaba özet). Su elektrolit görevi görür; deniz havasındaki tuz (İzmit Körfezi!) iletkenliği artırıp paslanmayı hızlandırır.</p>
+    <p><b>Analiz:</b> Yağ, metal yüzeyle su/oksijen arasına apolar bir bariyer koyar. Paslanmaz çelikteki krom ise yüzeyde görünmez bir oksit tabakası oluşturarak kendini korur (pasivasyon).</p>
+    <p><b>Sonuç:</b> Kimyayı bilen, 200 ₺'lik zinciri 5 ₺'lik yağla kurtarır. Alt disiplin: anorganik kimya / korozyon.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Telefon pili: lityum-iyonun gidiş dönüşü</h3>
+    <p><b>Durum:</b> Pil ısınıyor, yıllar geçince kapasitesi düşüyor.</p>
+    <p><b>Kavramla bağ:</b> Şarjda lityum iyonları katottan grafit anoda göç eder; kullanırken geri döner, elektronlar dış devreden akar. Bu bir elektrokimyasal tepkimedir (fizikokimya). Her döngüde anot yüzeyinde kalıcı bir tabaka kalınlaşır; kapasite düşer.</p>
+    <p><b>Analiz:</b> Yüksek sıcaklık bu yan tepkimeleri hızlandırır: yastığın altında şarj etmek pil ömrünü kısaltır. %20-80 aralığında tutmak ömrü uzatır.</p>
+    <p><b>Sonuç:</b> Kimya pil ömrünü belirler; pil kimyacısı bugün en çok aranan mesleklerden.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · İzmit Körfezi ve deniz suyu analizi</h3>
+    <p><b>Durum:</b> Belediye plaj için "yüzülebilir" raporu verdi. Neye göre?</p>
+    <p><b>Kavramla bağ:</b> Analitik kimyacı numunede çözünmüş oksijen, azot-fosfor (gübre kaçağı), ağır metal ve koliform bakteriyi ölçer; sınır değerlerle karşılaştırır.</p>
+    <p><b>Analiz:</b> Fosfor artınca alg patlar (ötrofikasyon), oksijen düşer, balık ölür. Körfez'de 1990'larda yaşanan buydu; arıtma tesisleriyle düzeldi.</p>
+    <p><b>Sonuç:</b> "Ne var, ne kadar var?" sorusu bir körfezi kurtarır. Alt disiplin: analitik ve çevre kimyası.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Tehlike sembolü avı</h3>
+    <div class="hint">Verilen ürün ya da durum için doğru piktograma dokun. 10 tur; sonunda puan ve açıklamalar gelir.</div>
+    <div id="pgame"></div>
+    <div class="ctrl"><button id="pgReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="sim">
+    <h3>Alt disiplin sıralayıcı</h3>
+    <div class="hint">Her iş tanımı için uygun alt disiplini seç. 8 tur.</div>
+    <div id="dgame"></div>
+    <div class="ctrl"><button id="dgReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Evdeki 3 ürünün etiketine bak, hangi piktogramlar var? &nbsp; 2) Hangi sembolü hiç görmedin, neden? &nbsp; 3) Banyodaki iki ürünün "karıştırmayın" uyarısı var mı? Fotoğrafını çek.</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · Fiziksel mi, kimyasal mı?</h3><p>a) Buzun erimesi b) Sütün ekşimesi c) Şekerin suda çözünmesi d) Ekmeğin küflenmesi</p>
+    <ol class="steps"><li>a) Fiziksel: H₂O molekülü değişmedi. <div class="why">Hâl değişimi, yeni madde yok.</div></li><li>b) Kimyasal: laktoz → laktik asit; koku ve pH değişti.</li><li>c) Fiziksel: şeker molekülü sudaki hâlinde de aynı; buharlaştırınca geri gelir.</li><li>d) Kimyasal: küf, nişastayı başka moleküllere çevirir; geri dönmez.</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · Etiket okuma</h3><p>Bir şişede "alev" ve "ünlem" sembolü var. Bu ürünle ilgili hangi önlemleri alırsın?</p>
+    <ol class="steps"><li>Alev → yanıcı: ocak, kıvılcım, sigara yakınında kullanma; serin yerde sakla.</li><li>Ünlem → tahriş edici/sağlığa zararlı: eldiven, havalandırma, göze-cilde temas ettirme.<div class="why">Sembol, önlem listesinin kısaltmasıdır; her sembol 2-3 davranış ister.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Hangi alt disiplin?</h3><p>Bir şirket, bisiklet lastiğinin daha az aşınması için yeni bir kauçuk geliştiriyor. Ekipte hangi kimyacılar olmalı, neden?</p>
+    <ol class="steps"><li>Polimer kimyacısı: zincir yapısını ve çapraz bağları tasarlar.</li><li>Fizikokimyacı: sürtünme, ısı dayanımı ve yaşlanma hızını ölçüp modeller.</li><li>Analitik kimyacı: üretilen her partide bileşimin aynı olduğunu doğrular.</li><li>Kimya mühendisi: laboratuvar tarifini fabrika ölçeğine taşır. <div class="why">Gerçek ürün, en az dört disiplinin ortak işidir.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Seyreltme güvenliği</h3><p>Laboratuvarda 100 mL derişik sülfürik asidi 900 mL su ile seyrelteceksin. Doğru sıra nedir ve neden?</p>
+    <ol class="steps"><li>Su kabı hazırlanır; asit yavaşça, karıştırarak suya eklenir.</li><li>Neden: seyrelme çok ekzotermiktir. Az su içine çok asit gelirse (ters sıra) su anında kaynar ve asit sıçrar. Çok su içine az asit gelince ısı geniş kütleye dağılır.<div class="why">Ezber cümle: "Asit suya, düğün evine gelin gibi; su aside, cenaze gibi gider."</div></li><li>Gözlük, eldiven, çeker ocak; kap borosilikat cam (ısıya dayanır).</li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Karışım tehlikesini kimyayla açıkla</h3><p>Çamaşır suyu (NaOCl) ile tuz ruhu (HCl) karışınca ne olur, neden tehlikelidir? Denklemi yazmadan, kavram düzeyinde açıkla.</p>
+    <ol class="steps"><li>Hipoklorit iyonu güçlü bir yükseltgendir; asidik ortamda klorür iyonunu yükseltgeyerek klor gazı (Cl₂) açığa çıkarır.</li><li>Klor gazı sudan ağır, sarı-yeşil, keskin kokulu; akciğer dokusunu tahrip eder — 1. Dünya Savaşı'nda kimyasal silah olarak kullanıldı.</li><li>Banyo küçük ve kapalı olduğu için derişim hızla artar.<div class="why">Sınav mantığı: "ürünler zararsız + zararsız = güvenli" değildir; ortam (asitlik) tepkimeyi tetikler.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Rafineriden pet şişeye</h3><p>Ham petrolden PET şişe üretiminde hangi kimyasal işlem basamakları vardır? Her basamağı alt disipline bağla.</p>
+    <ol class="steps"><li>Ayrımsal damıtma: kaynama noktasına göre fraksiyonlara ayırma — fiziksel işlem (fizikokimya/endüstriyel).</li><li>Kraking: uzun zincirlerin ısı ve katalizörle kırılması; etilen ve p-ksilen gibi küçük moleküller — organik/endüstriyel.</li><li>Etilen glikol ve tereftalik asit sentezi — organik kimya.</li><li>İkisinin polikondenzasyonu → PET — polimer kimyası. <div class="why">Kalite kontrolde molekül ağırlığı ölçümü analitik kimyadır.</div></li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 soru. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Kimya nedir</b>Maddenin yapısı, özellikleri ve dönüşümü. Atomları yeniden dizme bilimi.</div>
+    <div class="card"><b>Alt disiplinler</b>Organik · anorganik · analitik · fizikokimya · biyokimya · polimer · endüstriyel.</div>
+    <div class="card"><b>9 piktogram</b>Yanıcı · oksitleyici · patlayıcı · aşındırıcı · zehirli · tahriş · sağlık tehlikesi · basınçlı gaz · çevre.</div>
+    <div class="card"><b>Altın kurallar</b>Gözlük-önlük · asit suya · etiket oku · karıştırma · atık kabına.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>Çözünmeyi kimyasal değişim sanmak. Şeker suda çözülünce şeker olarak kalır.</li>
+    <li>"Doğal = güvenli" sanmak. Zehirli mantar da doğaldır; tehlike sembolü kaynağa değil özelliğe göredir.</li>
+    <li>Suyu aside eklemek. Sıra hayati.</li>
+    <li>Ünlem sembolü ile kuru kafa sembolünü karıştırmak: ünlem tahriş/orta tehlike, kuru kafa akut zehirlilik.</li>
+    <li>Kimyayı sadece "tepkime denklemi" sanmak. Analitik, polimer, biyokimya gibi disiplinlerin çoğu ölçme ve tasarımdır.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>"Atomları yeniden dizmek" dedik; peki atom nedir, içinde ne var, bunu nereden biliyoruz? Gelecek hafta: <b>atom teorilerinin tarihsel gelişimi</b> — Dalton'dan modern atom modeline.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Kimya · Ünite 1 · Hafta 1 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='kim-h01', HAFTA=1;
+const BASEKEY='ah9-kim-h01';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Kimya 9 · Ünite 1 · Hafta 1 · Kimya hayattır, alt disiplinler ve güvenlik';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'Aşağıdakilerden hangisi bileşiktir?',o:['Su (H₂O)','Demir (Fe)','Hava','Oksijen (O₂)'],a:0,e:'Su iki farklı elementin kimyasal birleşimidir; hava karışım, demir ve oksijen elementtir.'},
+ {s:'Hangisi kimyasal değişimdir?',o:['Demirin paslanması','Camın kırılması','Suyun donması','Tuzun suda çözünmesi'],a:0,e:'Pasta yeni madde (demir oksit) oluşur; diğerleri fiziksel.'},
+ {s:'Mavi turnusolü kırmızıya çeviren madde nedir?',o:['Asit','Baz','Tuz','Su'],a:0,e:'Asitler mavi turnusolü kırmızıya, bazlar kırmızıyı maviye çevirir.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,false)));}
+/* ana test */
+const QUIZ=[
+ {s:'Kimyanın uğraş alanını en iyi tanımlayan ifade hangisidir?',o:['Maddenin yapısı, özellikleri ve dönüşümleri','Canlıların yapısı ve işleyişi','Kuvvet, hareket ve enerji','Yer kabuğunun oluşumu'],a:0,e:'Diğerleri biyoloji, fizik ve jeolojinin tanımıdır.'},
+ {s:'Su numunesindeki kurşun miktarını ölçen kimyacı hangi alt disiplinde çalışır?',o:['Analitik kimya','Organik kimya','Polimer kimyası','Biyokimya'],a:0,e:'"Ne var, ne kadar var?" sorusu analitik kimyanın işidir.'},
+ {tag:'bağlam',s:'Bir öğrenci kekin kabarması için tarife karbonat ekliyor. Karbonatın gaz çıkarması için tarifte hangisi bulunmalıdır?',o:['Yoğurt veya limon gibi asidik bir malzeme','Daha fazla şeker','Tuz','Daha fazla un'],a:0,e:'NaHCO₃ bazdır; CO₂ çıkarması için asitle tepkimeye girmesi gerekir.'},
+ {s:'Etikette "ünlem" piktogramı olan bir ürün için doğru yorum hangisidir?',o:['Tahriş edici veya sağlığa zararlı; eldiven ve havalandırma gerekir','Patlayıcıdır','Radyoaktiftir','Tamamen zararsızdır'],a:0,e:'Ünlem, orta düzey tehlikeleri (tahriş, duyarlılaştırma, zararlı) gösterir.'},
+ {s:'Derişik asidi seyreltirken doğru uygulama hangisidir?',o:['Asidi yavaşça suya eklemek','Suyu hızla aside eklemek','İkisini aynı anda kaba dökmek','Sırası fark etmez'],a:0,e:'Seyrelme ekzotermiktir; su aside eklenirse kaynayıp sıçrar.'},
+ {tag:'bağlam',s:'Banyoyu temizleyen bir kişi çamaşır suyuna tuz ruhu ekliyor ve keskin bir koku hissediyor. Bu durumda ilk yapılması gereken nedir?',o:['Ortamı hemen terk edip havalandırmak','Üzerine su dökmek','Daha çok temizleyici eklemek','Kokuyu koklayarak tanımaya çalışmak'],a:0,e:'Açığa çıkan gaz zehirlidir; önce uzaklaş, sonra havalandır, gerekirse 112.'},
+ {s:'Demirin paslanmasını hızlandıran etken hangisidir?',o:['Nem ve tuzlu hava','Yağ tabakası','Kuru hava','Boya kaplaması'],a:0,e:'Su ve tuz elektrolit görevi görerek yükseltgenmeyi hızlandırır.'},
+ {s:'<b>Bilgi:</b> Rafineride ham petrol önce fiziksel olarak ayrılır, sonra kimyasal işlemlerle (kraking, polimerleşme) dönüştürülür.<br>Ham petrolü kaynama noktasına göre fraksiyonlara ayıran işlem hangisidir?',o:['Ayrımsal damıtma','Polimerleşme','Nötralleşme','Elektroliz'],a:0,e:'Damıtma fiziksel bir ayırma yöntemidir; kraking ve polimerleşme sonraki kimyasal adımlardır.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Kimyasal tepkimelerin hızı sıcaklıkla artar; pil içindeki istenmeyen yan tepkimeler de bu kurala uyar ve anot yüzeyinde kalıcı bir tabaka bırakır.<br>Bir telefon pili yastığın altında şarj edilince daha çabuk yaşlanıyor. Bunun kimyasal açıklaması hangisidir?',o:['Yüksek sıcaklık pil içindeki yan tepkimeleri hızlandırır','Yastık elektronları emer','Şarj akımı yastıkta kaybolur','Lityum iyonları soğukta daha hızlı hareket eder'],a:0,e:'Sıcaklık artışı tepkime hızını artırır; anot yüzeyindeki kalıcı tabaka kalınlaşır.'},
+ {s:'Hangi meslek kimya eğitimini doğrudan gerektirmez?',o:['Sismolog','Eczacı','Kalite kontrol analisti','Proses mühendisi'],a:0,e:'Sismolog fizik/jeofizik kökenlidir.'},
+ {open:true,s:'Evde bulunan iki temizlik ürününü seç; her biri için etkin maddesini, hangi piktogramı taşıyabileceğini ve neden karıştırılmaması gerektiğini yaz.',ans:'Örn. çamaşır suyu (NaOCl, aşındırıcı+çevre) ve kireç çözücü (HCl, aşındırıcı); karışınca klor gazı.',e:'Madde-piktogram-gerekçe üçlüsü beklenir.'},
+ {open:true,s:'Kocaeli sanayisinden bir ürün seç (plastik, boya, lastik, yakıt…) ve üretiminde rol alan en az üç kimya alt disiplinini gerekçesiyle yaz.',ans:'Örn. PET şişe: endüstriyel (damıtma), organik (monomer sentezi), polimer (PET), analitik (kalite kontrol).',e:'Her disiplin için bir iş adımı belirtilmeli.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+/* --- Damıtma kulesi --- */
+const FR=[
+ {n:'Rafineri gazı',t:[-40,20],u:'LPG, tüpgaz; ısıtma ve araç yakıtı.',d:'Endüstriyel kimya'},
+ {n:'Benzin',t:[20,120],u:'Otomobil yakıtı; ayrıca çözücü.',d:'Organik + endüstriyel'},
+ {n:'Nafta',t:[120,180],u:'Petrokimyanın hammaddesi: kraking ile etilen → plastik.',d:'Organik / polimer'},
+ {n:'Gazyağı',t:[180,250],u:'Jet yakıtı.',d:'Endüstriyel'},
+ {n:'Motorin',t:[250,350],u:'Kamyon, gemi, jeneratör yakıtı.',d:'Endüstriyel'},
+ {n:'Yağlar ve bitüm',t:[350,600],u:'Makine yağı, asfalt, mum.',d:'Polimer / malzeme'}];
+let selF=-1;
+function drawCol(){const svg=$('#colSvg');svg.innerHTML='';const T=+$('#temp').value;$('#tempo').value=T;
+  const ink=css('--ink'),nv=css('--navy2'),sky=css('--sky'),gd=css('--gold');
+  svg.appendChild(el('path',{d:'M250 20 h220 v300 h-220 z',fill:'none',stroke:ink,'stroke-width':3}));
+  FR.forEach((f,i)=>{const y=30+i*48, active=T>=f.t[0];
+    const g=el('g',{tabindex:0,role:'button','aria-label':f.n,style:'cursor:pointer'});
+    g.appendChild(el('rect',{x:252,y,width:216,height:42,fill:i===selF?nv:(active?sky:css('--bg')),opacity:active?1:.45,stroke:css('--line')}));
+    g.appendChild(el('text',{x:360,y:y+19,'text-anchor':'middle','font-size':'14','font-weight':'600',fill:i===selF?'#fff':ink},f.n));
+    g.appendChild(el('text',{x:360,y:y+35,'text-anchor':'middle','font-size':'12',fill:i===selF?'#fff':css('--ink2')},f.t[0]+'–'+f.t[1]+' °C'));
+    if(active)for(let k=0;k<3;k++)g.appendChild(el('circle',{cx:480+k*14,cy:y+21,r:3.5,fill:gd}));
+    g.onclick=()=>{selF=i;drawCol();$('#colOut').innerHTML='<b>'+f.n+'</b> ('+f.t[0]+'–'+f.t[1]+' °C) · '+f.u+'<br><span style="color:var(--gold)">Alt disiplin:</span> '+f.d+(T>=f.t[0]?'':' <b style="color:var(--bad)">— bu sıcaklıkta henüz buharlaşmadı.</b>');};
+    g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.onclick();}};
+    svg.appendChild(g);});
+  svg.appendChild(el('text',{x:130,y:180,'text-anchor':'middle','font-size':'15',fill:ink},'Ham petrol'));
+  svg.appendChild(el('path',{d:'M150 190 h95',stroke:nv,'stroke-width':3,'marker-end':''}));
+  svg.appendChild(el('text',{x:360,y:345,'text-anchor':'middle','font-size':'13',fill:css('--ink2')},'Tepe '+T+' °C · sarı noktalar: buharlaşıp yükselen fraksiyonlar'));}
+$('#temp').addEventListener('input',drawCol);
+$('#colReset').onclick=()=>{selF=-1;$('#temp').value=250;drawCol();$('#colOut').textContent='Bir fraksiyona dokun.';};
+/* --- Evdeki kimya --- */
+const HOME=[
+ {n:'Sirke',x:60,f:'Asetik asit, CH₃COOH (%5)',w:'Zayıf asit; kireç çözer, salata tatlandırır.',c:'#e9c46a'},
+ {n:'Tuz',x:150,f:'Sodyum klorür, NaCl',w:'İyonik bileşik; tat, koruyucu, buz çözücü.',c:'#f1f1f1'},
+ {n:'Karbonat',x:240,f:'Sodyum bikarbonat, NaHCO₃',w:'Zayıf baz; asitle CO₂ verir, kabartır, koku giderir.',c:'#dbe9ff'},
+ {n:'Şeker',x:330,f:'Sakkaroz, C₁₂H₂₂O₁₁',w:'Organik molekül; ısıtınca karamelleşir (kimyasal).',c:'#ffe8d6'},
+ {n:'Çamaşır suyu',x:420,f:'Sodyum hipoklorit, NaOCl',w:'Güçlü yükseltgen; beyazlatır, mikrop öldürür. Asitle karıştırma!',c:'#cfe8cf'},
+ {n:'Kireç çözücü',x:510,f:'Hidroklorik asit, HCl (seyreltik)',w:'Kuvvetli asit; CaCO₃ kirecini çözer. Aşındırıcı!',c:'#ffd6d6'},
+ {n:'Sabun',x:600,f:'Yağ asidi sodyum tuzu',w:'Bir ucu suyu, bir ucu yağı sever; kiri sarar.',c:'#f3d9ff'},
+ {n:'Pil',x:670,f:'Li-iyon / Zn-MnO₂',w:'Elektrokimyasal tepkime elektron akıtır.',c:'#d9d9d9'}];
+let selH=-1;
+function drawHome(){const svg=$('#homeSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2');
+  svg.appendChild(el('rect',{x:20,y:200,width:680,height:14,rx:4,fill:css('--line')}));
+  HOME.forEach((h,i)=>{const g=el('g',{tabindex:0,role:'button','aria-label':h.n,style:'cursor:pointer'});const w=i===selH?60:52,ht=i===selH?110:96,y=200-ht;
+    g.appendChild(el('rect',{x:h.x-w/2,y,width:w,height:ht,rx:8,fill:h.c,stroke:i===selH?nv:ink,'stroke-width':i===selH?3:1.2}));
+    g.appendChild(el('rect',{x:h.x-w/2+8,y:y+22,width:w-16,height:ht-44,rx:3,fill:'#fff',opacity:.7}));
+    g.appendChild(el('text',{x:h.x,y:250,'text-anchor':'middle','font-size':'12',fill:ink,'font-weight':i===selH?'700':'400'},h.n));
+    g.onclick=()=>{selH=i;drawHome();$('#homeOut').innerHTML='<b>'+h.n+'</b> · '+h.f+'<br>'+h.w;};g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();g.onclick();}};svg.appendChild(g);});}
+/* --- Piktogramlar --- */
+const PIC=[
+ {n:'Yanıcı',d:'Alev alır: alkol, benzin, sprey. Ateş ve kıvılcımdan uzak.',ex:'Kolonya, çakmak gazı',draw:g=>{g.appendChild(el('path',{d:'M50 22c6 10-4 14 2 24 8 12 22 6 20-8-1 8-6 9-6 4 0-8-8-12-6-22-4 4-6 8-10 2z',fill:'#000'}));g.appendChild(el('rect',{x:34,y:70,width:32,height:5,fill:'#000'}));}},
+ {n:'Oksitleyici',d:'Yanmayı şiddetlendirir: peroksit, klorat. Yanıcılarla saklama.',ex:'Havuz kloru, saç açıcı',draw:g=>{g.appendChild(el('circle',{cx:50,cy:56,r:13,fill:'none',stroke:'#000','stroke-width':5}));g.appendChild(el('path',{d:'M50 18c6 10-4 14 2 24 6 8 16 3 14-6-2 6-6 6-6 2 0-8-8-10-6-20-4 4-6 6-10 0z',fill:'#000'}));}},
+ {n:'Patlayıcı',d:'Darbe, ısı, sürtünmeyle patlar.',ex:'Havai fişek, bazı laboratuvar tuzları',draw:g=>{g.appendChild(el('path',{d:'M50 30l6 12 13-6-6 13 12 6-12 6 6 13-13-6-6 12-6-12-13 6 6-13-12-6 12-6-6-13 13 6z',fill:'#000'}));}},
+ {n:'Aşındırıcı',d:'Cildi ve metali yakar: kuvvetli asit ve bazlar.',ex:'Kireç çözücü, lavabo açıcı',draw:g=>{g.appendChild(el('path',{d:'M30 30h14v10l-8 14h20l-8-14v-10h14',fill:'none',stroke:'#000','stroke-width':4}));g.appendChild(el('path',{d:'M36 62h28M40 62v10h20v-10',fill:'none',stroke:'#000','stroke-width':3}));g.appendChild(el('path',{d:'M58 26h12M62 30l6 10',stroke:'#000','stroke-width':3}));}},
+ {n:'Zehirli (akut)',d:'Az miktarı bile öldürebilir: siyanür, metanol, bazı böcek ilaçları.',ex:'Fare zehri, metil alkol',draw:g=>{g.appendChild(el('circle',{cx:50,cy:44,r:16,fill:'#000'}));g.appendChild(el('circle',{cx:44,cy:42,r:4,fill:'#fff'}));g.appendChild(el('circle',{cx:56,cy:42,r:4,fill:'#fff'}));g.appendChild(el('rect',{x:42,y:56,width:16,height:8,fill:'#000'}));g.appendChild(el('path',{d:'M30 70l40-8M30 62l40 8',stroke:'#000','stroke-width':5}));}},
+ {n:'Tahriş edici / zararlı',d:'Cilt, göz, solunum tahrişi; alerji; orta düzey zehirlilik.',ex:'Bulaşık deterjanı, birçok temizleyici',draw:g=>{g.appendChild(el('rect',{x:45,y:24,width:10,height:32,rx:3,fill:'#000'}));g.appendChild(el('circle',{cx:50,cy:68,r:6,fill:'#000'}));}},
+ {n:'Sağlık tehlikesi',d:'Uzun vadeli: kanserojen, üreme, organ hasarı, solunum duyarlılığı.',ex:'Benzen, bazı boyalar',draw:g=>{g.appendChild(el('circle',{cx:50,cy:32,r:8,fill:'#000'}));g.appendChild(el('path',{d:'M36 46q14-6 28 0v28q-14-4-28 0z',fill:'#000'}));g.appendChild(el('path',{d:'M42 52q8 6 16 0M42 60q8 6 16 0',stroke:'#fff','stroke-width':3,fill:'none'}));}},
+ {n:'Basınçlı gaz',d:'Tüp ısınırsa patlayabilir; sıvı gaz soğuk yanığı yapar.',ex:'Piknik tüpü, oksijen tüpü',draw:g=>{g.appendChild(el('rect',{x:40,y:30,width:20,height:44,rx:10,fill:'#000'}));g.appendChild(el('rect',{x:46,y:22,width:8,height:10,fill:'#000'}));}},
+ {n:'Çevre için tehlikeli',d:'Sudaki canlılara zehirli; lavaboya dökülmez.',ex:'Böcek ilacı, çamaşır suyu, motor yağı',draw:g=>{g.appendChild(el('path',{d:'M30 60q10-12 20-6 10 6 20-6l-4 12-32 4z',fill:'#000'}));g.appendChild(el('path',{d:'M56 34c8 0 12 6 14 10-6-2-10 0-14 4-2-6 0-10 0-14z',fill:'#000'}));g.appendChild(el('path',{d:'M50 40v20',stroke:'#000','stroke-width':3}));}}];
+function pictoSvg(p,size){const s=el('svg',{viewBox:'0 0 100 100',width:size,height:size,role:'img','aria-label':p.n});s.appendChild(el('rect',{x:18,y:18,width:64,height:64,fill:'#fff',stroke:'#d0021b','stroke-width':6,transform:'rotate(45 50 50)'}));const g=el('g');p.draw(g);s.appendChild(g);return s;}
+function drawPictos(){const grid=$('#pictoGrid');grid.innerHTML='';PIC.forEach(p=>{const c=document.createElement('div');c.className='card';c.style.display='flex';c.style.gap='12px';c.style.alignItems='center';const s=pictoSvg(p,72);c.appendChild(s);const t=document.createElement('div');t.innerHTML='<b>'+p.n+'</b><div style="font-size:14px">'+p.d+'</div><div style="font-size:13px;color:var(--ink2)">Örnek: '+p.ex+'</div>';c.appendChild(t);grid.appendChild(c);});}
+/* --- Piktogram oyunu --- */
+const PQ=[['Kolonya şişesi',0,'Etil alkol %80: yanıcı.'],['Lavabo açıcı (sodyum hidroksit)',3,'Kuvvetli baz cildi yakar.'],['Fare zehri',4,'Küçük dozda ölümcül.'],['Piknik tüpü',7,'Sıkıştırılmış gaz.'],['Havuz kloru granülü',1,'Yanmayı şiddetlendirir.'],['Bulaşık deterjanı (göz tahrişi uyarısı)',5,'Orta düzey tehlike.'],['Motor yağı (suya karışırsa)',8,'Sudaki canlılara zehirli.'],['Havai fişek',2,'Darbe ve ısıyla patlar.'],['Benzen (laboratuvar)',6,'Kanserojen, uzun vadeli.'],['Kireç çözücü (HCl)',3,'Asit metal ve cildi aşındırır.']];
+let PG={i:0,s:0,log:[]};
+function drawPG(){const box=$('#pgame');if(PG.i>=PQ.length){box.innerHTML='<div class="readout">Puan: '+PG.s+' / '+PQ.length+'</div>'+PG.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ Doğru: <b>'+l.d+'</b> · ')+l.e+'</div></div>').join('');return;}
+  const q=PQ[PG.i];box.innerHTML='<div class="readout">'+(PG.i+1)+' / '+PQ.length+' · Puan '+PG.s+'</div><div class="q"><div class="stem">'+q[0]+'</div><div id="pgOpts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px"></div><div class="fb" id="pgFb"></div></div>';
+  const o=box.querySelector('#pgOpts');PIC.forEach((p,j)=>{const b=document.createElement('button');b.className='btn alt';b.style.cssText='display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;font-size:11px';b.appendChild(pictoSvg(p,56));b.appendChild(document.createTextNode(p.n));b.onclick=()=>{const ok=j===q[1];if(ok)PG.s++;PG.log.push({q:q[0],ok,d:PIC[q[1]].n,e:q[2]});box.querySelector('.q').classList.add(ok?'right':'wrong');o.querySelectorAll('button').forEach(x=>x.disabled=true);$('#pgFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru: <b>'+PIC[q[1]].n+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="pgNext">Sonraki →</button>';$('#pgNext').onclick=()=>{PG.i++;drawPG();};};o.appendChild(b);});}
+$('#pgReset').onclick=()=>{PG={i:0,s:0,log:[]};drawPG();};
+/* --- Alt disiplin oyunu --- */
+const DB=['Organik','Anorganik','Analitik','Fizikokimya','Biyokimya','Polimer','Endüstriyel'];
+const DQ=[['Yeni bir ağrı kesici molekül tasarlamak',0,'Karbon temelli ilaç sentezi.'],['Körfez suyunda fosfat ölçmek',2,'Ne kadar var? sorusu.'],['Pilin şarj hızını artırmak için elektrot tepkimesini modellemek',3,'Tepkime hızı ve enerji.'],['Daha dayanıklı bisiklet lastiği için kauçuk zincirini değiştirmek',5,'Uzun zincirli molekül tasarımı.'],['Enzimin şekeri nasıl parçaladığını incelemek',4,'Canlı molekülleri.'],['Laboratuvar tarifini günde 50 ton üretime çevirmek',6,'Ölçek büyütme.'],['Çimento için yeni kalsiyum silikat bileşimi',1,'Karbon dışı mineral bileşik.'],['Doping testi',2,'Numunede aranan maddeyi bulma ve miktarlama.']];
+let DG={i:0,s:0,log:[]};
+function drawDG(){const box=$('#dgame');if(DG.i>=DQ.length){box.innerHTML='<div class="readout">Puan: '+DG.s+' / '+DQ.length+'</div>'+DG.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ Doğru: <b>'+l.d+'</b> · ')+l.e+'</div></div>').join('');return;}
+  const q=DQ[DG.i];box.innerHTML='<div class="readout">'+(DG.i+1)+' / '+DQ.length+' · Puan '+DG.s+'</div><div class="q"><div class="stem">'+q[0]+'</div><div class="opts">'+DB.map(b=>'<label><input type="radio" name="dg"> <span>'+b+'</span></label>').join('')+'</div><div class="fb" id="dgFb"></div></div>';
+  box.querySelectorAll('input').forEach((r,j)=>r.onchange=()=>{const ok=j===q[1];if(ok)DG.s++;DG.log.push({q:q[0],ok,d:DB[q[1]],e:q[2]});box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('input').forEach(x=>x.disabled=true);$('#dgFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru: <b>'+DB[q[1]]+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="dgNext">Sonraki →</button>';$('#dgNext').onclick=()=>{DG.i++;drawDG();};});}
+$('#dgReset').onclick=()=>{DG={i:0,s:0,log:[]};drawDG();};
+function stopAll(){}
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawCol();drawHome();drawPictos();drawPG();drawDG();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

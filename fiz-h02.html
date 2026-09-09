@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fizik 9 · Hafta 2 · Fizikte Ölçme ve Birimler</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#9a3b00;--navy2:#d9540f;--sky:#ffe8d6;--gold:#1b4f9c;--gold2:#dce8ff}
+[data-theme="dark"]{--navy:#ffb37a;--navy2:#f07a2a;--sky:#4a2410;--gold:#8fb4ff;--gold2:#16264a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Fizik · Ünite 1 Fizik Bilimi ve Kariyer Keşfi · Hafta 2<b>Temel ve türetilmiş büyüklükler, SI, birim çevirme, ölçüm hatası, anlamlı basamak</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>327 milyon dolarlık uzay aracı bir birim hatasıyla yandı</h1>
+  <p class="lead">1999'da NASA'nın Mars Climate Orbiter aracı Mars atmosferinde parçalandı. Sebep: bir ekip itki verisini pound-kuvvet ile hesaplamış, diğeri newton sanmıştı. Sayılar doğruydu, birimler değil. Fizikte bir ölçüm "sayı + birim"dir; ikisinden biri eksikse ölçüm yoktur.</p>
+  <div class="card">
+    <p><b>Bu hafta</b> fiziğin ortak dilini öğreniyoruz: SI birim sistemi, temel ve türetilmiş büyüklükler, birim çevirme, ölçüm hatası ve "kaç basamak yazmalıyım?" sorusunun cevabı olan anlamlı basamaklar. Bunlar sınav konusu olmaktan önce, laboratuvarda ve mühendislikte hata yapmamanın araçlarıdır.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>Aynı cetvelle aynı kalemi beş kez ölçtün: 14,2 · 14,3 · 14,2 · 14,4 · 14,2 cm. Kalemin uzunluğu kaç? "14,26" mı, "14,3" mü, "14,2 ± 0,1" mi? Üçü de savunulabilir görünüyor ama fizikçi için tek doğru cevap var. 3. sekmede.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Fizik Bilimi ve Kariyer Keşfi)</div>Temel ve türetilmiş büyüklükleri ayırt etmek · SI birimlerini ve katlarını kullanmak · birim dönüşümlerini boyut analiziyle yapmak · ölçüm hatalarını sınıflandırıp hassasiyet-doğruluk ayrımını yapmak · anlamlı basamak kurallarını uygulamak (fen lisesi derinliği).</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma ve aralıklı tekrar</h2>
+  <div class="grid2">
+    <div class="card"><b>Ortaokuldan birimler</b><p>Uzunluk m, kütle kg, zaman s, sıcaklık °C; hız m/s veya km/sa; 1 km = 1000 m, 1 saat = 3600 s.</p></div>
+    <div class="card"><b>Matematik H1 köprüsü</b><p>Bilimsel gösterim: 1,5 × 10⁸ km. Birim katları da 10'un kuvvetleridir: kilo = 10³, mili = 10⁻³. Bu hafta o üsler ile çalışacağız.</p></div>
+    <div class="card"><b>Geçen haftadan</b><p>Fizik ölçerek konuşur; yasa "ne olur" der, teori "neden" der. Ölçüm olmadan model sınanamaz.</p></div>
+    <div class="card"><b>Matematik H2 köprüsü</b><p>"14,2 ± 0,1 cm" bir kapalı aralıktır: [14,1, 14,3]. Ölçüm belirsizliği aralık diliyle yazılır.</p></div>
+  </div>
+  <h3>Aralıklı tekrar (3 soru, anında geri bildirim)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Ölçmek: bir büyüklüğü birimle karşılaştırmak</h3>
+  <p>Ölçme, bir büyüklüğü aynı türden "birim" alınmış bir büyüklükle karşılaştırmaktır: "masa 1,4 m" demek, masanın uzunluğu metre çubuğunun 1,4 katı demektir. Bu yüzden her ölçüm sonucu iki parçalıdır: <b>sayısal değer × birim</b>. 1,4'ün tek başına anlamı yoktur.</p>
+  <div class="box def"><div class="t">SI (Uluslararası Birim Sistemi)</div>Dünyanın ortak ölçü dili. Yedi <b>temel büyüklük</b> tanımlar; diğer tüm büyüklükler bunlardan <b>türetilir</b>.</div>
+  <table>
+    <tr><th>Temel büyüklük</th><th>Birim</th><th>Sembol</th><th>Günlük karşılığı</th></tr>
+    <tr><td>Uzunluk</td><td>metre</td><td>m</td><td>Bisiklet tekerleği çapı ≈ 0,7 m</td></tr>
+    <tr><td>Kütle</td><td>kilogram</td><td>kg</td><td>1 L su ≈ 1 kg</td></tr>
+    <tr><td>Zaman</td><td>saniye</td><td>s</td><td>Kalp atışı ≈ 1 s</td></tr>
+    <tr><td>Sıcaklık</td><td>kelvin</td><td>K</td><td>0 °C = 273,15 K</td></tr>
+    <tr><td>Elektrik akımı</td><td>amper</td><td>A</td><td>Telefon şarjı ≈ 2 A</td></tr>
+    <tr><td>Madde miktarı</td><td>mol</td><td>mol</td><td>18 g su = 1 mol (Kimya'da gelecek)</td></tr>
+    <tr><td>Işık şiddeti</td><td>kandela</td><td>cd</td><td>Bir mum ≈ 1 cd</td></tr>
+  </table>
+  <div class="box warn"><div class="t">Tuzak: kilogram temel, gram değil</div>Temel birim <b>kilogram</b>dır; "kilo" ön eki taşıyan tek temel birim. Ayrıca sıcaklığın SI birimi kelvin'dir; derece Celsius günlük hayatta kullanılır ama temel birim değildir.</div>
+  <h3>3.2 Türetilmiş büyüklükler: temel birimlerin çarpım ve bölümleri</h3>
+  <div class="formula"><div class="m">hız = uzunluk / zaman → m/s</div><div class="why">İki temel büyüklüğün oranı.</div></div>
+  <div class="formula"><div class="m">ivme = hız / zaman → m/s²</div><div class="why">Türetilmişin türetilmişi.</div></div>
+  <div class="formula"><div class="m">kuvvet = kütle × ivme → kg·m/s² = <b>newton (N)</b></div><div class="why">Özel ad alan türetilmiş birim; Mars aracını yakan birim.</div></div>
+  <div class="formula"><div class="m">yoğunluk = kütle / hacim → kg/m³</div><div class="why">Hacim = m³ zaten türetilmiştir.</div></div>
+  <div class="formula"><div class="m">basınç = kuvvet / alan → N/m² = <b>pascal (Pa)</b></div><div class="why">Lastik basıncı psi'yi Pa'ya çevirmek bu hafta öğreneceğin iş.</div></div>
+  <div class="box def"><div class="t">Ayırt etme kuralı</div>Bir büyüklük başka büyüklüklerle <em>tanımlanıyorsa</em> türetilmiştir. Sürat "yol bölü zaman" diye tanımlanır → türetilmiş. Uzunluk başka bir şeyle tanımlanmaz → temel. Alan, hacim, enerji, güç, frekans: hepsi türetilmiş.</div>
+  <h3>3.3 Katlar ve askatlar: 10'un kuvvetleriyle konuşmak</h3>
+  <table>
+    <tr><th>Ön ek</th><th>Sembol</th><th>Çarpan</th><th>Örnek</th></tr>
+    <tr><td>giga</td><td>G</td><td>10⁹</td><td>GB, GHz işlemci</td></tr>
+    <tr><td>mega</td><td>M</td><td>10⁶</td><td>MB, MW santral gücü</td></tr>
+    <tr><td>kilo</td><td>k</td><td>10³</td><td>km, kg, kW</td></tr>
+    <tr><td>santi</td><td>c</td><td>10⁻²</td><td>cm</td></tr>
+    <tr><td>mili</td><td>m</td><td>10⁻³</td><td>mm, mL, ms</td></tr>
+    <tr><td>mikro</td><td>μ</td><td>10⁻⁶</td><td>μm bakteri boyu, μs GPS</td></tr>
+    <tr><td>nano</td><td>n</td><td>10⁻⁹</td><td>nm çip teknolojisi (3 nm)</td></tr>
+  </table>
+  <div class="sim">
+    <h3>Birim merdiveni</h3>
+    <div class="hint">Bir değer ve ön ek seç; merdivende adım attıkça değerin nasıl yazıldığını ve virgülün kaç basamak kaydığını izle. Alan ve hacim anahtarlarıyla üssün nasıl katlandığını gör.</div>
+    <div class="ctrl">
+      <label>Değer <input type="number" id="uv" value="2.5" step="0.1" style="width:90px"></label>
+      <label>Kaynak <select id="uf" style="font:inherit;padding:6px;border-radius:8px"><option value="3">km</option><option value="0" selected>m</option><option value="-2">cm</option><option value="-3">mm</option><option value="-6">μm</option></select></label>
+      <label>Hedef <select id="ut" style="font:inherit;padding:6px;border-radius:8px"><option value="3">km</option><option value="0">m</option><option value="-2" selected>cm</option><option value="-3">mm</option><option value="-6">μm</option></select></label>
+      <label>Boyut <select id="ud" style="font:inherit;padding:6px;border-radius:8px"><option value="1">uzunluk</option><option value="2">alan (²)</option><option value="3">hacim (³)</option></select></label>
+    </div>
+    <div class="svgwrap"><svg id="uSvg" viewBox="0 0 720 150" role="img" aria-label="Birim merdiveni"></svg></div>
+    <div class="readout" id="uOut" style="display:block"></div>
+  </div>
+  <h3>3.4 Birim çevirmenin güvenli yolu: birim çarpanı (boyut analizi)</h3>
+  <p>Ezber yerine yöntem: değeri, <b>değeri 1 olan bir kesirle</b> çarp; istemediğin birim sadeleşsin. Örnek — 72 km/sa kaç m/s?</p>
+  <div class="formula"><div class="m">72 <span class="frac"><span>km</span><span>sa</span></span> × <span class="frac"><span>1000 m</span><span>1 km</span></span> × <span class="frac"><span>1 sa</span><span>3600 s</span></span> = 20 m/s</div><div class="why">km ile km, sa ile sa sadeleşti; kalan m/s. Kısayol: km/sa ÷ 3,6 = m/s.</div></div>
+  <div class="box warn"><div class="t">Tuzak: alan ve hacimde üs katlanır</div>1 m = 100 cm ama 1 m² = 100² = 10⁴ cm², 1 m³ = 10⁶ cm³. "1 m² = 100 cm²" en yaygın hata. Aynı şekilde 1 L = 1 dm³ = 1000 cm³.</div>
+  <h3>3.5 Ölçüm hatası: hiçbir ölçüm kesin değildir</h3>
+  <p>Merak sorusuna dönelim: 14,2 · 14,3 · 14,2 · 14,4 · 14,2 cm. Her ölçümde hem alet hem gözlemci küçük sapmalar yapar. İki tür hata vardır:</p>
+  <table>
+    <tr><th></th><th>Sistematik hata</th><th>Rastgele hata</th></tr>
+    <tr><td>Kaynak</td><td>Yanlış kalibre alet, sıfır hatası, yöntem</td><td>Okuma, titreşim, sıcaklık dalgalanması</td></tr>
+    <tr><td>Yönü</td><td>Hep aynı yöne (hep fazla ya da hep az)</td><td>Rastgele iki yöne</td></tr>
+    <tr><td>Çare</td><td>Kalibrasyon, başka aletle karşılaştırma</td><td>Ölçümü tekrarlayıp <b>ortalama</b> almak</td></tr>
+    <tr><td>Etkilediği</td><td><b>Doğruluk</b> (gerçek değere yakınlık)</td><td><b>Hassasiyet</b> (ölçümlerin birbirine yakınlığı)</td></tr>
+  </table>
+  <div class="sim">
+    <h3>Hassasiyet mi, doğruluk mu? Ölçüm simülatörü</h3>
+    <div class="hint">Gerçek uzunluk 14,25 cm. Sistematik ve rastgele hata kaydırıcılarını ayarla, 10 ölçüm al; ortalama ve saçılmayı dart tahtasında ve sayı doğrusunda izle.</div>
+    <div class="ctrl">
+      <label>Sistematik <input type="range" id="esys" min="-0.5" max="0.5" step="0.05" value="0"><output id="esyso">0</output> cm</label>
+      <label>Rastgele <input type="range" id="ernd" min="0" max="0.5" step="0.05" value="0.1"><output id="erndo">0,1</output> cm</label>
+      <button id="eGo">10 ölçüm al</button>
+    </div>
+    <div class="svgwrap"><svg id="eSvg" viewBox="0 0 720 220" role="img" aria-label="Ölçüm simülatörü"></svg></div>
+    <div class="readout" id="eOut" style="display:block">Ölçüm almak için düğmeye bas.</div>
+  </div>
+  <div class="box def"><div class="t">Sonucu doğru yazmak</div>Beş ölçümün ortalaması 14,26; aletin okuma hassasiyeti 0,1 cm; sapmalar ±0,1 civarı. Doğru rapor: <b>14,3 ± 0,1 cm</b>. "14,26" yazmak, cetvelin veremediği bir hassasiyet iddia etmektir. Bağıl hata = 0,1 / 14,3 ≈ %0,7.</div>
+  <h3>3.6 Anlamlı basamaklar (fen lisesi)</h3>
+  <p>Anlamlı basamak, bir ölçümde güvenilir olan basamak sayısıdır; ölçümün kalitesini taşır.</p>
+  <table>
+    <tr><th>Kural</th><th>Örnek</th></tr>
+    <tr><td>Sıfır dışındaki rakamlar anlamlıdır</td><td>14,3 → 3 anlamlı</td></tr>
+    <tr><td>Araya giren sıfırlar anlamlıdır</td><td>1,03 → 3</td></tr>
+    <tr><td>Baştaki sıfırlar anlamlı değildir</td><td>0,0025 → 2</td></tr>
+    <tr><td>Ondalıklı sayının sonundaki sıfırlar anlamlıdır</td><td>2,50 → 3</td></tr>
+    <tr><td>Tam sayının sonundaki sıfırlar belirsizdir; bilimsel gösterim çözer</td><td>1200 → 2, 3 ya da 4; 1,20 × 10³ → 3</td></tr>
+    <tr><td>Çarpma/bölmede sonuç, en az anlamlı basamaklı veri kadar</td><td>2,5 × 3,14 = 7,85 → <b>7,9</b> (2 basamak)</td></tr>
+    <tr><td>Toplama/çıkarmada sonuç, en az ondalık basamaklı veri kadar</td><td>12,1 + 0,25 = 12,35 → <b>12,4</b></td></tr>
+  </table>
+  <div class="sim">
+    <h3>Anlamlı basamak sınayıcı</h3>
+    <div class="hint">Bir sayı yaz; kaç anlamlı basamağı olduğunu tahmin et ve kontrol et. Sonundaki sıfırlar ve bilimsel gösterim özellikle tuzaklı.</div>
+    <div class="ctrl"><label>Sayı <input type="text" id="sfIn" value="0,0250" style="width:130px"></label><label>Tahminin <input type="number" id="sfG" min="1" max="12" style="width:70px"></label><button id="sfGo">Kontrol et</button></div>
+    <div class="readout" id="sfOut" style="display:block"></div>
+  </div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · İlaç dozu: mg/kg hesabı ve tek basamağın anlamı</h3>
+    <p><b>Durum:</b> Prospektüs "10 mg/kg, günde iki kez" diyor. 52 kg'lık biri için doz kaç mL şurup? (Şurup: 250 mg / 5 mL)</p>
+    <p><b>Kavramla bağ:</b> Türetilmiş birim mg/kg; birim çarpanı yöntemi hatasız yol.</p>
+    <p><b>Hesap:</b> 52 kg × 10 mg/kg = 520 mg. 520 mg × (5 mL / 250 mg) = 10,4 mL. Ölçek 0,5 mL hassasiyetli → <b>10,5 mL</b> (anlamlı basamak kuralı gereği 10,4 yazılır ama pratikte alet hassasiyetine yuvarlanır).</p>
+    <p><b>Sonuç:</b> "mg" ile "mL"yi karıştırmak, çocuk doz hatalarının en yaygın nedeni. Birim yazmadan sayı yazma.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · 50 km/sa hız sınırı gerçekte ne kadar hızlı?</h3>
+    <p><b>Durum:</b> Okul önünde hız sınırı 50 km/sa. Bisikletle 20 km/sa gidiyorsun; araba yanından geçiyor.</p>
+    <p><b>Hesap:</b> 50 km/sa ÷ 3,6 = 13,9 m/s ≈ 14 m/s; 20 km/sa = 5,6 m/s. Bir saniyede araba 14 m, sen 5,6 m. Sürücü 1 saniye telefona bakarsa 14 m "kör" gider — iki araba boyu.</p>
+    <p><b>Sonuç:</b> m/s, trafik güvenliğinin gerçek dili; km/sa duygusal olarak "yavaş" hissettirir. Bu yüzden fizik problemleri hep SI'ya çevrilerek çözülür.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Bisiklet lastiği: psi → Pa dönüşümü</h3>
+    <p><b>Durum:</b> Lastik 45 psi. Fizik dersinde basıncın SI birimi pascal.</p>
+    <p><b>Bilgi:</b> 1 psi ≈ 6895 Pa.</p>
+    <p><b>Hesap:</b> 45 psi × 6895 Pa/psi = 310 275 Pa ≈ <b>3,1 × 10⁵ Pa</b> = 310 kPa (anlamlı basamak: 45 iki basamaklı → 3,1 × 10⁵). Atmosfer basıncı ≈ 1,0 × 10⁵ Pa; lastik atmosferin ~3 katı.</p>
+    <p><b>Sonuç:</b> Bilimsel gösterim hem büyüklük sırasını hem anlamlı basamağı tek seferde gösterir.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · İzmit'te sanayi kalibrasyonu: neden her yıl sertifika?</h3>
+    <p><b>Durum:</b> Rafinerideki akış ölçerler, baskül ve termometreler yılda bir "kalibre" edilir; TÜBİTAK UME (Gebze) referans ölçüleri sağlar.</p>
+    <p><b>Kavramla bağ:</b> Sistematik hata zamanla büyür (aşınma, sıcaklık). Ölçer %0,5 fazla gösterirse, günde 10 000 ton akan hatta 50 ton "hayalet" ürün doğar: milyonlarca liralık hata.</p>
+    <p><b>Sonuç:</b> Doğruluk = sistematik hatayı azaltmak = kalibrasyon. Hassas ama yanlış ölçen bir alet, sürekli aynı hatayı yapan bir alettir; en tehlikelisi odur, çünkü tutarlı görünür.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Temel mi, türetilmiş mi?</h3>
+    <div class="hint">12 büyüklük; her biri için temel/türetilmiş seç. Gerekçe her cevaptan sonra gelir.</div>
+    <div id="game"></div>
+    <div class="ctrl"><button id="gmReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="sim">
+    <h3>Birim çevirme atölyesi</h3>
+    <div class="hint">Rastgele bir çevirme sorusu gelir; cevabını yaz, kontrol et. Alan/hacim ve km/sa ↔ m/s soruları ağırlıklı. 8 tur.</div>
+    <div id="conv"></div>
+    <div class="ctrl"><button id="cvReset" class="alt">Yeniden başla</button></div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Ölçüm simülatöründe sistematik hatayı 0,3'e, rastgeleyi 0'a getir: ölçümler hassas mı, doğru mu? &nbsp; 2) Rastgele hatayı büyütüp ölçüm sayısını artırsan ortalama gerçek değere yaklaşır mı? Neden? &nbsp; 3) Telefonundaki adım sayar kaç anlamlı basamak gösteriyor; bu hassasiyet gerçekçi mi?</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · 0,75 km kaç cm?</h3>
+    <ol class="steps"><li>0,75 km × 1000 m/km = 750 m.</li><li>750 m × 100 cm/m = <b>75 000 cm</b> = 7,5 × 10⁴ cm.<div class="why">İki adımda, her adımda tek çarpan; ezber yok.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · Aşağıdakileri temel/türetilmiş olarak ayır: kütle, hacim, sıcaklık, kuvvet, zaman, hız</h3>
+    <ol class="steps"><li>Temel: kütle, sıcaklık, zaman.</li><li>Türetilmiş: hacim (m³), kuvvet (kg·m/s²), hız (m/s).<div class="why">Tanımı başka büyüklük içeren → türetilmiş.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · 3,6 m² kaç cm²? 2,5 L kaç m³?</h3>
+    <ol class="steps"><li>1 m = 10² cm → 1 m² = 10⁴ cm². 3,6 × 10⁴ = <b>36 000 cm²</b>.</li><li>1 L = 1 dm³ = 10⁻³ m³ → 2,5 L = <b>2,5 × 10⁻³ m³</b>.<div class="why">Üs, boyut sayısıyla çarpılır: uzunlukta 2, alanda 4, hacimde 6 (cm için).</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Ölçüm serisi: 2,31 · 2,29 · 2,33 · 2,30 · 2,32 s. Sonucu belirsizliğiyle yaz.</h3>
+    <ol class="steps"><li>Ortalama: toplam 11,55 / 5 = 2,31 s.</li><li>En büyük sapma: 2,33 − 2,31 = 0,02; en küçük: 2,31 − 2,29 = 0,02 → belirsizlik ≈ ±0,02 s.</li><li>Sonuç: <b>2,31 ± 0,02 s</b>; bağıl hata 0,02/2,31 ≈ %0,9.<div class="why">Belirsizlik, ölçüm dağılımının yarı genişliği; anlamlı basamak sayısı belirsizliğin basamağıyla uyumlu (yüzde birler).</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · 12,0 cm × 3,25 cm × 0,50 cm blok: hacmi anlamlı basamak kuralıyla yaz</h3>
+    <ol class="steps"><li>Ham çarpım: 12,0 × 3,25 × 0,50 = 19,5 cm³.</li><li>Anlamlı basamaklar: 12,0 → 3; 3,25 → 3; 0,50 → 2. En az 2 → sonuç 2 basamak: <b>20 cm³</b>; belirsizlik olmasın diye <b>2,0 × 10¹ cm³</b> yazılır.<div class="why">"20" tek başına 1 mi 2 mi anlamlı belli olmaz; bilimsel gösterim belirsizliği kaldırır.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Boyut analiziyle formül denetimi: bir öğrenci "yer değiştirme = ½·a·t" yazdı. Doğru olabilir mi?</h3>
+    <ol class="steps"><li>Sağ taraf: (m/s²)·s = m/s → hız boyutu. Sol taraf: m.</li><li>Boyutlar uyuşmuyor → formül <b>yanlış</b>. Doğrusu ½·a·t²: (m/s²)·s² = m ✓.<div class="why">Boyut analizi sayıyı doğrulamaz (½ katsayısını göremez) ama formülün biçimini yakalar; sınavda 10 saniyelik güvenlik kontrolü.</div></li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 çoktan seçmeli (4 temel, 5 orta, 3 fen lisesi) + 2 açık uçlu. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>SI temel 7</b>m · kg · s · K · A · mol · cd. Gerisi türetilmiş: N = kg·m/s², Pa = N/m², J = N·m.</div>
+    <div class="card"><b>Ön ekler</b>G 10⁹ · M 10⁶ · k 10³ · c 10⁻² · m 10⁻³ · μ 10⁻⁶ · n 10⁻⁹. Alan: üs ×2, hacim: ×3.</div>
+    <div class="card"><b>Çevirme</b>Birim çarpanı yöntemi; km/sa ÷ 3,6 = m/s; boyut analizi ile formül kontrolü.</div>
+    <div class="card"><b>Hata</b>Sistematik → doğruluk, kalibrasyonla azalır · Rastgele → hassasiyet, tekrar+ortalama ile azalır · Sonuç: ortalama ± belirsizlik.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>1 m² = 100 cm² sanmak. 10⁴ cm².</li>
+    <li>km/sa → m/s için 3,6 ile <em>çarpmak</em>. Bölünür.</li>
+    <li>Gramı temel birim saymak. Kilogramdır.</li>
+    <li>Ortalama 14,26 çıktı diye "14,26 cm" yazmak. Alet hassasiyeti kadar basamak: 14,3.</li>
+    <li>Hassas ölçen aleti "doğru" sanmak. Sistematik hata hassasiyeti bozmaz, doğruluğu bozar.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>"Araba 14 m/s" dedik; peki hangi yöne? Hız için yön söylemeden bilgi eksik kalır, sıcaklık için yön anlamsızdır. Gelecek hafta: <b>skaler ve vektörel büyüklükler</b> — Ünite 2 Kuvvet ve Hareket'in kapısı.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Fizik · Ünite 1 · Hafta 2 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='fiz-h02', HAFTA=2;
+const BASEKEY='ah9-fiz-h02';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Fizik 9 · Ünite 1 · Hafta 2 · Fizikte ölçme ve birimler';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'<span class="tag">Geçen hafta</span> Fiber kablo içinde ışığın ilerlemesini hangi alt dal inceler?',o:['Optik','Termodinamik','Mekanik','Nükleer fizik'],a:0,e:'Işığın yansıma ve kırılması optiğin konusu.'},
+ {s:'<span class="tag">Geçen hafta</span> Fizikte "teori" için doğru olan hangisidir?',o:['Sınanmış, öngörü gücü olan açıklama çerçevesi','Kanıtlanmamış tahmin','Tek deneyin sonucu','Matematiksel formül'],a:0,e:'Gündelik dildeki "teori = tahmin" fizikte geçersizdir.'},
+ {s:'<span class="tag">Matematik H1</span> 0,00045 sayısının bilimsel gösterimi hangisidir?',o:['4,5 × 10⁻⁴','4,5 × 10⁴','45 × 10⁻⁵','0,45 × 10⁻³'],a:0,e:'Virgül 4 basamak sağa kayar; katsayı 1 ile 10 arasında olmalı.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,true)));}
+/* ana test */
+const QUIZ=[
+ {s:'Aşağıdakilerden hangisi SI temel büyüklüğüdür?',o:['Elektrik akımı','Kuvvet','Hız','Hacim'],a:0,e:'Amper temel birimdir; kuvvet, hız ve hacim türetilmiştir.'},
+ {s:'54 km/sa kaç m/s\'dir?',o:['15','194,4','54','5,4'],a:0,e:'54 ÷ 3,6 = 15. Çarpmak (194,4) en yaygın hata.'},
+ {s:'0,0032 sayısında kaç anlamlı basamak vardır?',o:['2','4','5','3'],a:0,e:'Baştaki sıfırlar yalnızca yer tutucudur: 3 ve 2 anlamlı.'},
+ {s:'2,4 m² kaç cm²\'dir?',o:['24 000','240','2 400','240 000'],a:0,e:'1 m² = 10⁴ cm² → 2,4 × 10⁴ = 24 000.'},
+ {s:'Bir terazi, üzerine hiçbir şey konmadığında 3 g gösteriyor ve her tartımda aynı 3 g fazlalık oluşuyor. Bu hata türü ve etkilediği özellik hangisidir?',o:['Sistematik hata – doğruluk','Rastgele hata – hassasiyet','Sistematik hata – hassasiyet','Rastgele hata – doğruluk'],a:0,e:'Hep aynı yönde ve büyüklükte → sistematik; ölçümler birbirine yakın kalır (hassas) ama gerçekten sapar (doğruluk bozulur).'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> 1 psi ≈ 6,9 × 10³ Pa. Bir bisiklet lastiği 60 psi ile şişirildi. Basınç, anlamlı basamak kuralına uygun olarak kaç Pa\'dır?',o:['4,1 × 10⁵ Pa','414 000 Pa','4,14 × 10⁵ Pa','4 × 10⁵ Pa'],a:0,e:'60 × 6,9 × 10³ = 4,14 × 10⁵; her iki veri 2 anlamlı basamaklı → 4,1 × 10⁵ Pa.'},
+ {s:'Aşağıdaki ölçüm serilerinden hangisi hassas ama doğru değildir? (Gerçek değer 10,0 cm)',o:['12,1 · 12,0 · 12,1 · 12,0','9,8 · 10,3 · 9,7 · 10,2','10,0 · 10,1 · 9,9 · 10,0','8,0 · 12,0 · 9,0 · 11,0'],a:0,e:'Ölçümler birbirine çok yakın (hassas) ama hepsi gerçek değerden 2 cm uzak (doğru değil): sistematik hata.'},
+ {tag:'bağlam',s:'Bir sürücü 90 km/sa hızla giderken 2,0 s telefona bakıyor. Bu sürede araç kaç metre "kör" gider?',o:['50 m','180 m','25 m','45 m'],a:0,e:'90 ÷ 3,6 = 25 m/s; 25 × 2,0 = 50 m.'},
+ {s:'Aşağıdaki türetilmiş birim eşleştirmelerinden hangisi yanlıştır?',o:['Basınç – kg/m³','Kuvvet – kg·m/s²','İvme – m/s²','Yoğunluk – kg/m³'],a:0,e:'Basınç N/m² = kg/(m·s²)\'dir; kg/m³ yoğunluğun birimidir.'},
+ {s:'Uzunlukları 4,20 cm ve 1,4 cm olan iki parçanın toplam uzunluğu anlamlı basamak kuralına göre nasıl yazılır?',o:['5,6 cm','5,60 cm','5,600 cm','6 cm'],a:0,e:'Toplamada en az ondalık basamaklı veri (1,4 → 1 ondalık) belirler: 5,6.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Anlamlı basamak, ölçümün güvenilir basamak sayısını gösterir; bir aletin okuyamadığı basamak rapor edilmez.<br>0,5 mL hassasiyetli bir ölçekle ilaç veren hemşire, hesabı 10,37 mL çıkan dozu nasıl vermelidir?',o:['10,5 mL','10,37 mL','10,4 mL','10 mL'],a:0,e:'Alet 0,5 mL adımlarla okur; 10,37 en yakın 10,5\'e yuvarlanır. 10,4 aletin okuyamadığı bir değerdir.'},
+ {s:'Bir öğrenci "kinetik enerji = ½·m·v" yazdı. Boyut analizine göre bu formül için ne söylenebilir? (Enerji birimi J = kg·m²/s²)',o:['Yanlış: sağ taraf kg·m/s boyutunda, enerji değil','Doğru: boyutlar uyuşuyor','Boyut analiziyle karar verilemez','Yalnızca ½ katsayısı yanlış'],a:0,e:'kg·(m/s) = kg·m/s ≠ kg·m²/s². Doğrusu ½·m·v².'},
+ {open:true,s:'Aynı kalemi cetvelle 5 kez ölçen bir öğrenci 14,2 · 14,3 · 14,2 · 14,4 · 14,2 cm buluyor. Sonucu belirsizliğiyle yaz ve "14,26 cm" yazmanın neden hatalı olduğunu açıkla.',ans:'Ortalama 14,26 → alet hassasiyeti 0,1 cm olduğundan 14,3 ± 0,1 cm. 14,26 cetvelin okuyamadığı bir basamak iddia eder.',e:'Ortalama + belirsizlik + anlamlı basamak gerekçesi beklenir.'},
+ {open:true,s:'Mars Climate Orbiter kazasında sayılar doğru, birimler yanlıştı. Boyut analizinin bu hatayı nasıl yakalayabileceğini bir örnekle açıkla.',ans:'İtki verisi newton yerine pound-kuvvet ile üretildi; hesaplarda birimler taşınsaydı (lbf ≠ N) sadeleşmeyen birim uyumsuzluğu görülür ve 4,45 çarpanı fark edilirdi.',e:'Birim taşımanın uyumsuzluğu görünür kılması vurgulanmalı.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+
+/* --- Birim merdiveni --- */
+const PRE={'3':'km','0':'m','-2':'cm','-3':'mm','-6':'μm'};
+function drawU(){const v=+$('#uv').value||0,f=+$('#uf').value,t=+$('#ut').value,d=+$('#ud').value;const ex=(f-t)*d;const res=v*Math.pow(10,ex);
+  const svg=$('#uSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');const steps=[3,0,-2,-3,-6];
+  steps.forEach((p,i)=>{const x=80+i*140,on=(p===f||p===t);svg.appendChild(el('rect',{x:x-50,y:40,width:100,height:44,rx:8,fill:on?nv:css('--sky'),stroke:nv}));svg.appendChild(el('text',{x,y:60,'text-anchor':'middle','font-size':'15','font-weight':'700',fill:on?'#fff':ink},PRE[p]+(d>1?(d===2?'²':'³'):'')));svg.appendChild(el('text',{x,y:77,'text-anchor':'middle','font-size':'11',fill:on?'#fff':css('--ink2')},'10^'+(p*d)));
+    if(i<steps.length-1){const dp=(steps[i]-steps[i+1])*d;svg.appendChild(el('text',{x:x+70,y:30,'text-anchor':'middle','font-size':'12',fill:gd},'×10^'+dp));svg.appendChild(el('path',{d:'M'+(x+52)+' 62 h34',stroke:gd,'stroke-width':2}));}});
+  const sup=d===2?'²':d===3?'³':'';
+  $('#uOut').innerHTML=v.toLocaleString('tr-TR')+' '+PRE[f]+sup+' = <b>'+(Math.abs(res)>=1e6||Math.abs(res)<1e-3?res.toExponential(2).replace('.',',').replace('e+','×10^').replace('e-','×10^-'):res.toLocaleString('tr-TR',{maximumFractionDigits:8}))+' '+PRE[t]+sup+'</b> &nbsp;·&nbsp; çarpan 10^'+ex+(d>1?' (boyut '+d+' olduğu için üs '+d+' katına çıktı)':'');}
+['#uv','#uf','#ut','#ud'].forEach(s=>$(s).addEventListener('input',drawU));
+/* --- Ölçüm simülatörü --- */
+function drawE(run){const sys=+$('#esys').value,rnd=+$('#ernd').value;$('#esyso').value=sys.toLocaleString('tr-TR');$('#erndo').value=rnd.toLocaleString('tr-TR');
+  const svg=$('#eSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold'),ok=css('--ok');const TRUE=14.25;
+  // dart tahtası
+  [60,42,24,8].forEach((r,i)=>svg.appendChild(el('circle',{cx:130,cy:110,r,fill:i%2?css('--sky'):css('--paper'),stroke:css('--line')})));
+  svg.appendChild(el('text',{x:130,y:190,'text-anchor':'middle','font-size':'12',fill:css('--ink2')},'merkez = gerçek değer'));
+  // sayı doğrusu
+  const X=v=>300+(v-13.5)*260;svg.appendChild(el('line',{x1:300,y1:110,x2:690,y2:110,stroke:ink,'stroke-width':2}));
+  for(let v=13.5;v<=15.01;v+=0.5){svg.appendChild(el('line',{x1:X(v),y1:104,x2:X(v),y2:116,stroke:ink}));svg.appendChild(el('text',{x:X(v),y:135,'text-anchor':'middle','font-size':'12',fill:css('--ink2')},v.toLocaleString('tr-TR')));}
+  svg.appendChild(el('line',{x1:X(TRUE),y1:70,x2:X(TRUE),y2:150,stroke:ok,'stroke-width':2,'stroke-dasharray':'4 3'}));svg.appendChild(el('text',{x:X(TRUE),y:62,'text-anchor':'middle','font-size':'12',fill:ok},'gerçek 14,25'));
+  if(!run)return;
+  const ms=[];for(let i=0;i<10;i++){const g=(Math.random()+Math.random()+Math.random()-1.5)*rnd*1.6;ms.push(Math.round((TRUE+sys+g)*10)/10);}
+  const mean=ms.reduce((a,b)=>a+b,0)/10,spread=Math.max(...ms)-Math.min(...ms);
+  ms.forEach((m,i)=>{const ang=i/10*Math.PI*2,dist=(m-TRUE)*140;svg.appendChild(el('circle',{cx:130+Math.cos(ang)*Math.abs(dist)*0.6+(m-TRUE)*60,cy:110+Math.sin(ang)*Math.abs(dist)*0.6,r:5,fill:nv,opacity:.8}));svg.appendChild(el('circle',{cx:X(m),cy:110-6-i*4,r:4,fill:nv,opacity:.8}));});
+  svg.appendChild(el('line',{x1:X(mean),y1:80,x2:X(mean),y2:150,stroke:gd,'stroke-width':3}));svg.appendChild(el('text',{x:X(mean),y:170,'text-anchor':'middle','font-size':'12',fill:gd},'ortalama '+mean.toFixed(2).replace('.',',')));
+  const acc=Math.abs(mean-TRUE)<=0.08,prec=spread<=0.3;
+  $('#eOut').innerHTML='Ölçümler: '+ms.map(m=>m.toFixed(1).replace('.',',')).join(' · ')+'<br>Ortalama <b>'+mean.toFixed(2).replace('.',',')+'</b> · yayılım '+spread.toFixed(1).replace('.',',')+' cm → <b>'+(prec?'hassas':'hassas değil')+', '+(acc?'doğru':'doğru değil')+'</b>. '+(prec&&!acc?'Tutarlı ama yanlış: tipik sistematik hata; kalibrasyon gerekir.':!prec&&acc?'Dağınık ama ortalaması doğru: rastgele hata; daha çok ölçüm ve ortalama çare.':prec&&acc?'İdeal ölçüm.':'Hem sistematik hem rastgele hata var.');}
+$('#eGo').onclick=()=>drawE(true);['#esys','#ernd'].forEach(s=>$(s).addEventListener('input',()=>drawE(false)));
+/* --- Anlamlı basamak --- */
+function sigfig(str){str=str.trim().replace(',','.');let m=str.match(/^(-?)([0-9.]+)(?:[eE×]\s*(?:10\^)?\s*(-?\d+))?$/);if(!m)return null;let digits=m[2];const hasDot=digits.includes('.');digits=digits.replace('.','');
+  const stripped=digits.replace(/^0+/,'');if(!stripped)return 1;if(hasDot||m[3]!==undefined)return stripped.length;return stripped.replace(/0+$/,'').length;}
+$('#sfGo').onclick=()=>{const s=$('#sfIn').value,g=+$('#sfG').value,n=sigfig(s);if(n==null){$('#sfOut').textContent='Sayıyı okuyamadım; örn. 0,0250 ya da 1,20e3 yaz.';return;}
+  const amb=!/[.,]/.test(s)&&/0+$/.test(s.trim())&&!/[eE×]/.test(s);
+  $('#sfOut').innerHTML=(g===n?'<b style="color:var(--ok)">Doğru.</b> ':'<b style="color:var(--bad)">Cevap '+n+'.</b> ')+(amb?'Sonu sıfırla biten tam sayı belirsizdir; en az '+n+' anlamlı basamak sayılır. Kesinlik için bilimsel gösterim kullan (örn. 1,20 × 10³ → 3).':'Kural: baştaki sıfırlar sayılmaz, ondalıklı sayının sondaki sıfırları sayılır.');};
+/* --- Temel/türetilmiş oyunu --- */
+const GB=['Temel','Türetilmiş'];const GQ=[['Sıcaklık',0,'Kelvin temel birimdir.'],['Kuvvet',1,'kg·m/s².'],['Madde miktarı',0,'Mol temel birimdir.'],['Hacim',1,'m³: uzunluğun küpü.'],['Elektrik akımı',0,'Amper temel.'],['Enerji',1,'J = kg·m²/s².'],['Işık şiddeti',0,'Kandela temel.'],['Yoğunluk',1,'kg/m³.'],['Zaman',0,'Saniye temel.'],['Frekans',1,'1/s = Hz.'],['Kütle',0,'Kilogram temel (gram değil).'],['Basınç',1,'N/m² = Pa.']];
+let GM={i:0,s:0,log:[]};
+function drawGame(){const box=$('#game');if(GM.i>=GQ.length){box.innerHTML='<div class="readout">Puan: '+GM.s+' / '+GQ.length+'</div>'+GM.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ Doğru: <b>'+l.d+'</b> · ')+l.e+'</div></div>').join('');return;}
+  const q=GQ[GM.i];box.innerHTML='<div class="readout">'+(GM.i+1)+' / '+GQ.length+' · Puan '+GM.s+'</div><div class="q"><div class="stem" style="font-size:20px">'+q[0]+'</div><div class="ctrl">'+GB.map((b,j)=>'<button class="btn'+(j?' alt':'')+'" data-v="'+j+'">'+b+'</button>').join('')+'</div><div class="fb" id="gmFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.v===q[1];if(ok)GM.s++;GM.log.push({q:q[0],ok,d:GB[q[1]],e:q[2]});box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#gmFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru: <b>'+GB[q[1]]+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="gmNext">Sonraki →</button>';$('#gmNext').onclick=()=>{GM.i++;drawGame();};});}
+$('#gmReset').onclick=()=>{GM={i:0,s:0,log:[]};drawGame();};
+/* --- Birim çevirme atölyesi --- */
+const CQ=[['36 km/sa = ? m/s',10,'36 ÷ 3,6'],['5 m² = ? cm²',50000,'1 m² = 10⁴ cm²'],['0,25 km = ? m',250,'×1000'],['2 L = ? cm³',2000,'1 L = 1000 cm³'],['15 m/s = ? km/sa',54,'×3,6'],['3 mm = ? m',0.003,'×10⁻³'],['1 m³ = ? L',1000,'1 m³ = 1000 dm³ = 1000 L'],['450 cm² = ? m²',0.045,'÷10⁴']];
+let CV={i:0,s:0};
+function drawCV(){const box=$('#conv');if(CV.i>=CQ.length){box.innerHTML='<div class="readout">Puan: '+CV.s+' / '+CQ.length+'</div>';return;}
+  const q=CQ[CV.i];box.innerHTML='<div class="readout">'+(CV.i+1)+' / '+CQ.length+' · Puan '+CV.s+'</div><div class="q"><div class="stem" style="font-size:20px">'+q[0]+'</div><div class="ctrl"><input type="text" id="cvIn" placeholder="cevap" style="width:140px"><button class="btn" id="cvGo">Kontrol</button></div><div class="fb" id="cvFb"></div></div>';
+  $('#cvIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('#cvGo').click();});
+  $('#cvGo').onclick=()=>{const v=parseFloat($('#cvIn').value.replace(/\s/g,'').replace(',','.'));const ok=Math.abs(v-q[1])<=Math.abs(q[1])*0.001;if(ok)CV.s++;box.querySelector('.q').classList.add(ok?'right':'wrong');$('#cvGo').disabled=true;$('#cvFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru cevap <b>'+q[1].toLocaleString('tr-TR')+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="cvNext">Sonraki →</button>';$('#cvNext').onclick=()=>{CV.i++;drawCV();};};}
+$('#cvReset').onclick=()=>{CV={i:0,s:0};drawCV();};
+function stopAll(){}
+
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawU();drawE(false);drawGame();drawCV();$("#sfGo").click();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

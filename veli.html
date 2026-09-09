@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Veli / Öğretmen Paneli</title>
+<style>
+:root{--bg:#f4f6fb;--paper:#fff;--ink:#141a2e;--ink2:#4a5472;--line:#dbe0ec;--acc:#1b2f6e;--acc2:#2f4aa8;--ok:#1f7a4d;--ok2:#e6f6ec;--bad:#b3261e;--bad2:#fde8e6;--font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 14px 60px}h1{font-size:26px;margin:0 0 12px}h2{font-size:19px;margin:22px 0 8px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
+.btn{background:var(--acc2);color:#fff;border:0;border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer;min-height:40px}.btn.alt{background:var(--paper);color:var(--acc);border:1.5px solid var(--acc2)}.btn.sm{padding:5px 10px;min-height:32px;font-size:13px}.btn.danger{background:var(--bad)}
+input{font:inherit;padding:10px;border:1.5px solid var(--line);border-radius:8px;width:100%;max-width:340px}label{display:block;font-size:14px;color:var(--ink2);margin:8px 0 4px}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;margin:8px 0;max-width:340px}.seg button{flex:1;border:0;background:none;padding:9px;font:inherit;cursor:pointer;color:var(--ink2)}.seg button.on{background:var(--acc2);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#eef2ff;color:var(--acc)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;background:#eef2ff;color:var(--acc)}.ok{background:var(--ok2)}.bad{background:var(--bad2)}
+.st{cursor:pointer}.st:hover td{background:#f6f8ff}.note{font-size:13px;color:var(--ink2)}.err{color:var(--bad);min-height:18px;font-size:14px}
+@media(max-width:600px){table{font-size:12px}td,th{padding:5px 3px}}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Veli / öğretmen paneli</h1>
+
+<div class="card" id="gate">
+  <div class="seg"><button class="on" data-m="veli">Veli</button><button data-m="ogretmen">Öğretmen</button></div>
+  <div id="veliForm">
+    <label>Veli e-postası</label><input id="vEp" type="email" autocomplete="email">
+    <label>Veli PIN</label><input id="vPin" type="password" inputmode="numeric" maxlength="6">
+    <p class="note"><a href="#" id="vForgot" style="color:var(--acc)">PIN'imi unuttum</a></p>
+  </div>
+  <div id="ogrForm" style="display:none"><label>Öğretmen PIN</label><input id="tPin" type="password" inputmode="numeric" maxlength="8"></div>
+  <div class="err" id="verr"></div>
+  <button class="btn" id="vgo">Giriş</button>
+</div>
+
+<div class="card" id="setBox" style="display:none">
+  <h2 style="margin-top:0" id="setTitle">Veli PIN'ini belirle</h2>
+  <p class="note" id="setNote">Bu PIN ile veli paneline girer, yalnızca onayladığın öğrencileri görürsün.</p>
+  <label>PIN (4-6 rakam)</label><input id="sPin" type="password" inputmode="numeric" maxlength="6">
+  <label>Tekrar</label><input id="sPin2" type="password" inputmode="numeric" maxlength="6">
+  <div class="err" id="serr"></div><button class="btn" id="sGo">Kaydet</button>
+</div>
+
+<div class="card" id="fBox" style="display:none">
+  <h2 style="margin-top:0">Veli PIN sıfırlama</h2>
+  <label>Veli e-postası</label><input id="fEp" type="email">
+  <div class="err" id="ferr"></div>
+  <div style="display:flex;gap:8px"><button class="btn" id="fGo">Bağlantı gönder</button><button class="btn alt" id="fBack">Geri</button></div>
+</div>
+
+<div id="panel" style="display:none">
+  <div class="card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center"><b id="who">Öğrenciler</b><div><button class="btn alt sm" id="refresh">Yenile</button> <button class="btn alt sm" id="logout">Çıkış</button></div></div>
+    <table id="students"></table><p class="note">Bir öğrenciye dokununca paket detayı ve test cevapları açılır. 🔒 = test kaydedilip kilitlenmiş.</p></div>
+  <div id="detail"></div>
+</div>
+</div>
+<script>
+(function(){
+const API='https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const $=s=>document.querySelector(s);const Q=new URLSearchParams(location.search);
+let CRED=JSON.parse(sessionStorage.getItem('ah9-veli')||'null'),DATA=null,mode='veli';
+function api(obj){return new Promise((res,rej)=>{const cb='cb'+Date.now()+Math.floor(Math.random()*1e6);const s=document.createElement('script');const t=setTimeout(()=>{del();rej(new Error('Sunucuya ulaşılamadı'))},20000);function del(){clearTimeout(t);delete window[cb];s.remove();}window[cb]=r=>{del();res(r)};s.onerror=()=>{del();rej(new Error('Sunucuya ulaşılamadı'))};s.src=API+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(obj));document.body.appendChild(s);});}
+const tr=x=>x?new Date(x).toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'}):'—';const esc=x=>String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const creds=()=>CRED.tur==='ogretmen'?{vpin:CRED.vpin}:{eposta:CRED.eposta,pin:CRED.pin};
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;$('#veliForm').style.display=mode==='veli'?'':'none';$('#ogrForm').style.display=mode==='veli'?'none':'';$('#verr').textContent='';});
+$('#vgo').onclick=async()=>{$('#verr').textContent='';$('#vgo').disabled=true;
+  try{let r;if(mode==='veli'){const eposta=$('#vEp').value.trim(),pin=$('#vPin').value.trim();r=await api({action:'velilogin',eposta,pin});if(!r.ok)throw new Error(r.error);CRED={tur:'veli',eposta,pin};}
+    else{const vpin=$('#tPin').value.trim();r=await api({action:'veli',vpin});if(!r.ok)throw new Error(r.error);CRED={tur:'ogretmen',vpin};}
+    sessionStorage.setItem('ah9-veli',JSON.stringify(CRED));DATA=r;show();}
+  catch(e){$('#verr').textContent=e.message;}$('#vgo').disabled=false;};
+[$('#vPin'),$('#tPin')].forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')$('#vgo').click();}));
+$('#logout').onclick=()=>{sessionStorage.removeItem('ah9-veli');CRED=null;DATA=null;$('#panel').style.display='none';$('#gate').style.display='';};
+async function load(){try{const r=await api(Object.assign({action:'veli'},creds()));if(!r.ok)throw new Error(r.error);DATA=r;show();}catch(e){$('#verr').textContent=e.message;$('#gate').style.display='';$('#panel').style.display='none';}}
+$('#refresh').onclick=load;
+function show(){$('#gate').style.display='none';$('#panel').style.display='';$('#who').textContent=DATA.tur==='ogretmen'?'Tüm öğrenciler (öğretmen)':'Öğrencilerim · '+DATA.eposta;render();}
+function render(){const st=DATA.students.slice().sort((a,b)=>b.xp-a.xp);
+  $('#students').innerHTML='<tr><th>Öğrenci</th><th>E-posta / veli</th><th>Seviye</th><th>Puan</th><th>Seri</th><th>Dk</th><th>Test</th><th>Son giriş</th></tr>'+(st.length?st.map(s=>{const tests=Object.values(s.progress).filter(p=>p.quizSubmitted).length;return '<tr class="st" data-id="'+s.id+'"><td><b>'+esc(s.ad)+'</b></td><td class="note">'+esc(s.eposta||'—')+'<br>'+esc(s.veliEposta||'—')+'</td><td>'+s.level+'</td><td>'+s.xp+'</td><td>'+s.streak+'</td><td>'+s.totalMin+'</td><td>'+tests+'</td><td>'+tr(s.sonGiris)+'</td></tr>';}).join(''):'<tr><td colspan="8" class="note">Henüz onaylanmış öğrenci yok.</td></tr>');
+  document.querySelectorAll('.st').forEach(r=>r.onclick=()=>detail(r.dataset.id));}
+async function detail(id){const s=DATA.students.find(x=>x.id===id);const d=$('#detail');const T=DATA.tur==='ogretmen';
+  d.innerHTML='<div class="card"><h2>'+esc(s.ad)+' · '+s.level+' · '+s.xp+' puan</h2><div class="note">Kayıt '+tr(s.kayit)+' · rozetler: '+(s.badges.map(b=>b.n).join(', ')||'—')+'</div>'+
+   (T?'<div style="margin:8px 0;display:flex;gap:6px;flex-wrap:wrap"><button class="btn alt sm" data-op="resetpin">PIN sıfırlama maili gönder</button><button class="btn danger sm" data-op="delete">Öğrenciyi sil</button></div>':'')+
+   '<table><tr><th>Paket</th><th>Bölüm</th><th>Mini</th><th>Test</th><th>Dk</th><th>Güncelleme</th>'+(T?'<th></th>':'')+'</tr>'+Object.keys(s.progress).sort().map(k=>{const p=s.progress[k];const pc=p.quizOf?Math.round(100*p.quizScore/p.quizOf):null;return '<tr><td>'+k+'</td><td>'+p.done+'/8</td><td>'+p.mini+'/3</td><td>'+(p.quizSubmitted?'<span class="pill '+(pc>=70?'ok':'bad')+'">'+p.quizScore+'/'+p.quizOf+' (%'+pc+') 🔒</span>':'—')+'</td><td>'+p.activeMin+'</td><td>'+tr(p.updated)+'</td>'+(T?'<td>'+(p.quizSubmitted?'<button class="btn alt sm" data-op="reopen" data-paket="'+k+'">Testi yeniden aç</button>':'')+'</td>':'')+'</tr>';}).join('')+'</table><p id="rep" class="note">Test cevapları yükleniyor…</p><div class="err" id="oerr"></div></div>';
+  d.querySelectorAll('[data-op]').forEach(b=>b.onclick=async()=>{const op=b.dataset.op;if(op==='delete'&&!confirm(s.ad+' silinsin mi? Geri alınamaz.'))return;if(op==='reopen'&&!confirm('Test yeniden açılsın mı? Öğrenci cevaplarını değiştirip yeniden kaydedebilir.'))return;
+    try{const r=await api({action:'ogretmen',vpin:CRED.vpin,id,op,paket:b.dataset.paket});if(!r.ok)throw new Error(r.error);$('#oerr').style.color='var(--ok)';$('#oerr').textContent=r.message;setTimeout(load,800);}catch(e){$('#oerr').textContent=e.message;}});
+  try{const r=await api(Object.assign({action:'velirapor',id},creds()));if(!r.ok)throw new Error(r.error);
+    $('#rep').outerHTML=r.reports.length?r.reports.reverse().map(rp=>'<div class="card"><b>'+esc(rp.paket)+'</b> · '+tr(rp.zaman)+' · '+rp.score+'/'+rp.of+' · aktif '+rp.session.active+'<table style="margin-top:6px"><tr><th>#</th><th>Soru</th><th>Öğrenci</th><th>Doğru</th><th></th></tr>'+rp.items.map(i=>'<tr class="'+(i.tip==='açık uçlu'?'':i.puan===1?'ok':'bad')+'"><td>'+i.n+'</td><td>'+esc(i.soru)+'</td><td><b>'+esc(i.cevap)+'</b></td><td>'+esc(i.dogru)+'</td><td>'+(i.tip==='açık uçlu'?'elle':i.puan===1?'✔':'✘')+'</td></tr>').join('')+'</table></div>').join(''):'<p class="note">Henüz kaydedilmiş test yok.</p>';}
+  catch(e){const el=$('#rep');if(el)el.textContent=e.message;}
+  d.scrollIntoView({behavior:'smooth'});}
+/* veli PIN kurma / sıfırlama */
+const KUR=Q.get('kur'),SIF=Q.get('sifirla');
+if(KUR||SIF){$('#gate').style.display='none';$('#setBox').style.display='';if(SIF){$('#setTitle').textContent='Yeni veli PIN\'i belirle';$('#setNote').textContent='';}}
+$('#sGo').onclick=async()=>{const p=$('#sPin').value.trim(),p2=$('#sPin2').value.trim();if(!/^\d{4,6}$/.test(p)){$('#serr').textContent='PIN 4-6 rakam olmalı.';return;}if(p!==p2){$('#serr').textContent='PIN\'ler aynı değil.';return;}$('#sGo').disabled=true;
+  try{const r=await api(KUR?{action:'velipin',token:KUR,pin:p}:{action:'resetpin',token:SIF,pin:p});if(!r.ok)throw new Error(r.error);
+    CRED={tur:'veli',eposta:r.eposta,pin:p};sessionStorage.setItem('ah9-veli',JSON.stringify(CRED));history.replaceState(null,'',location.pathname);$('#setBox').style.display='none';await load();}
+  catch(e){$('#serr').textContent=e.message;$('#sGo').disabled=false;}};
+$('#vForgot').onclick=e=>{e.preventDefault();$('#gate').style.display='none';$('#fBox').style.display='';};
+$('#fBack').onclick=()=>{$('#fBox').style.display='none';$('#gate').style.display='';};
+$('#fGo').onclick=async()=>{const ep=$('#fEp').value.trim();if(!ep){$('#ferr').textContent='E-posta gerekli.';return;}$('#fGo').disabled=true;$('#ferr').style.color='';
+  try{const r=await api({action:'forgot',eposta:ep});if(!r.ok)throw new Error(r.error);$('#ferr').style.color='var(--ok)';$('#ferr').textContent=r.message;}catch(e){$('#ferr').textContent=e.message;}setTimeout(()=>$('#fGo').disabled=false,30000);};
+if(CRED&&!KUR&&!SIF)load();
+})();
+</script></body></html>

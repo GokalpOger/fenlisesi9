@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biyoloji 9 · Hafta 2 · Canlıların Sınıflandırılması</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#0f4c5c;--navy2:#0e8a9a;--sky:#d6f1f4;--gold:#b5541d;--gold2:#ffe9dc}
+[data-theme="dark"]{--navy:#8fdde8;--navy2:#2fb8c9;--sky:#0f3238;--gold:#f0a06a;--gold2:#3d2214}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Biyoloji · Ünite 1 Yaşam · Hafta 2<b>Sınıflandırma, tür kavramı, homolog-analog yapılar, ikili adlandırma</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>Yunus balık değildir; yarasa kuş değildir — peki neden?</h1>
+  <p class="lead">Yunus suda yaşar, yüzgeci var, balık gibi görünür. Ama akciğerle solur, yavrusunu sütle besler, sıcakkanlıdır. Görünüşe göre sınıflandırsak yunus "balık" olurdu; akrabalığa göre sınıflandırınca "memeli" çıkıyor. Bu hafta biyolojinin en temel sorularından birini soruyoruz: canlıları neye göre gruplarız ve "tür" tam olarak nedir?</p>
+  <div class="card">
+    <p>Dünyada 2 milyondan fazla tanımlanmış tür var; tahminler 8-10 milyon. Bu kalabalıkta bir canlıdan söz edebilmek için ortak bir düzen ve ortak bir ad gerekir. Sınıflandırma (<b>taksonomi</b>) bu düzeni, <b>ikili adlandırma</b> ise ortak dili kurar: <i>Homo sapiens</i> dünyanın her yerinde aynı şeyi ifade eder; "insan", "human", "Mensch" etmez.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>Balık tezgâhında "somon" diye satılan balığın gerçekten somon olup olmadığını nasıl anlarsın? Görünüş yetmez; laboratuvar bir DNA parçasını okuyup "barkod" gibi karşılaştırır. Bu yöntem, bu haftaki "doğal sınıflandırma" fikrinin doğrudan uygulamasıdır. Ayrıntı 4. sekmede.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 1 · Yaşam)</div>Sınıflandırmanın gerekliliğini açıklamak · yapay ve doğal (filogenetik) sınıflandırmayı ölçütleriyle karşılaştırmak · homolog ve analog yapıları ayırt etmek · sınıflandırma birimlerini hiyerarşik olarak sıralamak · tür kavramını ve sınırlarını tartışmak · ikili adlandırma kurallarını uygulamak.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma ve aralıklı tekrar</h2>
+  <div class="grid2">
+    <div class="card"><b>Geçen haftadan: ortak özellikler</b><p>Hücresel yapı, beslenme, solunum, üreme, homeostazi… Sınıflandırma bu ortak zemin üzerindeki <em>farklılıklara</em> bakar.</p></div>
+    <div class="card"><b>Ortaokuldan</b><p>Canlılar âlemleri: bakteriler, arkeler, protistler, mantarlar, bitkiler, hayvanlar. Omurgalı/omurgasız ayrımı.</p></div>
+    <div class="card"><b>Kalıtım köprüsü</b><p>DNA benzerliği akrabalığın ölçüsüdür: insan-şempanze DNA'sı ≈ %98,8 benzer. Doğal sınıflandırma bu ölçüye dayanır.</p></div>
+    <div class="card"><b>Matematik H2 köprüsü</b><p>Sınıflandırma da bir "örtme ve ayrıklık" işidir: her canlı tam bir gruba girer, hiçbir canlı iki âleme birden girmez — tıpkı deprem sınıflarının [4, 5), [5, 6) aralıkları gibi.</p></div>
+  </div>
+  <h3>Aralıklı tekrar (3 soru, anında geri bildirim)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Neden sınıflandırırız?</h3>
+  <p>Kütüphanede kitapları rastgele dizseydin aradığını bulamazdın. Sınıflandırma, milyonlarca türü <b>bulunabilir, karşılaştırılabilir ve öngörülebilir</b> kılar: yeni bir mantar türü bulunduğunda "mantarlar âlemi" etiketi, onun hücre duvarının kitinden olduğunu, klorofilinin olmadığını, sporla ürediğini test etmeden söyler. İyi bir sınıflandırma <em>bilgi üretir</em>.</p>
+  <h3>3.2 Yapay (ampirik) ve doğal (filogenetik) sınıflandırma</h3>
+  <table>
+    <tr><th></th><th>Yapay sınıflandırma</th><th>Doğal sınıflandırma</th></tr>
+    <tr><td>Ölçüt</td><td>Dış görünüş, yaşam ortamı, işlev (uçan / yüzen / yürüyen)</td><td>Evrimsel akrabalık: köken birliği, DNA-protein benzerliği, embriyo gelişimi, homolog yapılar</td></tr>
+    <tr><td>Öncü</td><td>Aristo (MÖ 4. yy)</td><td>Linnaeus'un sistemi + Darwin sonrası akrabalık ölçütü; Woese (DNA, 1977)</td></tr>
+    <tr><td>Sorunu</td><td>Yarasa "kuş", yunus "balık", balina "balık" olur</td><td>Kanıt toplamak zordur ama gruplar gerçek akrabalığı yansıtır</td></tr>
+    <tr><td>Bugün</td><td>Günlük dilde ("deniz ürünleri", "yabani otlar")</td><td>Biyolojide geçerli sistem</td></tr>
+  </table>
+  <div class="box def"><div class="t">Doğal sınıflandırmanın kanıtları</div>1) <b>Homolog yapılar</b> (aynı köken). 2) <b>DNA, RNA ve protein benzerliği</b> (en güçlü kanıt). 3) <b>Embriyo gelişimi</b> benzerliği (omurgalı embriyolarında solungaç yarıkları). 4) <b>Körelmiş organlar</b> (insanda apandis, balinada kalça kemiği). 5) Hücre yapısı ve biyokimyasal yollar.</div>
+  <h3>3.3 Homolog mu, analog mu?</h3>
+  <p><b>Homolog yapılar:</b> kökenleri aynı, işlevleri farklı olabilir. İnsan kolu, yarasa kanadı, balina yüzgeci, kedi ön bacağı: aynı kemik düzeni (bir üst kol kemiği, iki ön kol kemiği, bilek, beş parmak) — ortak atadan miras. <b>Analog yapılar:</b> işlevleri aynı, kökenleri farklı. Böcek kanadı (deri kıvrımı) ile kuş kanadı (kemik-kas); köpek balığı yüzgeci ile yunus yüzgeci. Benzer çevre baskısı benzer çözümler üretir (yakınsak evrim); bu akrabalık göstermez.</p>
+  <div class="sim">
+    <h3>Homolog / analog karşılaştırıcı</h3>
+    <div class="hint">Bir çift seç; iki yapının iskeletini yan yana gör. "Kemik planı aynı mı?" ve "işlev aynı mı?" sorularına göre sınıflandır, sonra kontrol et.</div>
+    <div class="ctrl"><label>Çift <select id="haSel" style="font:inherit;padding:6px;border-radius:8px"></select></label><button class="alt" data-h="1">Homolog</button><button class="alt" data-h="0">Analog</button></div>
+    <div class="svgwrap"><svg id="haSvg" viewBox="0 0 720 200" role="img" aria-label="Yapı karşılaştırması"></svg></div>
+    <div class="readout" id="haOut" style="display:block"></div>
+  </div>
+  <div class="box warn"><div class="t">Tuzak: "benzer = akraba"</div>Analog yapılar sınavların en sevdiği çeldirici: "yunus ve köpek balığının yüzgeci benzer, öyleyse akrabadır" yanlıştır. Akrabalık için kemik planı, embriyo ve DNA'ya bakılır; yüzgecin şekline değil.</div>
+  <h3>3.4 Sınıflandırma birimleri: türden domaine</h3>
+  <p>Linnaeus'un hiyerarşisi kutu içinde kutudur: her tür bir cinse, her cins bir familyaya… Yukarı çıktıkça grup büyür, ortak özellik azalır; aşağı indikçe grup küçülür, benzerlik artar.</p>
+  <table>
+    <tr><th>Birim</th><th>İnsan</th><th>Ev kedisi</th><th>Kızıl geyik (Kartepe)</th></tr>
+    <tr><td>Domain</td><td>Ökarya</td><td>Ökarya</td><td>Ökarya</td></tr>
+    <tr><td>Âlem</td><td>Hayvanlar</td><td>Hayvanlar</td><td>Hayvanlar</td></tr>
+    <tr><td>Şube</td><td>Kordalılar</td><td>Kordalılar</td><td>Kordalılar</td></tr>
+    <tr><td>Sınıf</td><td>Memeliler</td><td>Memeliler</td><td>Memeliler</td></tr>
+    <tr><td>Takım</td><td>Primatlar</td><td>Etçiller</td><td>Çift toynaklılar</td></tr>
+    <tr><td>Familya</td><td>Hominidae</td><td>Felidae</td><td>Cervidae</td></tr>
+    <tr><td>Cins</td><td><i>Homo</i></td><td><i>Felis</i></td><td><i>Cervus</i></td></tr>
+    <tr><td>Tür</td><td><i>Homo sapiens</i></td><td><i>Felis catus</i></td><td><i>Cervus elaphus</i></td></tr>
+  </table>
+  <div class="box def"><div class="t">Kural</div>Aynı türden canlılar aynı cinste, aynı cinstekiler aynı familyada… Tersi doğru değildir: aynı sınıftaki iki canlı (kedi ve geyik) farklı takımlarda olabilir. Ortak özellik sayısı: tür &gt; cins &gt; familya &gt; … &gt; âlem; birey sayısı tam tersi.</div>
+  <div class="sim">
+    <h3>Sınıflandırma merdiveni</h3>
+    <div class="hint">Karışık verilen 8 birimi büyükten küçüğe sırala: birime dokunarak sıraya ekle. Sonra "kutu içinde kutu" görünümünde kontrol et.</div>
+    <div id="ladder"></div>
+    <div class="ctrl"><button id="ldCheck">Kontrol et</button><button id="ldReset" class="alt">Karıştır</button></div>
+    <div class="readout" id="ldOut" style="display:block"></div>
+  </div>
+  <h3>3.5 Tür nedir? Basit tanım, karmaşık sınır</h3>
+  <div class="box def"><div class="t">Biyolojik tür kavramı (Mayr)</div>Doğal koşullarda birbirleriyle çiftleşip <b>verimli (döl verebilen) yavrular</b> oluşturabilen bireyler topluluğu.</div>
+  <p><b>Katır testi:</b> At (<i>Equus caballus</i>) ile eşek (<i>Equus asinus</i>) çiftleşir, katır doğar; ama katır kısırdır → at ve eşek <em>farklı</em> türlerdir. Çoban köpeği ile kaniş çiftleşir, yavruları verimlidir → aynı tür (<i>Canis lupus familiaris</i>); görünüş farkı türü değiştirmez.</p>
+  <div class="box warn"><div class="t">Tanımın sınırları (fen lisesi)</div>1) Eşeysiz üreyen bakterilerde "çiftleşme" ölçütü işlemez → DNA benzerliği kullanılır. 2) Fosillerde çiftleşme test edilemez → morfoloji. 3) <b>Halka türler</b>: A ile B, B ile C çiftleşir ama A ile C çiftleşmez; sınır bulanıklaşır. 4) Aslan-kaplan melezi (liger) nadiren verimli olabilir — doğal koşullarda karşılaşmadıkları için yine ayrı tür sayılırlar. Tür, doğanın kesin bir çizgisi değil, bizim en iyi çizgimizdir.</div>
+  <h3>3.6 İkili adlandırma (binomial nomenclatura)</h3>
+  <table>
+    <tr><th>Kural</th><th>Doğru</th><th>Yanlış</th></tr>
+    <tr><td>İki kelime: cins + tür belirteci</td><td><i>Felis catus</i></td><td>Felis (tek), ev kedisi (Türkçe)</td></tr>
+    <tr><td>Cins büyük, tür küçük harfle başlar</td><td><i>Homo sapiens</i></td><td>homo Sapiens, Homo Sapiens</td></tr>
+    <tr><td>İtalik yazılır (el yazısında altı çizilir)</td><td><i>Canis lupus</i></td><td>Canis lupus (düz)</td></tr>
+    <tr><td>Latince ya da Latinceleştirilmiş</td><td><i>Pinus brutia</i> (kızılçam)</td><td>Pinus kızılçam</td></tr>
+    <tr><td>Tür adı tek başına anlamsızdır</td><td><i>Felis catus</i>, <i>Canis lupus</i></td><td>"catus" (hangi cins?)</td></tr>
+    <tr><td>Alt tür üç kelime</td><td><i>Canis lupus familiaris</i></td><td>—</td></tr>
+    <tr><td>Aynı cins adı = yakın akraba</td><td><i>Felis catus</i> – <i>Felis silvestris</i></td><td><i>Felis catus</i> – <i>Panthera leo</i> (farklı cins)</td></tr>
+  </table>
+  <div class="sim">
+    <h3>Adlandırma düzeltici</h3>
+    <div class="hint">Verilen ad yazımında hata var mı? Hatalıysa hangi kural bozulmuş? 8 tur.</div>
+    <div id="nm"></div>
+    <div class="ctrl"><button id="nmReset" class="alt">Yeniden başla</button></div>
+  </div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · Balık tezgâhı ve DNA barkodu</h3>
+    <p><b>Durum:</b> Fileto hâlindeki "somon", "levrek" ya da "kalkan" gerçekten o tür mü? Avrupa'da yapılan denetimlerde balık ürünlerinin yaklaşık üçte birinin etikette yazan türden farklı çıktığı görülmüştür.</p>
+    <p><b>Kavramla bağ:</b> Laboratuvar, mitokondri DNA'sındaki kısa bir geni (COI) okuyup veri tabanıyla karşılaştırır; türe özgü dizilim bir "barkod" gibi çalışır. Bu, doğal sınıflandırmanın moleküler kanıtının doğrudan ticari kullanımıdır.</p>
+    <p><b>Analiz:</b> Görünüşe dayalı (yapay) tanıma filetoda çöker; DNA'ya dayalı tanıma çökmez. Kocaeli'deki gıda kontrol laboratuvarları bu yöntemi kullanır.</p>
+    <p><b>Sonuç:</b> "Tür" soyut bir ders kavramı değil; sofradaki dürüstlüğün ölçüsüdür.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · Köpek ırkları: bir tür, yüzlerce görünüş</h3>
+    <p><b>Durum:</b> Chihuahua ile Kangal arasında 40 kat kütle farkı var; yine de aynı tür (<i>Canis lupus familiaris</i>).</p>
+    <p><b>Kavramla bağ:</b> Tür ölçütü görünüş değil, verimli döl verebilme. Irklar insan seçilimiyle oluşmuş <em>varyasyon</em>lardır; tür sınırını aşmaz. Buna karşılık kurt (<i>Canis lupus</i>) ile köpek aynı türün alt türleridir; çakal (<i>Canis aureus</i>) ise aynı cinste ayrı türdür.</p>
+    <p><b>Sonuç:</b> "Çok farklı görünüyor → farklı tür" çıkarımı yapay sınıflandırma hatasıdır.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Kartepe ormanı: kızılçam ile karaçamı ayırmak</h3>
+    <p><b>Durum:</b> İkisi de "çam"; ikisi de <i>Pinus</i> cinsinde. Kızılçam <i>Pinus brutia</i> (kıyıya yakın, sıcak), karaçam <i>Pinus nigra</i> (yüksek, soğuk).</p>
+    <p><b>Kavramla bağ:</b> Aynı cins adı yakın akrabalığı söyler; tür belirteci ekolojik ve yapısal farkı (iğne uzunluğu, kozalak, kabuk). Orman mühendisi fidan seçerken bu farkı bilmezse ağaçlandırma tutmaz.</p>
+    <p><b>Sonuç:</b> İkili ad, iki kelimeyle hem akrabalığı hem farkı taşıyan sıkıştırılmış bilgidir.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · Sapanca Gölü'nde istilacı tür tanımlama</h3>
+    <p><b>Durum:</b> Bir balıkçı gölde "değişik bir balık" yakaladı. Yerli mi, istilacı mı? Karar, gölün ekosistemini etkiler.</p>
+    <p><b>Kavramla bağ:</b> Tanımlama merdiveni: şube (kordalı) → sınıf (kemikli balık) → takım → familya (sazangiller?) → cins → tür. Her basamakta ayırt edici özellik (yüzgeç ışın sayısı, pul, diş) kullanılır; belirsizlikte DNA barkodu.</p>
+    <p><b>Sonuç:</b> Doğru sınıflandırma olmadan doğru koruma kararı olmaz — 8. haftanın konusuna köprü.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Aynı tür mü? Karar oyunu</h3>
+    <div class="hint">Verilen çift için "aynı tür" ya da "farklı tür" seç; gerekçe her cevaptan sonra gelir. 10 tur; görünüş tuzakları bol.</div>
+    <div id="game"></div>
+    <div class="ctrl"><button id="gmReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="sim">
+    <h3>Kutu içinde kutu</h3>
+    <div class="hint">Bir canlı seç; hiyerarşinin hangi kutusunun içinde olduğunu iç içe halkalarda gör. İki canlı seçince ilk ortak kutuları (en yakın akrabalık düzeyi) vurgulanır.</div>
+    <div class="ctrl"><label>Canlı 1 <select id="bx1" style="font:inherit;padding:6px;border-radius:8px"></select></label><label>Canlı 2 <select id="bx2" style="font:inherit;padding:6px;border-radius:8px"></select></label></div>
+    <div class="svgwrap"><svg id="bxSvg" viewBox="0 0 720 240" role="img" aria-label="Kutu içinde kutu"></svg></div>
+    <div class="readout" id="bxOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Kutu oyununda insan ile kedinin ilk ortak kutusu hangisi? Kedi ile geyiğin? Hangisi daha yakın akraba? &nbsp; 2) Tür oyununda en çok hangi çeldiriciye takıldın: görünüş mü, ortam mı? &nbsp; 3) Evdeki bir bitkinin (fesleğen, kaktüs) Latince adını bul; cins adı sana hangi akrabaları söylüyor?</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · Aşağıdaki gruplandırma yapay mı, doğal mı? "Uçan canlılar: sinek, yarasa, serçe"</h3>
+    <ol class="steps"><li>Ölçüt: işlev (uçma). Sinek eklem bacaklı, yarasa memeli, serçe kuş: kökenleri farklı.</li><li><b>Yapay</b> sınıflandırma; kanatları analog yapılardır.<div class="why">Yapay = benzerliğe, doğal = akrabalığa dayanır.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · "Felis Catus" yazımındaki hataları düzelt</h3>
+    <ol class="steps"><li>Tür belirteci küçük harfle başlar: catus.</li><li>İtalik (ya da altı çizili) yazılmalı: <i>Felis catus</i>.<div class="why">Cins büyük, tür küçük, ikisi italik; Latince.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · <i>Panthera leo</i> (aslan), <i>Panthera tigris</i> (kaplan), <i>Felis catus</i> (kedi), <i>Canis lupus</i> (kurt). Akrabalık sırasını gerekçelendir.</h3>
+    <ol class="steps"><li>Aslan–kaplan: aynı cins (<i>Panthera</i>) → en yakın.</li><li>Kedi: farklı cins ama aynı familya (Felidae) → ikinci.</li><li>Kurt: farklı familya (Canidae), aynı takım (etçiller) → en uzak.<div class="why">Cins adı ortaklığı en güçlü ipucu; sonra familya, takım.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · At ile eşek katır verir; aslan ile kaplan liger verir. Tür ölçütüne göre bu çiftler aynı tür mü?</h3>
+    <ol class="steps"><li>Katır kısır → at ve eşek farklı tür.</li><li>Liger genellikle kısır; nadir verimli dişiler bildirilmiş ama doğal koşullarda aslan-kaplan karşılaşmaz (farklı kıta/habitat) → "doğal koşullarda" ölçütü sağlanmaz → farklı tür.<div class="why">Tanımın iki parçası var: verimli döl <em>ve</em> doğal koşullar.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Bakterilerde tür nasıl belirlenir?</h3>
+    <ol class="steps"><li>Eşeysiz (ikiye bölünme) ürerler → çiftleşme ölçütü uygulanamaz.</li><li>Ölçüt: 16S rRNA geninde ≥ %97-98 benzerlik + biyokimyasal profil (hangi şekeri kullanıyor, gram boyama).</li><li>Sonuç: tür kavramı gruba göre farklı işlevsel tanımlar alır; "tek evrensel tanım" yoktur.<div class="why">Sınav "tür tanımının sınırlılığı" diye sorar; bakteri en iyi örnek.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Balina kalça kemiği ve kuşlarda dişsiz gaga: hangi kanıt türü?</h3>
+    <ol class="steps"><li>Balinada işlevsiz kalça kemiği kalıntısı → <b>körelmiş organ</b>: karada yaşayan dört ayaklı atadan miras.</li><li>Kuş embriyolarında diş oluşum genleri hâlâ var ama kapalı; deneysel olarak aktifleştirilince diş tomurcukları çıkar → embriyolojik/genetik kanıt: dişli sürüngen ata.</li><li>İkisi de doğal sınıflandırmanın "köken birliği" kanıtıdır; görünüşe bakan yapay sistem bunları göremez.</li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 çoktan seçmeli (4 temel, 5 orta, 3 fen lisesi) + 2 açık uçlu. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Yapay vs doğal</b>Görünüş/işlev vs akrabalık (DNA, homoloji, embriyo, körelmiş organ). Biyolojide doğal geçerli.</div>
+    <div class="card"><b>Homolog / analog</b>Homolog: köken aynı (kol-kanat-yüzgeç). Analog: işlev aynı, köken farklı (böcek-kuş kanadı). Analog akrabalık göstermez.</div>
+    <div class="card"><b>Hiyerarşi</b>Domain → Âlem → Şube → Sınıf → Takım → Familya → Cins → Tür. Aşağı indikçe benzerlik ↑, birey sayısı ↓.</div>
+    <div class="card"><b>Tür ve ad</b>Doğal koşulda verimli döl. <i>Cins tür</i>: büyük-küçük, italik, Latince; aynı cins adı = yakın akraba.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>Benzer görünen canlıları akraba saymak (yunus-köpek balığı).</li>
+    <li>"Aynı takımdaysa aynı familyadır" demek. Tersi doğru: aynı familyadaysa aynı takımdır.</li>
+    <li>Tür adını tek kelime sanmak ("sapiens"). Tür adı iki kelimedir.</li>
+    <li>Katırın var olmasını at-eşek "aynı tür" sanmaya gerekçe yapmak. Katır kısır.</li>
+    <li>Cins adı aynı olan iki türü "aynı tür" sanmak (<i>Panthera leo</i> – <i>Panthera tigris</i> farklı türler).</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Hiyerarşinin en tepesinde üç kutu var: Bakteri, Arke, Ökarya. Neden üç? Bakteri ile arke mikroskopta aynı görünürken DNA neden onları ayırdı? Gelecek hafta: <b>üç üst âlem ve bakteriler</b> — yoğurttan antibiyotik direncine.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Biyoloji · Ünite 1 · Hafta 2 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='biy-h02', HAFTA=2;
+const BASEKEY='ah9-biy-h02';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Biyoloji 9 · Ünite 1 · Hafta 2 · Canlıların sınıflandırılması';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[
+ {s:'<span class="tag">Geçen hafta</span> Virüsler için doğru olan hangisidir?',o:['Hücresel yapıları yoktur; yalnız konak hücrede çoğalırlar','Kendi metabolizmalarıyla beslenirler','İkiye bölünerek ürerler','Tüm ortak özellikleri taşırlar'],a:0,e:'Virüs sınır durumdur; bu yüzden sınıflandırmada âlemlere dahil edilmez.'},
+ {s:'<span class="tag">Geçen hafta</span> Kontrollü deneyde yalnızca sıcaklık değiştirilip pıhtılaşma süresi ölçülüyorsa bağımsız değişken hangisidir?',o:['Sıcaklık','Pıhtılaşma süresi','Süt miktarı','Kap türü'],a:0,e:'Değiştirilen bağımsız, ölçülen bağımlı değişkendir.'},
+ {s:'<span class="tag">Ortaokul</span> Aşağıdakilerden hangisi omurgasız hayvandır?',o:['Ahtapot','Yarasa','Kurbağa','Yılan'],a:0,e:'Ahtapot yumuşakçadır; diğer üçü omurgalı.'}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,true)));}
+/* ana test */
+const QUIZ=[
+ {s:'Canlıları "suda yaşayanlar, karada yaşayanlar, havada yaşayanlar" diye gruplamak hangi sınıflandırma türüdür?',o:['Yapay','Doğal','Filogenetik','Moleküler'],a:0,e:'Yaşam ortamı görünüşe dayalı bir ölçüttür; akrabalık yansıtmaz.'},
+ {s:'İnsan kolu ile balina yüzgeci arasındaki ilişki hangisidir?',o:['Homolog: kemik planı ve köken aynı, işlev farklı','Analog: işlev aynı, köken farklı','Körelmiş organ','Aynı tür varyasyonu'],a:0,e:'Her ikisinde de bir üst kol, iki ön kol kemiği, bilek, parmak dizilimi vardır.'},
+ {s:'Sınıflandırma birimlerinin büyükten küçüğe doğru sıralanışı hangisidir?',o:['Âlem – şube – sınıf – takım – familya – cins – tür','Âlem – sınıf – şube – takım – familya – cins – tür','Tür – cins – familya – takım – sınıf – şube – âlem','Âlem – şube – takım – sınıf – familya – cins – tür'],a:0,e:'Şube sınıftan, sınıf takımdan büyüktür.'},
+ {s:'İkili adlandırma kurallarına uygun yazılmış ad hangisidir?',o:['<i>Pinus brutia</i>','Pinus Brutia','<i>pinus brutia</i>','Brutia pinus'],a:0,e:'Cins büyük, tür küçük harfle; italik; cins önce.'},
+ {s:'<i>Panthera leo</i> ve <i>Panthera tigris</i> için doğru olan hangisidir?',o:['Aynı cinste farklı türlerdir','Aynı türün iki alt türüdür','Farklı familyalardadır','Doğal koşullarda verimli döl verirler'],a:0,e:'Cins adı ortak, tür belirteci farklı → aynı cins, farklı tür.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Yunus suda yaşar, yüzgeçlidir; ancak akciğerle solur, yavrusunu sütle besler ve sıcakkanlıdır.<br>Yunusun balık değil memeli olarak sınıflandırılması hangi ilkeye dayanır?',o:['Doğal sınıflandırma: köken birliği ve fizyolojik akrabalık, dış görünüşe değil','Yapay sınıflandırma: yaşam ortamı','Analog yapı benzerliği','Yüzgeç şekli'],a:0,e:'Yüzgeç analogdur; solunum, üreme ve iskelet planı memeli akrabalığını gösterir.'},
+ {s:'Aşağıdakilerden hangisi doğal sınıflandırmanın kanıtı DEĞİLDİR?',o:['Dış görünüş benzerliği','DNA dizilim benzerliği','Homolog yapılar','Embriyo gelişim benzerliği'],a:0,e:'Dış görünüş yapay sınıflandırmanın ölçütüdür; analog yapılar yanıltır.'},
+ {tag:'bağlam',s:'Bir balıkçı Sapanca Gölü\'nde iki balık yakalıyor: biri gümüşi ve sivri, diğeri koyu ve yassı. Laboratuvar DNA barkodu ikisini de aynı tür olarak tanımlıyor. Bu durum için en doğru yorum hangisidir?',o:['Görünüş farkı tür içi varyasyondur; tür ölçütü görünüş değildir','Laboratuvar hata yapmıştır','İkisi farklı cinstir','Biri istilacı, biri yerlidir'],a:0,e:'Aynı tür içinde yaş, cinsiyet ve çevreye bağlı görünüş farkı olağandır.'},
+ {s:'At ile eşeğin verdiği katırın kısır olması hangi sonucu destekler?',o:['At ve eşek farklı türlerdir','At ve eşek aynı türdür','Katır yeni bir türdür','At ve eşek farklı cinslerdir'],a:0,e:'Verimli döl vermeme = farklı tür. İkisi aynı cinste (<i>Equus</i>) ayrı türlerdir.'},
+ {s:'Aynı sınıfta yer alan iki canlı için kesin olan hangisidir?',o:['Aynı şube ve aynı âlemdedirler','Aynı takımdadırlar','Aynı familyadadırlar','Aynı cinstedirler'],a:0,e:'Yukarı doğru kapsayıcılık kesindir; aşağı doğru (takım, familya) kesin değildir.'},
+ {tag:'bağlam',s:'<b>Bilgi:</b> Bakteriler eşeysiz ürer; tür ayrımında 16S rRNA geni benzerliği kullanılır.<br>Biyolojik tür kavramının bakterilere doğrudan uygulanamamasının nedeni hangisidir?',o:['Çiftleşerek verimli döl verme ölçütü eşeysiz üreyenlerde işlemez','Bakterilerin DNA\'sı yoktur','Bakteriler sınıflandırılamaz','Bakteriler tek türdür'],a:0,e:'Tanım eşeyli üremeye dayanır; bakterilerde moleküler ölçütler kullanılır.'},
+ {s:'Böcek kanadı ile kuş kanadının benzer işlev görmesi ama farklı yapıda olması ne ile açıklanır?',o:['Analog yapılar: benzer çevre baskısı benzer çözümler üretir (yakınsak evrim)','Homolog yapılar: ortak atadan miras','Körelmiş organlar','Aynı familyada olmaları'],a:0,e:'Kökenleri farklı (deri kıvrımı vs kemik-kas); akrabalık göstermez.'},
+ {open:true,s:'"Yarasa uçar, o hâlde kuştur" diyen birine, doğal sınıflandırmanın en az üç kanıt türünü kullanarak cevap ver.',ans:'Yarasa: kürklü, sıcakkanlı, yavrusunu sütle besler (fizyoloji); kanat iskeleti memeli ön bacağının homoloğu (kemik planı: uzamış parmaklar); DNA memelilere yakın; embriyo gelişimi memeli tipi. Uçma analog bir özelliktir.',e:'Homoloji, DNA, fizyoloji/embriyo kanıtlarından en az üçü beklenir.'},
+ {open:true,s:'Kartepe\'de bulduğun bir ağacın adını <i>Pinus nigra</i> olarak yazdın. Bu iki kelimenin her birinin ne bilgi taşıdığını ve yazım kurallarını açıkla.',ans:'Pinus: cins, büyük harf, tüm çamlarla yakın akrabalığı gösterir. nigra: tür belirteci, küçük harf, cins içinde bu türü ayırır (karaçam). İkisi italik/altı çizili, Latince; tür adı ikisi birlikte anlamlıdır.',e:'Cins-tür rolü + yazım kuralları.'}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+
+/* --- Homolog/analog --- */
+const HA=[{n:'İnsan kolu – yarasa kanadı',h:1,s:[1,1],e:'Aynı kemik planı (üst kol, iki ön kol, bilek, beş parmak); işlev farklı.'},{n:'Böcek kanadı – kuş kanadı',h:0,s:[0,1],e:'Böcek kanadı deri kıvrımı, kuş kanadı kemik-kas; yalnız işlev ortak.'},{n:'Köpek balığı yüzgeci – yunus yüzgeci',h:0,s:[0,1],e:'Kıkırdak ışın vs memeli ön bacağı kemikleri; yakınsak evrim.'},{n:'Balina yüzgeci – kedi ön bacağı',h:1,s:[1,1],e:'Aynı iskelet dizilimi, ortak dört ayaklı ata.'},{n:'Kaktüs dikeni – gül dikeni',h:0,s:[0,0],e:'Kaktüs dikeni değişmiş yaprak, gül dikeni gövde çıkıntısı; köken farklı.'},{n:'İnsan kolu – köpek ön bacağı',h:1,s:[1,1],e:'Homolog; hem köken hem plan aynı, işlev kısmen farklı.'}];
+let haI=0;
+function drawHA(){const p=HA[haI];const svg=$('#haSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  const limb=(x,scale,label,color,plan)=>{const g=el('g',{transform:'translate('+x+',30) scale('+scale+')'});
+    if(plan){g.appendChild(el('rect',{x:0,y:0,width:22,height:60,rx:8,fill:color}));g.appendChild(el('rect',{x:-6,y:64,width:12,height:50,rx:5,fill:color}));g.appendChild(el('rect',{x:14,y:64,width:12,height:50,rx:5,fill:color}));g.appendChild(el('rect',{x:-4,y:118,width:30,height:12,rx:4,fill:color}));for(let i=0;i<5;i++)g.appendChild(el('rect',{x:-8+i*9,y:133,width:6,height:22+ (i===2?8:0),rx:3,fill:color}));}
+    else{g.appendChild(el('path',{d:'M0 80 q30 -90 60 0 q-30 40 -60 0z',fill:color,opacity:.8}));}
+    svg.appendChild(g);svg.appendChild(el('text',{x:x+30,y:190,'text-anchor':'middle','font-size':'13',fill:ink},label));};
+  const [a,b]=p.n.split(' – ');
+  limb(160,0.8,a,nv,p.s[0]===1);limb(480,0.8,b,gd,p.s[1]===1);
+  svg.appendChild(el('text',{x:360,y:20,'text-anchor':'middle','font-size':'13',fill:css('--ink2')},p.h===1?'iskelet planı: aynı dizilim':'plan farklı, işlev benzer'));
+  $('#haOut').innerHTML='<b>'+p.n+'</b> — kemik planı aynı mı? işlev aynı mı? Seç ve kontrol et.';}
+$('#haSel').innerHTML=HA.map((p,i)=>'<option value="'+i+'">'+p.n+'</option>').join('');
+$('#haSel').addEventListener('input',()=>{haI=+$('#haSel').value;drawHA();});
+$$('[data-h]').forEach(b=>b.onclick=()=>{const p=HA[haI];const ok=+b.dataset.h===p.h;$('#haOut').innerHTML=(ok?'<b style="color:var(--ok)">Doğru.</b> ':'<b style="color:var(--bad)">Hayır — '+(p.h?'homolog':'analog')+'.</b> ')+p.e;});
+/* --- Sınıflandırma merdiveni --- */
+const LD=['Domain','Âlem','Şube','Sınıf','Takım','Familya','Cins','Tür'];let ldPool=[],ldSel=[];
+function ldShuffle(){ldPool=LD.slice().sort(()=>Math.random()-.5);ldSel=[];drawLD();$('#ldOut').textContent='';}
+function drawLD(){$('#ladder').innerHTML='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">'+ldPool.map(b=>'<button class="btn alt sm" data-p="'+b+'">'+b+'</button>').join('')+'</div><div class="readout" style="display:block">Sıran: '+(ldSel.length?ldSel.map((s,i)=>(i+1)+'. '+s).join(' → '):'—')+'</div>';
+  $$('#ladder [data-p]').forEach(b=>b.onclick=()=>{ldSel.push(b.dataset.p);ldPool=ldPool.filter(x=>x!==b.dataset.p);drawLD();});}
+$('#ldCheck').onclick=()=>{if(ldSel.length<8){$('#ldOut').textContent='Önce 8 birimi de sırala.';return;}const wrong=ldSel.map((s,i)=>s!==LD[i]?(i+1):null).filter(Boolean);
+  $('#ldOut').innerHTML=wrong.length?'<span style="color:var(--bad)">'+wrong.length+' yerde hata (konum '+wrong.join(', ')+').</span> Doğru sıra: '+LD.join(' → ')+'. Ezber ipucu: <b>D</b>omain <b>Â</b>lem <b>Ş</b>ube <b>S</b>ınıf <b>T</b>akım <b>F</b>amilya <b>C</b>ins <b>T</b>ür.':'<span style="color:var(--ok)">Doğru!</span> Aşağı indikçe benzerlik artar, birey sayısı azalır.';};
+$('#ldReset').onclick=ldShuffle;
+/* --- Adlandırma düzeltici --- */
+const NM=[['<i>Felis catus</i>',1,'Kurallara uygun.'],['Homo Sapiens',0,'Tür belirteci küçük harfle başlar: <i>Homo sapiens</i>.'],['<i>canis lupus</i>',0,'Cins adı büyük harfle: <i>Canis lupus</i>.'],['<i>Pinus brutia</i>',1,'Uygun.'],['sapiens',0,'Tür adı tek kelime olamaz; cins şart.'],['<i>Canis lupus familiaris</i>',1,'Alt tür üç kelimeyle yazılır; uygun.'],['Kızılçam pinus',0,'Latince olmalı ve cins önce gelmeli: <i>Pinus brutia</i>.'],['<i>Equus asinus</i>',1,'Eşek; uygun.']];
+let NI={i:0,s:0};
+function drawNM(){const box=$('#nm');if(NI.i>=NM.length){box.innerHTML='<div class="readout">Puan: '+NI.s+' / '+NM.length+'</div>';return;}
+  const q=NM[NI.i];box.innerHTML='<div class="readout">'+(NI.i+1)+' / '+NM.length+' · Puan '+NI.s+'</div><div class="q"><div class="stem" style="font-size:22px">'+q[0]+'</div><div class="ctrl"><button class="btn" data-v="1">Doğru yazım</button><button class="btn alt" data-v="0">Hatalı</button></div><div class="fb" id="nmFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.v===q[1];if(ok)NI.s++;box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#nmFb').innerHTML=(ok?'✔ ':'✘ ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="nmNext">Sonraki →</button>';$('#nmNext').onclick=()=>{NI.i++;drawNM();};});}
+$('#nmReset').onclick=()=>{NI={i:0,s:0};drawNM();};
+/* --- Aynı tür mü? --- */
+const GQ=[['Chihuahua – Kangal',1,'Aynı tür (<i>Canis lupus familiaris</i>); ırk farkı tür değiştirmez.'],['At – eşek',0,'Katır kısır → farklı tür.'],['Kurt – köpek',1,'Aynı türün alt türleri; verimli döl verirler.'],['Aslan – kaplan',0,'Liger genellikle kısır, doğal koşulda karşılaşmazlar.'],['Kızılçam – karaçam',0,'Aynı cins (<i>Pinus</i>), farklı tür.'],['Yunus – köpek balığı',0,'Farklı sınıflar; yüzgeç analog.'],['Sarı kanarya – yeşil kanarya',1,'Renk varyasyonu; aynı tür.'],['İnsan – şempanze',0,'%98,8 DNA benzerliği bile tür ayrımını kaldırmaz; farklı cins.'],['Erkek ve dişi tavus kuşu',1,'Eşeysel dimorfizm: görünüş çok farklı, aynı tür.'],['Ev kedisi – yaban kedisi',0,'<i>Felis catus</i> – <i>Felis silvestris</i>: aynı cins, farklı tür (melez verebilseler de).']];
+let GM={i:0,s:0,log:[]};
+function drawGame(){const box=$('#game');if(GM.i>=GQ.length){box.innerHTML='<div class="readout">Puan: '+GM.s+' / '+GQ.length+'</div>'+GM.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ ')+l.e+'</div></div>').join('');return;}
+  const q=GQ[GM.i];box.innerHTML='<div class="readout">'+(GM.i+1)+' / '+GQ.length+' · Puan '+GM.s+'</div><div class="q"><div class="stem" style="font-size:20px">'+q[0]+'</div><div class="ctrl"><button class="btn" data-v="1">Aynı tür</button><button class="btn alt" data-v="0">Farklı tür</button></div><div class="fb" id="gmFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.v===q[1];if(ok)GM.s++;GM.log.push({q:q[0],ok,e:q[2]});box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#gmFb').innerHTML=(ok?'✔ Doğru. ':'✘ ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="gmNext">Sonraki →</button>';$('#gmNext').onclick=()=>{GM.i++;drawGame();};});}
+$('#gmReset').onclick=()=>{GM={i:0,s:0,log:[]};drawGame();};
+/* --- Kutu içinde kutu --- */
+const BX={'İnsan':['Ökarya','Hayvanlar','Kordalılar','Memeliler','Primatlar','Hominidae','Homo','H. sapiens'],'Ev kedisi':['Ökarya','Hayvanlar','Kordalılar','Memeliler','Etçiller','Felidae','Felis','F. catus'],'Kızıl geyik':['Ökarya','Hayvanlar','Kordalılar','Memeliler','Çift toynaklılar','Cervidae','Cervus','C. elaphus'],'Aslan':['Ökarya','Hayvanlar','Kordalılar','Memeliler','Etçiller','Felidae','Panthera','P. leo'],'Kızılçam':['Ökarya','Bitkiler','Tohumlu bitkiler','Kozalaklılar','Pinales','Pinaceae','Pinus','P. brutia'],'E. coli':['Bakteri','Bakteriler','Proteobakteri','Gama','Enterobacterales','Enterobacteriaceae','Escherichia','E. coli']};
+function drawBX(){const a=$('#bx1').value,b=$('#bx2').value;const A=BX[a],B=BX[b];const svg=$('#bxSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold');
+  let common=0;for(let i=0;i<8;i++){if(A[i]===B[i])common=i+1;else break;}
+  for(let i=0;i<8;i++){const w=700-i*80,h=230-i*26,x=10+i*40,y=5+i*13;const shared=i<common;svg.appendChild(el('rect',{x,y,width:w,height:h,rx:10,fill:shared?css('--sky'):'none',stroke:shared?nv:css('--line'),'stroke-width':shared?2:1,opacity:shared?.9-i*0.06:1}));svg.appendChild(el('text',{x:x+8,y:y+14,'font-size':'11','font-weight':shared?'700':'400',fill:shared?nv:css('--ink2')},LD[i]+': '+(shared?A[i]:A[i]+' / '+B[i])));}
+  $('#bxOut').innerHTML=a===b?'Aynı canlı; tüm kutular ortak.':'<b>'+a+'</b> ile <b>'+b+'</b>: ilk '+common+' kutu ortak, en yakın ortak düzey <b>'+(common?LD[common-1]+' ('+A[common-1]+')':'yok')+'</b>. '+(common>=6?'Çok yakın akraba.':common>=4?'Aynı sınıf/takım düzeyinde akraba.':common>=1?'Uzak akraba.':'Farklı domain: en uzak.');}
+$('#bx1').innerHTML=Object.keys(BX).map(k=>'<option>'+k+'</option>').join('');$('#bx2').innerHTML=Object.keys(BX).map((k,i)=>'<option'+(i===1?' selected':'')+'>'+k+'</option>').join('');
+['#bx1','#bx2'].forEach(s=>$(s).addEventListener('input',drawBX));
+function stopAll(){}
+
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawHA();ldShuffle();drawNM();drawGame();drawBX();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>
