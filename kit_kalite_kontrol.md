@@ -15,6 +15,7 @@
 - [ ] `python3 kit_ornek_*.py` benzeri script ile `kit_template.html` üzerinden üretildi; yer tutucu kalmadı
 - [ ] JS söz dizimi: `node -e "const h=require('fs').readFileSync('X.html','utf8');const i=h.lastIndexOf('<script>');new Function(h.slice(i+8).split('</script>')[0])"` hatasız
 - [ ] Dosya adı `ders-hNN.html` (mat/fiz/kim/biy), PAKET ve KEY aynı kodla; HAFTA doğru
+- [ ] **Giriş yapılmış durumda test edildi**: tarayıcıda localStorage'a `ah9-student` yazılıp sayfa açıldığında 8 sekmenin de içeriği görünüyor (noLogin uyarı kutusu kapanış etiketi sectionların DIŞINDA olmalı)
 - [ ] Tarayıcıda (390 px) 8 sekme açıldı, simülasyonlar hata vermedi, "Cevapları kaydet" kilitlendi
 - [ ] `index.html` içindeki CATALOG'da haftanın 4 satırında `dosya:` dolduruldu; bir sonraki hafta "Yakında" satırlarıyla eklendi
 - [ ] Depoya commit edildi; Netlify deploy "ready"; https://fenlisesi9.netlify.app/ açılıyor, yeni hafta kartı görünüyor

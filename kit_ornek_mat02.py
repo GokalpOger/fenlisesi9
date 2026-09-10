@@ -137,7 +137,7 @@ SEC=r'''
 </section>
 <section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
   <h2>Kendini sına</h2>
-  <p>12 çoktan seçmeli (4 temel, 5 orta, 3 fen lisesi) + 2 açık uçlu. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <p>12 soru: 4 temel, 5 orta, 3 fen lisesi. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
   <div id="quiz"></div><div class="score" id="scoreBox"></div>
   <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
 </section>
