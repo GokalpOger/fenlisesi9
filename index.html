@@ -135,11 +135,16 @@ const CATALOG=[
    {id:'fiz-h02',ders:'Fizik',c:'var(--fiz)',konu:'Ölçme, birimler, hata',dosya:'fiz-h02.html',dk:80},
    {id:'kim-h02',ders:'Kimya',c:'var(--kim)',konu:'Atom teorileri I',dosya:'kim-h02.html',dk:80},
    {id:'biy-h02',ders:'Biyoloji',c:'var(--biy)',konu:'Canlıların sınıflandırılması',dosya:'biy-h02.html',dk:80}]},
- {hafta:3,baslik:'3. Hafta · Yakında',paketler:[
-   {id:'mat-h03',ders:'Matematik',c:'var(--mat)',konu:'Sayı kümeleri ve işlem özellikleri',dosya:'',dk:240},
-   {id:'fiz-h03',ders:'Fizik',c:'var(--fiz)',konu:'Skaler ve vektörel nicelikler',dosya:'',dk:80},
-   {id:'kim-h03',ders:'Kimya',c:'var(--kim)',konu:'Atom teorileri II, atom altı parçacıklar',dosya:'',dk:80},
-   {id:'biy-h03',ders:'Biyoloji',c:'var(--biy)',konu:'Üç üst âlem ve bakteriler',dosya:'',dk:80}]}];
+ {hafta:3,baslik:'3. Hafta · Sayı kümeleri, vektörler, Bohr, bakteriler',paketler:[
+   {id:'mat-h03',ders:'Matematik',c:'var(--mat)',konu:'Sayı kümeleri ve işlem özellikleri',dosya:'mat-h03.html',dk:240},
+   {id:'fiz-h03',ders:'Fizik',c:'var(--fiz)',konu:'Skaler ve vektörel nicelikler',dosya:'fiz-h03.html',dk:80},
+   {id:'kim-h03',ders:'Kimya',c:'var(--kim)',konu:'Atom teorileri II, atom altı parçacıklar',dosya:'kim-h03.html',dk:80},
+   {id:'biy-h03',ders:'Biyoloji',c:'var(--biy)',konu:'Üç üst âlem ve bakteriler',dosya:'biy-h03.html',dk:80}]},
+ {hafta:4,baslik:'4. Hafta · Yakında',paketler:[
+   {id:'mat-h04',ders:'Matematik',c:'var(--mat)',konu:'Özdeşlikler: iki kare farkı ve tam kare',dosya:'',dk:240},
+   {id:'fiz-h04',ders:'Fizik',c:'var(--fiz)',konu:'Vektörlerde işlemler',dosya:'',dk:80},
+   {id:'kim-h04',ders:'Kimya',c:'var(--kim)',konu:'Orbitaller ve elektron dizilimi',dosya:'',dk:80},
+   {id:'biy-h04',ders:'Biyoloji',c:'var(--biy)',konu:'Arkeler ve protistler',dosya:'',dk:80}]}];
 const ALLBADGES=[['ilk-adim','İlk Adım'],['tuzak-avcisi','Tuzak Avcısı'],['dort-dortluk','Dört Dörtlük'],['seri','Seri Çalışan'],['maratoncu','Maratoncu'],['sinav-kurdu','Sınav Kurdu']];
 const $=s=>document.querySelector(s);
 let S=JSON.parse(localStorage.getItem('ah9-student')||'null'), P=null, mode='login';

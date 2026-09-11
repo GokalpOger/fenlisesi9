@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biyoloji 9 · Hafta 3 · Üç Üst Âlem ve Bakteriler</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#0f4c5c;--navy2:#0e8a9a;--sky:#d6f1f4;--gold:#b5541d;--gold2:#ffe9dc}
+[data-theme="dark"]{--navy:#8fdde8;--navy2:#2fb8c9;--sky:#0f3238;--gold:#f0a06a;--gold2:#3d2214}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Biyoloji · Ünite 2 Organizasyon · Hafta 3<b>Üç üst âlem (Bakteri, Arke, Ökarya), bakteri hücresi, bakterilerin önemi ve antibiyotik direnci</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>İlerlemen yalnızca bu cihazda kalır ve puan kazanmazsın. <a href="index.html">Ana sayfadan giriş yap</a>, sonra bu sayfaya dön.</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>Gözle görülmeyen çoğunluk</h1>
+  <p class="lead">Vücudunda kendi hücrelerin kadar bakteri hücresi taşıyorsun; yoğurdunu onlar mayalıyor, bağırsağında K vitamini üretiyorlar, Körfez'e giden atık suyu onlar temizliyor. Aynı âlemden başka üyeler tüberküloz, kolera, tetanoz yapıyor. Geçen hafta sınıflandırma hiyerarşisinin tepesine "üç üst âlem" koymuştuk; bu hafta o üç kutuyu birbirinden ne ayırır, sorusuna cevap veriyoruz ve en kalabalık kutuya, bakterilere, yakından bakıyoruz.</p>
+  <div class="card">
+    <p><b>Plan:</b> Önce üç üst âlemi (Bakteri, Arke, Ökarya) ayıran temel özellikler tablosu — bir canlının özelliklerinden hangi kutuya ait olduğunu <em>çıkarmayı</em> öğreneceksin. Sonra bakteri hücresinin yapısı, şekilleri, yaşam biçimleri ve biyolojik önemi. Fen lisesi derinliği olarak: ikiye bölünmenin matematiği, endospor ve antibiyotik direncinin nasıl <em>evrimleştiği</em>.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>Bir bakteri uygun koşullarda her 20 dakikada bir ikiye bölünür. Tek bir hücreden başlasa 24 saatte 2⁷² ≈ 4,7 × 10²¹ hücre olurdu — kütlesi binlerce ton. Peki dünya neden bakteriyle kaplı değil? Ve neden yoğurt mayası 45 °C'de çalışır da kaynar sütte çalışmaz? Cevaplar 3. ve 4. sekmede.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 2 · Organizasyon → Üç üst âlem)</div>Üç üst âlem (domain) sistemindeki canlıları temel özellikleri (hücre tipi, çekirdek, hücre duvarı, peptidoglikan, histon) bakımından karşılaştırmak · verilen özelliklerden bir canlının üst âlemini çıkarmak · bakteri hücresinin yapısını ve şekillerini tanımak · bakterilerin yaşam alanları ve biyolojik önemi hakkında önerme kurmak · (fen lisesi) ikiye bölünme, endospor ve antibiyotik direncinin doğal seçilimle yayılmasını açıklamak.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma ve aralıklı tekrar</h2>
+  <div class="grid2">
+    <div class="card"><b>Geçen haftadan: hiyerarşi ve domain</b><p>Domain → Âlem → Şube → Sınıf → Takım → Familya → Cins → Tür. En tepede üç domain: Bakteri, Arke, Ökarya. Ökarya dört âlemi kapsar: protistler, mantarlar, bitkiler, hayvanlar.</p></div>
+    <div class="card"><b>Geçen haftadan: doğal sınıflandırmanın kanıtı</b><p>Görünüş aldatır (yunus–köpek balığı). Akrabalık DNA, RNA ve protein benzerliğiyle ölçülür. Bu hafta tam bu ölçüt iki "aynı görünen" grubu ayıracak.</p></div>
+    <div class="card"><b>2 hafta önce: ortak özellikler</b><p>Hücresel yapı, beslenme, solunum, üreme, homeostazi, uyum… Bakteri tek hücreyle bunların hepsini yapar; virüs hiçbirini kendi başına yapamaz.</p></div>
+    <div class="card"><b>Dersler arası köprü</b><p>Matematik H1 üslü sayılar: n bölünme sonra hücre sayısı 2ⁿ. 2¹⁰ = 1024, 2²⁰ ≈ 10⁶, 2⁷² ≈ 4,7 × 10²¹. Bakteri büyümesi üstel büyümenin canlı örneğidir.</p></div>
+  </div>
+  <h3>Aralıklı tekrar (3 soru, anında geri bildirim)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Neden üç üst âlem? Mikroskobun göremediğini moleküller gördü</h3>
+  <p>1970'lere kadar canlılar "çekirdeği olan / olmayan" diye ikiye ayrılıyordu; tüm prokaryotlar tek kutudaydı. 1977'de Carl Woese, hücrelerin ribozomal RNA (rRNA) dizilerini karşılaştırdı: bazı prokaryotların rRNA'sı bakterilerden çok <em>ökaryotlara</em> benziyordu. Mikroskopta bakteri gibi görünen bu canlılar (metan üreten, tuzda ve kaynar suda yaşayanlar) ayrı bir üst âlem oldu: <b>Arke</b>. Böylece üç üst âlem (domain) sistemi doğdu: <b>Bakteri – Arke – Ökarya</b>. Geçen haftanın ilkesi burada iş başında: akrabalığı görünüş değil, molekül belirler.</p>
+  <h3>3.2 Üç üst âlemi ayıran temel özellikler</h3>
+  <table>
+    <tr><th>Özellik</th><th>Bakteriler</th><th>Arkeler</th><th>Ökaryotlar</th></tr>
+    <tr><td>Hücre tipi</td><td>Prokaryot</td><td>Prokaryot</td><td>Ökaryot</td></tr>
+    <tr><td>Zarla çevrili çekirdek</td><td>Yok (DNA sitoplazmada, nükleoid)</td><td>Yok</td><td>Var</td></tr>
+    <tr><td>Zarlı organeller (mitokondri vb.)</td><td>Yok</td><td>Yok</td><td>Var</td></tr>
+    <tr><td>Hücre duvarı</td><td>Var; <b>peptidoglikan</b> içerir</td><td>Var; peptidoglikan <b>yok</b> (farklı polimerler)</td><td>Bitkide selüloz, mantarda kitin, hayvanda yok</td></tr>
+    <tr><td>DNA'ya bağlı <b>histon</b> proteini</td><td>Yok</td><td>Var</td><td>Var</td></tr>
+    <tr><td>DNA</td><td>Halkasal; ayrıca plazmit</td><td>Halkasal</td><td>Doğrusal kromozomlar, çekirdekte</td></tr>
+    <tr><td>Zar lipitleri (fen lisesi)</td><td>Ester bağlı, düz zincir</td><td>Eter bağlı, dallı zincir (aşırı ortama dayanıklı)</td><td>Ester bağlı</td></tr>
+    <tr><td>Bazı antibiyotiklere (streptomisin, kloramfenikol) duyarlılık</td><td>Duyarlı</td><td>Duyarsız</td><td>Duyarsız</td></tr>
+    <tr><td>Yaşam alanı</td><td>Hemen her yer: toprak, su, vücut</td><td>Her yer; özellikle aşırı ortamlar (sıcak su kaynağı, tuz gölü, oksijensiz çamur, mide)</td><td>Her yer</td></tr>
+    <tr><td>Örnek</td><td>E. coli, Lactobacillus, siyanobakteriler</td><td>Metanojenler, tuzcullar (halofil), termofiller</td><td>Amip, maya, çam, insan</td></tr>
+  </table>
+  <div class="box def"><div class="t">Karar sırası</div>1) Çekirdek var mı? Varsa ökaryot, bitti. 2) Yoksa prokaryot: hücre duvarında peptidoglikan var mı? Varsa bakteri. 3) Peptidoglikan yok, histon var, aşırı ortam → arke. Bu üç soru neredeyse her canlıyı yerleştirir.</div>
+  <div class="box warn"><div class="t">Tuzak: "arke = eski bakteri"</div>Arkelerin adı "eski" anlamına gelir ama bakterilerin atası değildirler; ökaryotlara bakterilerden daha yakın akrabadırlar (histon, RNA polimeraz, ribozom benzerliği). "Prokaryot" bir hücre tipidir, bir akrabalık grubu değil.</div>
+  <div class="sim">
+    <h3>Domain dedektifi</h3>
+    <div class="hint">Her kartta bilinmeyen bir canlının özellikleri var. Yukarıdaki karar sırasını uygula ve üst âlemini seç. 10 kart; geri bildirim hangi satırın kararı verdiğini söyler.</div>
+    <div id="ddgame"></div>
+    <div class="ctrl"><button id="ddReset" class="alt">Yeniden başla</button></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Sınıflandırmanın bir "ezber" değil, bir <em>çıkarım</em> olduğunu: birkaç ayırt edici özellik (çekirdek, peptidoglikan, histon) canlının yerini belirlemeye yeter. Aynı zamanda mikroskop görüntüsünün (prokaryot) neden yetmediğini: bakteri ile arke aynı görünür, molekülleri farklıdır.</div>
+
+  <h3>3.3 Bakteri hücresinin yapısı</h3>
+  <p>Tipik bir bakteri 1-5 μm boyundadır (Fizik H2: mikrometre); yani tek bir insan hücresinin içine yüzlercesi sığar. Küçük ama tam donanımlıdır:</p>
+  <table>
+    <tr><th>Yapı</th><th>Görevi</th><th>Not</th></tr>
+    <tr><td>Kapsül</td><td>Koruma (fagositozdan kaçış), yüzeye tutunma, biyofilm</td><td>Bazı türlerde; kapsüllü türler genellikle daha hastalık yapıcı</td></tr>
+    <tr><td>Hücre duvarı</td><td>Şekil verir, ozmotik patlamayı önler</td><td>Peptidoglikan; penisilinin hedefi</td></tr>
+    <tr><td>Hücre zarı</td><td>Madde giriş-çıkışı; solunum enzimleri burada</td><td>Mitokondri yok; zar görevi üstlenir</td></tr>
+    <tr><td>Sitoplazma</td><td>Metabolizmanın gerçekleştiği ortam</td><td>Zarlı organel yok</td></tr>
+    <tr><td>Ribozom</td><td>Protein sentezi</td><td>Çok sayıda; bazı antibiyotiklerin hedefi</td></tr>
+    <tr><td>Nükleoid</td><td>Halkasal DNA'nın bulunduğu bölge</td><td>Zarla çevrili değil</td></tr>
+    <tr><td>Plazmit</td><td>Ek genler (antibiyotik direnci gibi)</td><td>Küçük halkasal DNA; hücreler arası aktarılabilir</td></tr>
+    <tr><td>Kamçı (flagellum)</td><td>Hareket</td><td>Bir ya da birçok; her türde yok</td></tr>
+    <tr><td>Pilus</td><td>Yüzeye tutunma; konjugasyon (DNA aktarımı)</td><td>Kısa, çok sayıda uzantı</td></tr>
+  </table>
+  <div class="sim">
+    <h3>Bakteri anatomisi gezgini</h3>
+    <div class="hint">"Öğren" modunda hücrenin parçalarına dokun, görevini oku. "Bul" modunda istenen parçayı hücre üzerinde bul; 9 parça sorulur.</div>
+    <div class="ctrl"><label>Mod <select id="anMode" style="font:inherit;padding:6px;border-radius:8px"><option value="learn">Öğren</option><option value="find">Bul</option></select></label><button id="anReset" class="alt">Sıfırla</button></div>
+    <div class="svgwrap"><svg id="anSvg" viewBox="0 0 720 300" role="img" aria-label="Bakteri hücresi" style="cursor:pointer"></svg></div>
+    <div class="readout" id="anOut" style="display:block">Bir parçaya dokun.</div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Bakterinin "basit" değil, <em>zarsız</em> bir hücre olduğunu: çekirdek ve mitokondri yok ama DNA, ribozom, zar ve duvar var; solunum zarda, protein sentezi ribozomda yapılır. Plazmit ve pilus, direnç genlerinin nasıl yayıldığını anlamanın anahtarıdır.</div>
+
+  <h3>3.4 Şekiller ve Gram boyama</h3>
+  <p>Bakteriler şekillerine göre adlandırılır: <b>kok</b> (küre), <b>basil</b> (çubuk), <b>spiril</b> (kıvrımlı, sert), <b>spiroket</b> (kıvrımlı, esnek), <b>vibrio</b> (virgül). Dizilişleri ek adla anlatılır: diplo- (ikili), strepto- (zincir), stafilo- (salkım). Örnek: boğaz enfeksiyonu yapan <em>Streptococcus</em> zincir hâlinde koklar; çıban yapan <em>Staphylococcus</em> salkım hâlinde koklar; yoğurttaki <em>Lactobacillus</em> basildir.</p>
+  <div class="box def"><div class="t">Gram boyama (fen lisesi derinliği)</div>1884'te geliştirilen boyama yöntemi bakterileri iki büyük gruba ayırır: <b>Gram pozitif</b> (kalın peptidoglikan duvar, boyayı tutar, mor görünür) ve <b>Gram negatif</b> (ince peptidoglikan + dış zar, boyayı bırakır, pembe görünür). Hekim için önemi: penisilin türü ilaçlar peptidoglikan yapımını engeller; hedef Gram pozitiflerde dışa açık ve kalındır, Gram negatiflerde dış zar bariyer oluşturur. Boyama sonucu, hangi antibiyotiğin işe yarayacağına dair ilk ipucudur.</div>
+
+  <h3>3.5 Beslenme ve yaşam alanı: her yerdeler, her şeyi yiyorlar</h3>
+  <p>Bakteriler beslenme bakımından iki ana gruba ayrılır. <b>Ototroflar</b> kendi besinini yapar: fotosentetik olanlar (siyanobakteriler; atmosferdeki oksijenin ilk üreticileri) ve kemosentetik olanlar (topraktaki azot bileşiklerini işleyen nitrit-nitrat bakterileri). <b>Heterotroflar</b> hazır besin alır: çürükçül (saprofit) olanlar ölü organik maddeyi ayrıştırır, parazitler konaktan alır ve hastalık yapabilir, mutualistler konakla karşılıklı yarar ilişkisi kurar (bağırsak florası; baklagil köklerinde azot bağlayan <em>Rhizobium</em>). Oksijene göre de ayrılırlar: aerob, anaerob; hem oksijenli hem oksijensiz yaşayabilen "geçici anaeroblar" (E. coli) en uyumlularıdır.</p>
+  <p>Yaşam alanı olarak neredeyse sınır tanımazlar: buzul, sıcak su kaynağı, derin deniz, mide (Helicobacter), cilt, telefon ekranı. Bu genişlik, hücrenin küçüklüğü ve hızlı çoğalması sayesinde "her koşula uygun bir tür" bulunmasından gelir.</p>
+
+  <h3>3.6 Üreme: ikiye bölünme (fen lisesi derinliği)</h3>
+  <p>Bakteriler eşeysiz olarak <b>ikiye bölünür</b>: halkasal DNA eşlenir, hücre uzar, ortadan bölünür; iki genetik özdeş hücre oluşur. E. coli uygun koşullarda 20 dakikada bir bölünür: n bölünme sonra hücre sayısı N = N₀ · 2ⁿ (Matematik H1). Üstel büyüme laboratuvarda birkaç saat sürer; sonra besin biter, atık birikir, alan dolar ve popülasyon durur (sabit evre). Merak sorusunun cevabı budur: dünya bakteriyle kaplı değil çünkü büyüme <em>sınırlı</em>dır.</p>
+  <div class="sim">
+    <h3>Bölünme sayacı</h3>
+    <div class="hint">Bölünme süresini, geçen süreyi ve başlangıç sayısını ayarla. Kesikli eğri "sınırsız" (2ⁿ) büyüme, düz eğri besinin sınırlı olduğu gerçekçi büyüme. Sayılar logaritmik eksende: her çizgi 10 kat.</div>
+    <div class="ctrl">
+      <label>Bölünme süresi <input type="range" id="bsT" min="15" max="60" step="5" value="20"><output id="bsTo">20</output> dk</label>
+      <label>Geçen süre <input type="range" id="bsH" min="1" max="24" step="1" value="6"><output id="bsHo">6</output> sa</label>
+      <label>Başlangıç <select id="bsN0" style="font:inherit;padding:6px;border-radius:8px"><option value="1">1 hücre</option><option value="10">10</option><option value="100">100</option><option value="1000">1000</option></select></label>
+    </div>
+    <div class="svgwrap"><svg id="bsSvg" viewBox="0 0 720 260" role="img" aria-label="Bakteri büyüme eğrisi"></svg></div>
+    <div class="readout" id="bsOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Üstel büyümenin ne kadar hızlı olduğunu (20 dakikalık bölünmeyle 10 saatte bir milyar kat) ve neden sürdürülemediğini: gerçek eğri bir tavana (besin, alan, atık) dayanır. Bu tavan, gıda saklamanın ve enfeksiyonun erken tedavisinin mantığıdır: sayı küçükken müdahale et.</div>
+  <div class="box warn"><div class="t">Endospor: üreme değil, hayatta kalma</div>Bazı bakteriler (Bacillus, Clostridium) olumsuz koşulda hücre içinde kalın kabuklu, kuru ve metabolizması durmuş bir <b>endospor</b> oluşturur. Bir hücreden <em>bir</em> spor çıkar: sayı artmaz, dolayısıyla üreme değildir. Spor kaynatmaya, kuruluğa ve dezenfektanlara yıllarca direnir; koşullar düzelince çimlenir. Konserve ve cerrahi aletler bu yüzden 121 °C'de basınçlı buharla (otoklav) sterilize edilir.</div>
+  <p><b>Konjugasyon</b> (fen lisesi): iki bakteri pilus aracılığıyla temas eder ve plazmit kopyası aktarılır. Hücre sayısı artmaz, ama genler — örneğin antibiyotik direnci — türler arasında bile yayılır. Üreme değildir; gen alışverişidir.</p>
+
+  <h3>3.7 Bakterilerin biyolojik önemi</h3>
+  <div class="grid2">
+    <div class="card"><b>Yararları</b><p>Yoğurt, peynir, turşu, sirke (laktik ve asetik asit bakterileri) · bağırsak florası: sindirime yardım, K ve B vitaminleri, zararlıları dışlama · azot bağlama (Rhizobium) ve azot döngüsü · ayrıştırıcılık: madde döngüsünün motoru · biyoteknoloji: insülin, enzim, aşı üretimi (rekombinant E. coli) · atık su arıtma, petrol kirliliği temizleme (biyoremediasyon).</p></div>
+    <div class="card"><b>Zararları</b><p>Hastalıklar: tüberküloz, tetanoz, kolera, tifo, boğmaca, şarbon, diş çürüğü · besin bozulması ve gıda zehirlenmeleri (Salmonella, botulizm) · toksin üretimi · ürün ve malzeme hasarı (biyofilm, korozyon).</p></div>
+  </div>
+  <p><b>Antibiyotikler</b> bakterileri öldüren ya da çoğalmasını durduran maddelerdir; ilk örneği penisilin (Fleming, 1928) bir küf mantarından elde edildi. Virüslere <em>etki etmez</em>: virüsün duvarı, ribozomu, metabolizması yoktur (Biyoloji H7'de ayrıntı). Gripte antibiyotik istemek işe yaramadığı gibi direnç sorununu büyütür.</p>
+
+  <h3>3.8 Antibiyotik direnci nasıl ortaya çıkar? (fen lisesi derinliği)</h3>
+  <ol class="steps">
+    <li><b>Varyasyon:</b> Milyonlarca bakteri içinde rastgele mutasyon ya da plazmitle gelen genler sayesinde birkaç hücre zaten dirençlidir — ilaç gelmeden önce.<div class="why">Mutasyon ilaca "cevap" değildir; ilaçtan bağımsız ve rastgeledir.</div></li>
+    <li><b>Seçilim:</b> Antibiyotik duyarlı hücreleri öldürür; dirençliler hayatta kalır.</li>
+    <li><b>Çoğalma:</b> Rakipsiz kalan dirençliler ikiye bölünerek popülasyonu doldurur; yeni nesil dirençli doğar.</li>
+    <li><b>Yayılma:</b> Direnç genleri plazmitle konjugasyon yoluyla başka bakterilere, hatta başka türlere geçer.<div class="why">Tedaviyi yarıda bırakmak, düşük doz ve gereksiz kullanım 2. adımı yarım bırakıp 3. adımı hızlandırır. Dünya Sağlık Örgütü direnci en büyük halk sağlığı tehditleri arasında sayar.</div></li>
+  </ol>
+  <div class="box warn"><div class="t">Tuzak: "antibiyotik bakteriyi dirençli yapar"</div>Yapmaz; <em>seçer</em>. Direnç önce vardır, ilaç yalnız duyarlıları eler. Aynı mantık böcek ilaçları ve tarım zararlıları için de geçerlidir. Bu, Darwin'in doğal seçilim ilkesinin gözle izlenebilen bir örneğidir — bir hastanede haftalar içinde.</div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · Mutfakta yoğurt: 45 °C'nin sırrı</h3>
+    <p><b>Durum:</b> Süt kaynatılıp 45 °C'ye soğutulur, bir kaşık yoğurtla mayalanır, sarılıp 6-8 saat bekletilir.</p>
+    <p><b>Kavramla bağ:</b> Mayadaki <em>Lactobacillus bulgaricus</em> ve <em>Streptococcus thermophilus</em> (basil ve zincir kok; ikisi de Gram pozitif bakteri) laktozu laktik aside çevirir; asit süt proteinini pıhtılaştırır. Kaynatma, sütteki yabancı bakterileri öldürür (rekabeti kaldırır); 45 °C ise maya bakterilerinin en hızlı bölündüğü sıcaklıktır.</p>
+    <p><b>Analiz:</b> Kaynar sütte mayalama neden olmaz? Yüksek sıcaklık bakteri proteinlerini ve enzimlerini bozar (Biyoloji H1: denatürasyon); hücreler ölür. Çok soğukta ise bölünme yavaşlar, yoğurt "tutmaz". 20 dakikalık bölünmeyle 6 saatte 2¹⁸ ≈ 260 000 kat artış: bir kaşık maya bir tencereye yeter.</p>
+    <p><b>Sonuç:</b> Yoğurt, kontrollü bir bakteri popülasyonu deneyidir: sıcaklık, rekabet ve süre.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · İzmit Körfezi ve arıtma tesisi: aktif çamur</h3>
+    <p><b>Durum:</b> Kocaeli'nin evsel atık suyu arıtma tesislerinde havalandırmalı büyük havuzlardan geçer; havuzdaki koyu "çamur" aslında yoğun bir bakteri topluluğudur.</p>
+    <p><b>Kavramla bağ:</b> Çürükçül (heterotrof, aerob) bakteriler atık sudaki organik maddeyi besin olarak parçalar; havalandırma oksijen sağlar. Nitrit-nitrat bakterileri (kemosentetik) amonyağı işler. Sonuçta organik yük ve azot bileşikleri azalır, su Körfez'e daha temiz döner.</p>
+    <p><b>Analiz:</b> 1990'larda Körfez'in kirliliği balıkçılığı bitirme noktasına gelmişti; arıtma kapasitesinin artmasıyla su kalitesi yıllar içinde iyileşti. Bu, ayrıştırıcıların madde döngüsündeki rolünün mühendislikle ölçeklenmiş hâlidir.</p>
+    <p><b>Sonuç:</b> "Bakteri = mikrop" önyargısı yanlıştır; şehrin suyunu temizleyen de bakterilerdir.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · "Kendimi iyi hissettim, ilacı bıraktım"</h3>
+    <p><b>Durum:</b> Boğaz enfeksiyonu için 7 günlük antibiyotik yazılıyor; 3. günde şikâyetler geçince kutu yarım bırakılıyor.</p>
+    <p><b>Kavramla bağ:</b> 3. günde duyarlı bakterilerin çoğu ölmüş, belirtiler geçmiştir; ama rastgele mutasyonla dirençli birkaç hücre hayatta kalmıştır. İlaç kesilince rakipsiz çoğalırlar; sonraki enfeksiyonda aynı ilaç işe yaramaz.</p>
+    <p><b>Analiz:</b> 1000 bakterinin %0,1'i dirençli olsun (1 hücre). İlaç duyarlıların %99'unu öldürsün: kalan 10 duyarlı + 1 dirençli → dirençli oranı %9. Kalanlar 200 kat çoğalıp ikinci bir yarım kür daha görsün: 2000 duyarlının 20'si, 200 dirençlinin 200'ü kalır → %91 dirençli. İki yarım kür, direnci binde birden onda dokuza taşıdı.</p>
+    <p><b>Sonuç:</b> Tam kür, popülasyonu bağışıklık sisteminin bitirebileceği kadar küçültmek içindir; belirti geçmesi bakteri bitti demek değildir.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · Ev konservesi ve endospor: 100 °C neden yetmez?</h3>
+    <p><b>Durum:</b> Evde yapılan sebze konservesi kavanozu kaynar suda 20 dakika bekletildi; aylar sonra kapak şişti.</p>
+    <p><b>Kavramla bağ:</b> Topraktan gelen <em>Clostridium botulinum</em> endosporları 100 °C'de saatlerce hayatta kalır. Kavanoz içinde oksijensiz ortam (anaerob) bulan sporlar çimlenir, bakteri çoğalır, gaz ve çok güçlü bir sinir zehiri (botulinum toksini) üretir.</p>
+    <p><b>Analiz:</b> Sporu öldürmek için 121 °C'de basınçlı buhar (düdüklü tencere/otoklav) ya da asitli ortam (turşu, pH &lt; 4,6: spor çimlenemez) gerekir. Şişmiş kapak, gaz üretiminin — yani bölünmenin — kanıtıdır; tadına bile bakılmaz.</p>
+    <p><b>Sonuç:</b> "Endospor ≠ üreme" ayrımı bir gıda güvenliği kuralıdır: kaynatma hücreleri öldürür, sporları değil.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Antibiyotik direnci evrim simülasyonu</h3>
+    <div class="hint">200 hücrelik bir enfeksiyon. Başlangıçtaki dirençli oranını, dozu ve tedavi süresini seç; istersen tedaviyi yarıda bırak. Her hücre bir bakteri topluluğunu temsil eder. İlaç her gün duyarlıların bir kısmını öldürür (tam dozda yarısını), dirençliler yavaş da olsa çoğalır, nadiren mutasyon olur; ilaç kesilince herkes ikiye katlanır. Tedavi bittiğinde kalan sayı 10'un altındaysa bağışıklık sistemi işi bitirir. Grafik dirençli oranını izler.</div>
+    <div class="ctrl">
+      <label>Başlangıç dirençli <select id="drP0" style="font:inherit;padding:6px;border-radius:8px"><option value="0">%0</option><option value="1" selected>%1</option><option value="5">%5</option></select></label>
+      <label>Doz <select id="drDose" style="font:inherit;padding:6px;border-radius:8px"><option value="full">Tam doz</option><option value="low">Düşük doz</option></select></label>
+      <label>Tedavi <select id="drDur" style="font:inherit;padding:6px;border-radius:8px"><option value="3">3 gün</option><option value="5">5 gün</option><option value="7" selected>7 gün</option><option value="10">10 gün</option></select></label>
+      <label><input type="checkbox" id="drHalf"> Yarıda bırak</label>
+    </div>
+    <div class="ctrl"><button id="drDay">1 gün ilerle</button><button id="drRun">Tedaviyi ve 4 gün takibi çalıştır</button><button id="drReset" class="alt">Sıfırla</button></div>
+    <div class="svgwrap"><svg id="drSvg" viewBox="0 0 720 340" role="img" aria-label="Direnç simülasyonu"></svg></div>
+    <div class="readout" id="drOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Direncin ilaçla <em>yaratılmadığını</em>, seçildiğini: başlangıçta %0 dirençliyle tam kür çoğu zaman enfeksiyonu bitirir; %1 dirençli + yarım kür ise dirençli bir popülasyon bırakır. Aynı deneyi birkaç kez çalıştır: sonuç her seferinde aynı olmaz, çünkü mutasyon ve ölüm rastgeledir — ama eğilim değişmez.</div>
+  <div class="sim">
+    <h3>Şekil tanıma</h3>
+    <div class="hint">Çizimdeki bakteri şeklini ve dizilişini adlandır. 8 tur; her cevaptan sonra örnek bir bakteri ve yaptığı iş gelir.</div>
+    <div id="game"></div>
+    <div class="ctrl"><button id="gmReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Şekil ve diziliş adlarının bir sistem olduğunu: kök (kok/basil/spiril) + ön ek (diplo-/strepto-/stafilo-). Mikroskopta ilk bakışta okunan bu bilgi, Gram boyamayla birlikte hekimin ilk teşhis ipucudur.</div>
+  <div class="sim">
+    <h3>Bakteri efsaneleri: doğru mu, yanlış mı?</h3>
+    <div class="hint">10 yaygın iddia; her biri için karar ver. Yanlışların çoğu sınavlarda çeldirici olarak karşına çıkacak.</div>
+    <div id="efgame"></div>
+    <div class="ctrl"><button id="efReset" class="alt">Yeniden başla</button></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Bakterilerle ilgili en yaygın beş yanılgının (endospor = üreme, antibiyotik = her mikroba, arke = bakteri, ilaç = direnç üretir, kaynatma = sterilizasyon) hepsinin bu haftanın kavramlarıyla çürütülebildiğini.</div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Direnç simülasyonunda %0 dirençli ile başlayıp yine de dirençli popülasyon elde edebildin mi? Hangi ayarlarla; nedeni ne? &nbsp; 2) Bölünme sayacında 20 dk ile 40 dk bölünme süresi arasında 10 saatteki sayı kaç kat farklı? (İpucu: 2ⁿ.) &nbsp; 3) Domain dedektifinde en çok hangi özellik kararı verdi: peptidoglikan mı, histon mu? Neden bu ikisi "bakteri mi arke mi" sorusunun anahtarı?</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · Bir hücrede zarla çevrili çekirdek yok, hücre duvarında peptidoglikan var. Üst âlemi?</h3>
+    <ol class="steps"><li>Çekirdek yok → prokaryot: Bakteri ya da Arke.</li><li>Peptidoglikan var → <b>Bakteri</b>. (Arke duvarında peptidoglikan yoktur.)<div class="why">Karar sırası: önce çekirdek, sonra peptidoglikan. İki soru yetti.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · Mikroskopta üzüm salkımı gibi kümelenmiş küreler görülüyor. Adı ve tipik bir örneği?</h3>
+    <ol class="steps"><li>Küre → kok; salkım dizilişi → stafilo-: <b>stafilokok</b>.</li><li>Örnek: <em>Staphylococcus aureus</em> — ciltte çıban, gıda zehirlenmesi; hastane enfeksiyonlarında direnç sorunu (MRSA).<div class="why">Zincir olsaydı streptokok (boğaz enfeksiyonu), ikili olsaydı diplokok (zatürre) derdik.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · 20 dakikada bir bölünen 100 bakteri, uygun koşullarda 3 saat sonra kaç olur? Sonuç neden bu kadar sürmez?</h3>
+    <ol class="steps"><li>3 saat = 180 dk → 180/20 = 9 bölünme.</li><li>N = 100 · 2⁹ = 100 · 512 = <b>51 200</b>.</li><li>Gerçekte bir süre sonra besin biter, atık (asit) birikir, alan dolar → bölünme yavaşlar ve durur; popülasyon sabit evreye girer.<div class="why">Üstel formül yalnız "uygun koşul" sürdükçe geçerli; yoğurdun asitlenip durması bunun günlük örneği.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Kaynar su kaynağında (90 °C) yaşayan, çekirdeksiz, peptidoglikansız ama histon proteinli bir canlı: bakteri mi, arke mi? Bu canlı ökaryotlara neden "yakın" sayılır?</h3>
+    <ol class="steps"><li>Prokaryot (çekirdek yok); peptidoglikan yok + histon var → <b>Arke</b>. Aşırı ortam da destekler ama tek başına karar verdirmez (bazı bakteriler de sıcakta yaşar).</li><li>Histon, ökaryot DNA'sının paketleme proteinidir; arkede bulunması, RNA polimeraz ve ribozom benzerliğiyle birlikte rRNA ağacında arkeleri ökaryotlara yakın yerleştirir.<div class="why">Görünüş (prokaryot) bakteriye, moleküller ökaryota yakın diyor; sınıflandırma molekülü dinler.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · İki yarım kürün dirençli oranına etkisi (sayısal senaryo)</h3>
+    <p>1000 bakteri, %0,1 dirençli (1 hücre). Antibiyotik her kürde duyarlıların %99'unu öldürüyor, dirençlilere dokunmuyor. Her kürden sonra popülasyon 200 kat çoğalıyor.</p>
+    <ol class="steps"><li>1. yarım kür: 999 duyarlının %1'i = 10 kalır; 1 dirençli kalır. Oran: 1/11 ≈ <b>%9</b>.</li><li>Çoğalma × 200: 2000 duyarlı, 200 dirençli.</li><li>2. yarım kür: 2000 → 20 duyarlı; 200 dirençli. Oran: 200/220 ≈ <b>%91</b>.<div class="why">İlaç hiçbir hücreyi dirençli yapmadı; yalnız duyarlıları eledi. Oran binde birden onda dokuza çıktı: seçilim + çoğalma. Tam kür + bağışıklık, popülasyonu ikinci adıma gelmeden bitirmeyi hedefler.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · "Konserveyi 20 dakika kaynattım, güvenli" iddiasını endospor ve üreme kavramlarıyla değerlendir</h3>
+    <ol class="steps"><li>Kaynatma (100 °C) aktif bakteri hücrelerini öldürür; ancak <em>Clostridium botulinum</em> gibi türlerin endosporları 100 °C'ye dayanır. Spor, üreme değil dayanma yapısıdır; kavanozda çimlenerek yeniden aktif hücreye döner.</li><li>Kavanoz oksijensizdir (anaerob); bu bakteri için uygun ortamdır: bölünür, toksin ve gaz üretir.</li><li>Güvenlik için: 121 °C basınçlı buhar (spor ölür) ya da pH &lt; 4,6 asitli ortam (spor çimlenemez).<div class="why">İddia yanlış: "kaynattım" hücreleri hedefler, sporları değil. Şişkin kapak = bölünme kanıtı.</div></li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 soru: 4 temel, 5 orta, 3 fen lisesi. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Üç üst âlem</b>Woese 1977, rRNA. Bakteri – Arke – Ökarya. Karar: çekirdek var → ökaryot; yok + peptidoglikan → bakteri; yok + histon, peptidoglikan yok → arke.</div>
+    <div class="card"><b>Bakteri hücresi</b>Kapsül · duvar (peptidoglikan) · zar · ribozom · nükleoid (halkasal DNA) · plazmit · kamçı · pilus. Zarlı organel yok. Şekil: kok, basil, spiril, vibrio; diplo/strepto/stafilo.</div>
+    <div class="card"><b>Yaşam ve önem</b>Ototrof (foto/kemosentetik) – heterotrof (çürükçül, parazit, mutualist). Yararlar: yoğurt, flora, azot, ayrıştırma, insülin, arıtma. Zararlar: hastalık, bozulma, toksin.</div>
+    <div class="card"><b>Üreme ve direnç</b>İkiye bölünme: N = N₀·2ⁿ, sınırlı büyüme. Endospor ≠ üreme (121 °C). Direnç: varyasyon → seçilim → çoğalma → plazmitle yayılma; ilaç seçer, yaratmaz.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>Arkeyi "bir tür bakteri" saymak: prokaryot ama peptidoglikansız, histonlu, ökaryota daha yakın.</li>
+    <li>Endosporu üreme sanmak: bir hücre → bir spor; sayı artmaz.</li>
+    <li>"Antibiyotik bakteriyi dirençli yapar" demek: direnç önce vardır, ilaç seçer.</li>
+    <li>Antibiyotiği virüse (grip, soğuk algınlığı) vermek: virüsün duvarı ve ribozomu yoktur.</li>
+    <li>2ⁿ'de n'yi bölünme sayısı yerine süre sanmak: 3 saat, 20 dk → n = 9, N = 512 (2 × 9 değil).</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Arkeleri bu hafta yalnız bir tablo satırı olarak tanıdın. Peki 110 °C'de, %30 tuzda ya da inek midesinde yaşamayı nasıl başarırlar; biyoteknoloji onları neden sever? Ve ökaryotların en karışık kutusu protistler: sıtmayı yapan da, öglena gibi hem bitki hem hayvan gibi davranan da orada. Gelecek hafta: <b>arkeler ve protistler</b>.</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Biyoloji · Ünite 2 · Hafta 3 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='biy-h03', HAFTA=3;
+const BASEKEY='ah9-biy-h03';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Biyoloji 9 · Ünite 2 · Hafta 3 · Üç üst âlem ve bakteriler';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[{"s": "<span class=\"tag\">Geçen hafta</span> Yunus yüzgeci ile köpek balığı yüzgeci benzer görünür ama kökenleri farklıdır. Bu yapılar ne olarak adlandırılır?", "o": ["Analog", "Homolog", "Körelmiş", "Embriyonik"], "a": 0, "e": "İşlev aynı, köken farklı → analog; akrabalık göstermez. Bu hafta akrabalığı moleküllerle (rRNA) ölçeceğiz."}, {"s": "<span class=\"tag\">2 hafta önce</span> Canlıların ortak özelliklerinden \"homeostazi\" ne anlama gelir?", "o": ["İç ortamın kararlı dengede tutulması", "Hücre sayısının artması", "Uyarılara tepki verme", "Kalıtım materyalinin aktarılması"], "a": 0, "e": "Homeostazi iç dengedir (sıcaklık, su, pH). Tek hücreli bir bakteri bile bunu yapar; virüs yapamaz."}, {"s": "<span class=\"tag\">Matematik H1 köprüsü</span> 2¹⁰ kaçtır?", "o": ["1024", "20", "100", "512"], "a": 0, "e": "2¹⁰ = 1024. Bu hafta: 20 dakikada bir bölünen bir bakteri 10 bölünme (3 saat 20 dakika) sonra 1024 hücre olur."}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,true)));}
+/* ana test */
+const QUIZ=[{"s": "Üç üst âlem (domain) sistemindeki gruplardan hangileri prokaryot hücrelidir?", "o": ["Bakteriler ve Arkeler", "Yalnız Bakteriler", "Arkeler ve Ökaryotlar", "Yalnız Ökaryotlar"], "a": 0, "e": "Bakteri ve arke hücrelerinde zarla çevrili çekirdek ve zarlı organel yoktur. Arkeler prokaryot olsa da moleküler yapıca ökaryotlara daha yakındır."}, {"s": "Hücre duvarında peptidoglikan bulunan grup hangisidir?", "o": ["Bakteriler", "Arkeler", "Bitkiler", "Mantarlar"], "a": 0, "e": "Peptidoglikan yalnız bakterilere özgüdür; arkelerde yoktur, bitkilerde selüloz, mantarlarda kitin vardır. Penisilin bu yüzden yalnız bakteriye etki eder."}, {"s": "Zincir hâlinde dizilmiş küre şeklindeki bakterilere ne ad verilir?", "o": ["Streptokok", "Stafilokok", "Basil", "Spiril"], "a": 0, "e": "Kok = küre; strepto- zincir, stafilo- üzüm salkımı. Basil çubuk, spiril kıvrımlıdır."}, {"s": "Bakteri hücresindeki plazmit için hangisi doğrudur?", "o": ["Ana DNA'dan ayrı, küçük halkasal bir DNA parçasıdır; direnç genleri taşıyabilir", "Bakterinin zarla çevrili çekirdeğidir", "Protein sentezleyen organeldir", "Hareketi sağlayan uzantıdır"], "a": 0, "e": "Plazmit, nükleoiddeki halkasal DNA'dan bağımsız küçük bir DNA halkasıdır; konjugasyonla aktarılabilir. Protein sentezi ribozomda, hareket kamçıyla olur."}, {"s": "Bir kaynak suyundan alınan tek hücreli canlının çekirdeği yok, hücre duvarında peptidoglikan yok, DNA'sına bağlı histon proteinleri var ve 95 °C'de çoğalıyor. Bu canlı hangi gruptadır?", "o": ["Arkeler", "Bakteriler", "Protistler", "Mantarlar"], "a": 0, "e": "Çekirdek yok → prokaryot; peptidoglikan yok + histon var + aşırı ortam → arke. Bakteride peptidoglikan var, histon yoktur; protist ve mantar ökaryottur."}, {"tag": "bağlam", "s": "Ev yapımı yoğurt için süt 45 °C'ye soğutulup mayalanır. Bir öğrenci sütü kaynar hâldeyken mayalıyor ve yoğurt olmuyor. En iyi açıklama hangisidir?", "o": ["Yüksek sıcaklık yoğurt bakterilerini öldürdüğü (protein ve enzimlerini bozduğu) için laktik asit üretimi olmaz", "Kaynar süt laktoz içermez", "Bakteriler 45 °C'nin üstünde yalnızca uyur; süt asitleşmez ama yine de yoğurt olur", "Sıcak sütte bakteri endospor oluşturup sütü kesmez"], "a": 0, "e": "Lactobacillus ve Streptococcus thermophilus 40-45 °C'de laktozu laktik aside çevirir; kaynar sıcaklık hücreleri ve enzimlerini bozar (Biyoloji H1: denatürasyon). Yoğurt bakterileri endospor yapmaz."}, {"s": "20 dakikada bir ikiye bölünen tek bir bakteri, uygun koşullarda 3 saat sonra kaç hücre oluşturur?", "o": ["512", "9", "64", "18"], "a": 0, "e": "3 saat = 180 dk → 180/20 = 9 bölünme → 2⁹ = 512 (Matematik H1: üslü sayılar). 9 bölünme sayısıdır; 18 = 2 × 9 yaygın bir çarpma hatasıdır."}, {"s": "Endospor için hangisi doğrudur?", "o": ["Olumsuz koşullara dayanıklı, uyku hâlindeki bir yapıdır; üreme değildir, hücre sayısı artmaz", "Bakterinin eşeyli üreme hücresidir", "Her bakteri türü oluşturur", "Kaynatmayla kolayca yok edilir"], "a": 0, "e": "Endospor bir hayatta kalma biçimidir: bir hücre bir spor yapar. Yalnız bazı türler (Bacillus, Clostridium) oluşturur; 100 °C'ye dirençlidir, 121 °C basınçlı buhar gerekir."}, {"tag": "bağlam", "s": "<b>Bilgi:</b> İzmit Körfezi'ne dökülen atık sular arıtma tesislerinde havalandırılan \"aktif çamur\" havuzlarından geçer; çamur büyük ölçüde bakteri kütlesidir.<br>Bu havuzların işlevi bakterilerin hangi özelliğine dayanır?", "o": ["Heterotrof (çürükçül) bakterilerin organik atıkları besin olarak parçalaması", "Bakterilerin fotosentezle oksijen üretmesi", "Bakterilerin endospor oluşturarak atığı kapsüllemesi", "Bakterilerin suyu ısıtarak sterilize etmesi"], "a": 0, "e": "Çürükçül bakteriler organik maddeyi CO₂, su ve mineral maddelere çevirir; havalandırma oksijen sağlar (aerob). Madde döngüsünün mühendisliğe uyarlanmış hâlidir."}, {"tag": "bağlam", "s": "Bir hasta 7 günlük antibiyotik tedavisini 3. günde, kendini iyi hissedince bırakıyor; birkaç hafta sonra aynı enfeksiyon geri geliyor ve ilaç işe yaramıyor. En doğru açıklama hangisidir?", "o": ["İlaç duyarlı bakterileri öldürmüş; rastgele mutasyonla önceden dirençli olan az sayıdaki hücre hayatta kalıp çoğalmıştır (doğal seçilim)", "Antibiyotik, bakterileri direnç kazanmaya zorlayarak mutasyona uğratmıştır", "Bakteriler antibiyotiğe alışıp onu besin olarak kullanmıştır", "Hastanın bağışıklık sistemi antibiyotiğe direnç kazanmıştır"], "a": 0, "e": "Direnç mutasyonu ilaçtan önce ve rastgele oluşur; ilaç yalnız seçer. Tedavi yarıda kalınca dirençliler rakipsiz çoğalır. Direnç bakterinin özelliğidir, hastanın değil."}, {"s": "<b>Bilgi:</b> Gram boyamada kalın peptidoglikan duvarlı bakteriler mor (Gram pozitif), ince peptidoglikanlı ve dış zarlı bakteriler pembe (Gram negatif) görünür. Penisilin, peptidoglikan duvarın yapımını engeller.<br>Buna göre hangisi beklenir?", "o": ["Gram pozitif bakteriler penisiline genellikle daha duyarlıdır; Gram negatiflerde dış zar ilacın hedefe ulaşmasını zorlaştırır", "Gram negatifler penisiline daha duyarlıdır, çünkü duvarları incedir", "Penisilin insan hücrelerine de aynı etkiyi yapar", "Boyama sonucunun antibiyotik seçimiyle ilgisi yoktur"], "a": 0, "e": "Hedef (peptidoglikan) Gram pozitiflerde kalın ve dışa açıktır; Gram negatiflerin dış zarı bariyerdir. İnsan hücresinde peptidoglikan yoktur → penisilin seçici etkilidir."}, {"s": "Woese'un 1977'de prokaryotları iki ayrı üst âleme (Bakteri ve Arke) ayırmasının dayanağı hangisidir?", "o": ["Ribozomal RNA dizilerinin karşılaştırılması: arke rRNA'sı bakteriden çok ökaryota benziyordu", "Mikroskop görüntülerinin farklı olması", "Arkelerin çok hücreli olması", "Arkelerin zarla çevrili çekirdek taşıması"], "a": 0, "e": "Mikroskopta ikisi de aynı görünür; ayrım moleküler kanıtla (rRNA dizisi, zar lipitleri, RNA polimeraz) yapıldı. Doğal sınıflandırmanın en güçlü kanıtı DNA/RNA benzerliğidir."}, {"open": true, "s": "Bakteri, Arke ve Ökarya üst âlemlerini birbirinden ayıran en az üç özelliği tablo hâlinde yaz; her üst âlem için bir canlı örneği ver.", "ans": "Örnek satırlar: zarla çevrili çekirdek (yok / yok / var); peptidoglikan (var / yok / yok); histon (yok / var / var); zar lipitleri (ester / eter-dallı / ester); streptomisine duyarlılık (duyarlı / duyarsız / duyarsız). Örnekler: E. coli veya Lactobacillus / metanojen ya da tuzcul arke / amip, maya, çam, insan.", "e": "Üç doğru satır + üç örnek beklenir."}, {"open": true, "s": "Antibiyotik kürünü yarıda bırakmanın direnci nasıl artırdığını doğal seçilim kavramıyla adım adım açıkla; \"antibiyotik bakteriyi dirençli yapar\" ifadesindeki hatayı belirt.", "ans": "Popülasyonda rastgele mutasyonla az sayıda dirençli hücre zaten vardır; ilaç duyarlıları öldürür, dirençliler kalır; kür yarıda kalınca dirençliler rakipsiz çoğalır ve çoğunluk olur; direnç genleri plazmitle diğer bakterilere de geçer. Hata: ilaç direnci oluşturmaz, var olan direnci seçer.", "e": "Varyasyon → seçilim → çoğalma sırası ve hata tespiti beklenir."}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+
+/* --- Domain dedektifi --- */
+const DDB=['Bakteri','Arke','Ökarya'];
+const DD=[['Çekirdek yok; hücre duvarında peptidoglikan var; histon yok; yoğurtta yaşıyor.',0,'Peptidoglikan satırı karar verdi: yalnız bakteride var.'],['Çekirdek yok; peptidoglikan yok; DNA\'ya bağlı histon var; 105 °C\'lik su kaynağında yaşıyor.',1,'Peptidoglikan yok + histon var: arke. Aşırı ortam destekleyici ipucu.'],['Zarla çevrili çekirdek ve mitokondri var; hücre duvarı kitin.',2,'Çekirdek satırı yeter: ökaryot (mantar).'],['Prokaryot; zar lipitleri eter bağlı ve dallı; oksijensiz çamurda metan üretiyor.',1,'Eter bağlı dallı lipit yalnız arkede; metanojenler arkedir.'],['Prokaryot; streptomisin antibiyotiğinden etkileniyor; baklagil köklerinde azot bağlıyor.',0,'Antibiyotik duyarlılığı bakteriye özgü; Rhizobium bir bakteridir.'],['Tek hücreli; kamçısı var; zarla çevrili çekirdeği var.',2,'Kamçı prokaryotta da var ama çekirdek karar verir: ökaryot (protist).'],['Halkasal DNA ve plazmit; 20 dakikada bir bölünüyor; bağırsakta yaşıyor.',0,'Plazmit ve hızlı bölünme tipik bakteri (E. coli).'],['%30 tuzlu gölde yaşıyor; prokaryot; peptidoglikan yok.',1,'Prokaryot + peptidoglikan yok → arke (halofil).'],['Çok hücreli; hücre duvarı selüloz; kloroplast var.',2,'Kloroplast zarlı organel: ökaryot (bitki).'],['Fotosentez yapan prokaryot; hücre duvarında peptidoglikan var.',0,'Fotosentez ökaryota özgü değildir; peptidoglikan bakteri der: siyanobakteri.']];
+let DG={i:0,s:0};
+function drawDD(){const box=$('#ddgame');if(DG.i>=DD.length){box.innerHTML='<div class="readout">Puan: '+DG.s+' / '+DD.length+'</div>';return;}const q=DD[DG.i];
+  box.innerHTML='<div class="readout">'+(DG.i+1)+' / '+DD.length+' · Puan '+DG.s+'</div><div class="q"><div class="stem">Bilinmeyen canlı: '+q[0]+'</div><div class="ctrl">'+DDB.map((b,j)=>'<button class="btn alt" data-v="'+j+'">'+b+'</button>').join('')+'</div><div class="fb" id="ddFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.v===q[1];if(ok)DG.s++;box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#ddFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru: <b>'+DDB[q[1]]+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="ddNext">Sonraki →</button>';$('#ddNext').onclick=()=>{DG.i++;drawDD();};});}
+$('#ddReset').onclick=()=>{DG={i:0,s:0};drawDD();};
+/* --- Anatomi gezgini --- */
+const PARTS={kapsul:['Kapsül','Yapışkan dış tabaka: fagositozdan korur, yüzeye tutunmayı ve biyofilmi sağlar. Her türde yok; kapsüllüler genellikle daha hastalık yapıcı.'],duvar:['Hücre duvarı','Peptidoglikandan yapılır; şekli korur, ozmotik patlamayı önler. Penisilinin hedefi; Gram boyama bu tabakanın kalınlığını okur.'],zar:['Hücre zarı','Madde giriş-çıkışını denetler; mitokondri olmadığından solunum enzimleri zarda çalışır.'],sitoplazma:['Sitoplazma','Metabolizmanın ortamı; zarlı organel içermez.'],ribozom:['Ribozomlar','Protein sentezi. Binlerce tane; bazı antibiyotikler (streptomisin) ribozomu hedefler.'],nukleoid:['Nükleoid','Halkasal DNA\'nın bulunduğu bölge; zarla çevrili değildir (prokaryot).'],plazmit:['Plazmit','Ana DNA\'dan ayrı küçük halkasal DNA; direnç genleri taşıyabilir, konjugasyonla başka hücreye geçer.'],kamci:['Kamçı (flagellum)','Dönerek hücreyi hareket ettirir; bazı türlerde yoktur.'],pilus:['Pilus','Kısa uzantılar: yüzeye tutunma ve konjugasyon (DNA aktarımı) için köprü.']};
+let AN={mode:'learn',order:[],i:0,s:0};
+function drawAN(){const svg=$('#anSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold'),ink2=css('--ink2');
+  const add=(t,a,part)=>{const e=el(t,a);e.dataset.part=part;e.style.cursor='pointer';e.onclick=()=>anClick(part);svg.appendChild(e);return e;};
+  add('rect',{x:110,y:60,width:500,height:180,rx:90,fill:css('--sky'),opacity:.8,stroke:nv,'stroke-width':1,'stroke-dasharray':'3 3'},'kapsul');
+  for(let i=0;i<14;i++){const x=150+i*32;add('line',{x1:x,y1:68,x2:x-8,y2:44,stroke:ink2,'stroke-width':2},'pilus');add('line',{x1:x+10,y1:232,x2:x+18,y2:256,stroke:ink2,'stroke-width':2},'pilus');}
+  add('rect',{x:128,y:78,width:464,height:144,rx:72,fill:'#c9a86a',stroke:'#8a6a2a','stroke-width':2},'duvar');
+  add('rect',{x:140,y:90,width:440,height:120,rx:60,fill:'#e8c98a',stroke:'#b08a40','stroke-width':2},'zar');
+  add('rect',{x:150,y:100,width:420,height:100,rx:50,fill:'#fbf0d2'},'sitoplazma');
+  for(let i=0;i<28;i++){const x=175+(i*37)%400,y=112+((i*53)%76);add('circle',{cx:x,cy:y,r:4,fill:nv},'ribozom');}
+  add('path',{d:'M300 150 c-20 -30 40 -40 50 -15 c10 25 -50 30 -30 5 c15 -20 60 -10 45 15 c-10 20 -60 15 -45 -5 c15 -18 55 -20 50 5',fill:'none',stroke:css('--bad'),'stroke-width':3},'nukleoid');
+  add('circle',{cx:230,cy:170,r:11,fill:'none',stroke:css('--bad'),'stroke-width':3},'plazmit');add('circle',{cx:500,cy:125,r:9,fill:'none',stroke:css('--bad'),'stroke-width':3},'plazmit');
+  add('path',{d:'M610 150 c20 -25 40 25 60 0 c15 -20 30 20 45 0',fill:'none',stroke:ink,'stroke-width':4},'kamci');
+  if(AN.mode==='learn'){svg.appendChild(el('text',{x:360,y:290,'text-anchor':'middle','font-size':'12',fill:ink2},'Parçalara dokun: kapsül · duvar · zar · sitoplazma · ribozom · nükleoid · plazmit · kamçı · pilus'));}
+  else if(AN.i<AN.order.length){svg.appendChild(el('text',{x:360,y:290,'text-anchor':'middle','font-size':'14','font-weight':'700',fill:gd},'Bul: '+PARTS[AN.order[AN.i]][0]+'  ('+(AN.i+1)+'/'+AN.order.length+')'));}}
+function anClick(part){if(AN.mode==='learn'){$('#anOut').innerHTML='<b>'+PARTS[part][0]+':</b> '+PARTS[part][1];return;}
+  if(AN.i>=AN.order.length)return;const want=AN.order[AN.i];const ok=part===want;if(ok)AN.s++;
+  $('#anOut').innerHTML=(ok?'✔ Doğru: ':'✘ Bu '+PARTS[part][0].toLowerCase()+'; aranan: ')+'<b>'+PARTS[want][0]+'</b>. '+PARTS[want][1]+' <span style="color:var(--ink2)">Puan '+AN.s+'/'+(AN.i+1)+'</span>';AN.i++;drawAN();
+  if(AN.i>=AN.order.length)$('#anOut').innerHTML+='<br><b>Bitti: '+AN.s+' / '+AN.order.length+'</b>';}
+function anSetup(){AN.mode=$('#anMode').value;AN.order=Object.keys(PARTS).sort(()=>Math.random()-0.5);AN.i=0;AN.s=0;drawAN();$('#anOut').textContent=AN.mode==='learn'?'Bir parçaya dokun.':'İstenen parçayı hücre üzerinde bul.';}
+$('#anMode').addEventListener('change',anSetup);$('#anReset').onclick=anSetup;
+/* --- Bölünme sayacı --- */
+function sci(log10v){const e=Math.floor(log10v),m=Math.pow(10,log10v-e);return (Math.round(m*10)/10).toString().replace('.',',')+' × 10<sup>'+e+'</sup>';}
+function drawBS(){const T=+$('#bsT').value,H=+$('#bsH').value,N0=+$('#bsN0').value;$('#bsTo').value=T;$('#bsHo').value=H;const svg=$('#bsSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),gd=css('--gold'),ink2=css('--ink2'),ln=css('--line');
+  const ox=60,oy=220,w=620,h=190;const K=1e9,r=Math.log(2)/(T/60);
+  svg.appendChild(el('line',{x1:ox,y1:oy,x2:ox+w,y2:oy,stroke:ink}));svg.appendChild(el('line',{x1:ox,y1:oy,x2:ox,y2:oy-h,stroke:ink}));
+  for(let d=0;d<=24;d+=3){svg.appendChild(el('line',{x1:ox,y1:oy-d/24*h,x2:ox+w,y2:oy-d/24*h,stroke:ln}));svg.appendChild(el('text',{x:ox-6,y:oy-d/24*h+4,'text-anchor':'end','font-size':'10',fill:ink2},'10^'+d));}
+  for(let t=0;t<=24;t+=4)svg.appendChild(el('text',{x:ox+t/24*w,y:oy+16,'text-anchor':'middle','font-size':'10',fill:ink2},t+' sa'));
+  const Y=lg=>oy-Math.min(24,Math.max(0,lg))/24*h;let d1='',d2='';
+  for(let t=0;t<=24;t+=0.25){const lgU=Math.log10(N0)+t*60/T*Math.log10(2);const NL=K/(1+((K-N0)/N0)*Math.exp(-r*t));const lgL=Math.log10(NL);d1+=(t?' L':'M')+(ox+t/24*w)+' '+Y(lgU);d2+=(t?' L':'M')+(ox+t/24*w)+' '+Y(lgL);}
+  svg.appendChild(el('path',{d:d1,fill:'none',stroke:gd,'stroke-width':2,'stroke-dasharray':'6 4'}));svg.appendChild(el('path',{d:d2,fill:'none',stroke:nv,'stroke-width':3}));
+  svg.appendChild(el('line',{x1:ox+H/24*w,y1:oy,x2:ox+H/24*w,y2:oy-h,stroke:css('--bad'),'stroke-dasharray':'4 3'}));
+  svg.appendChild(el('text',{x:ox+10,y:oy-h+12,'font-size':'11',fill:gd},'kesikli: sınırsız (N₀·2ⁿ)'));svg.appendChild(el('text',{x:ox+10,y:oy-h+26,'font-size':'11',fill:nv},'düz: besin sınırlı (tavan 10⁹)'));
+  const n=Math.floor(H*60/T);const lg=Math.log10(N0)+n*Math.log10(2);const NL=K/(1+((K-N0)/N0)*Math.exp(-r*H));
+  $('#bsOut').innerHTML='<b>'+H+' saatte '+n+' bölünme</b> (n = '+H+'·60/'+T+'). Sınırsız büyüme: N = '+N0+' · 2<sup>'+n+'</sup> ≈ <b>'+sci(lg)+'</b> hücre. Gerçekçi (tavan 10⁹): ≈ '+sci(Math.log10(NL))+'.'+(lg>9?' <span style="color:var(--gold)">Üstel tahmin tavanı aştı: besin, atık ve alan sınırı devreye girer; popülasyon sabit evrede kalır.</span>':'')+(H===24&&T===20&&N0===1?' <span style="color:var(--ink2)">2⁷² ≈ 4,7 × 10²¹ — merak sorusunun sayısı.</span>':'');}
+['#bsT','#bsH','#bsN0'].forEach(s=>$(s).addEventListener('input',drawBS));
+/* --- Direnç simülasyonu --- */
+let DR={day:0,cells:[],hist:[],done:false};
+function drRecord(){DR.hist.push({day:DR.day,n:DR.cells.length,r:DR.cells.filter(c=>c.r).length});}
+function drInit(){const p0=+$('#drP0').value/100;DR={day:0,cells:[],hist:[],done:false};for(let i=0;i<200;i++)DR.cells.push({r:Math.random()<p0});drRecord();drawDR('Gün 0: enfeksiyon başladı. "1 gün ilerle" ile tedaviyi izle.');}
+function drTreatDays(){const dur=+$('#drDur').value;return $('#drHalf').checked?Math.ceil(dur/2):dur;}
+function drStep(){if(DR.done)return;const dose=$('#drDose').value;const td=drTreatDays();const treating=DR.day<td;const pS=dose==='full'?0.5:0.85,pR=dose==='full'?0.9:1,pRg=dose==='full'?0.12:0.3;
+  if(treating){DR.cells=DR.cells.filter(c=>c.r?Math.random()<pR:Math.random()<pS);}
+  DR.cells.forEach(c=>{if(!c.r&&Math.random()<0.004)c.r=true;});
+  if(treating){const add=[];DR.cells.forEach(c=>{if(c.r&&Math.random()<pRg)add.push({r:true});});DR.cells=DR.cells.concat(add).slice(0,200);}
+  else{const base=DR.cells.slice();base.forEach(c=>{if(DR.cells.length<200)DR.cells.push({r:c.r});});}
+  DR.day++;let immune=false;const n0=DR.cells.length;
+  if(n0>0&&(!treating||DR.day>=td)&&n0<10){DR.cells=[];immune=true;}
+  drRecord();const n=DR.cells.length,r=DR.cells.filter(c=>c.r).length;const p0=+$('#drP0').value;
+  let msg='<b>Gün '+DR.day+':</b> '+(treating?'ilaç verildi':'ilaç yok')+' → '+n+' hücre, dirençli '+r+(n?' (%'+Math.round(100*r/n)+')':'')+'. ';
+  if(immune)msg+='<span style="color:var(--ok)">Tedavi bitince sayı 10\'un altındaydı; bağışıklık sistemi kalanları temizledi.</span>';
+  if(n===0){DR.done=true;msg+=' <b style="color:var(--ok)">Enfeksiyon bitti.</b>';}
+  else if(DR.day>=td+4){DR.done=true;const share=Math.round(100*r/n);msg+=share>50?' <b style="color:var(--bad)">Takip sonunda popülasyonun çoğu dirençli (%'+share+'): bu ilaç bir dahaki sefere işe yaramaz.</b>':' <b style="color:var(--gold)">Nüks: enfeksiyon geri geldi; dirençli oranı %'+p0+'\'den %'+share+'\'e çıktı. Bir sonraki kür daha zor.</b>';}
+  drawDR(msg);}
+function drawDR(msg){const svg=$('#drSvg');svg.innerHTML='';const ink=css('--ink'),nv=css('--navy2'),ink2=css('--ink2'),ln=css('--line'),bad=css('--bad');
+  for(let i=0;i<200;i++){const x=20+(i%20)*24,y=14+Math.floor(i/20)*17;const c=DR.cells[i];svg.appendChild(el('rect',{x,y,width:20,height:13,rx:6,fill:c?(c.r?bad:nv):ln,opacity:c?.9:.35}));}
+  svg.appendChild(el('text',{x:510,y:30,'font-size':'11',fill:ink},'■ duyarlı'));svg.appendChild(el('rect',{x:495,y:20,width:12,height:10,fill:nv}));svg.appendChild(el('text',{x:510,y:48,'font-size':'11',fill:ink},'■ dirençli'));svg.appendChild(el('rect',{x:495,y:38,width:12,height:10,fill:bad}));svg.appendChild(el('text',{x:510,y:66,'font-size':'11',fill:ink},'□ boş'));
+  const td=drTreatDays();svg.appendChild(el('text',{x:510,y:100,'font-size':'11',fill:ink2},'Tedavi: '+td+' gün'+($('#drHalf').checked?' (yarıda)':'')));svg.appendChild(el('text',{x:510,y:116,'font-size':'11',fill:ink2},'Doz: '+($('#drDose').value==='full'?'tam':'düşük')));
+  const ox=50,oy=320,w=620,h=110;svg.appendChild(el('line',{x1:ox,y1:oy,x2:ox+w,y2:oy,stroke:ink}));svg.appendChild(el('line',{x1:ox,y1:oy,x2:ox,y2:oy-h,stroke:ink}));
+  [0,50,100].forEach(p=>{svg.appendChild(el('text',{x:ox-6,y:oy-p/100*h+4,'text-anchor':'end','font-size':'10',fill:ink2},'%'+p));svg.appendChild(el('line',{x1:ox,y1:oy-p/100*h,x2:ox+w,y2:oy-p/100*h,stroke:ln}));});
+  svg.appendChild(el('text',{x:ox+w,y:oy-h+2,'text-anchor':'end','font-size':'11',fill:ink2},'dirençli oranı (çizgi) · toplam hücre (sütun)'));
+  const days=Math.max(12,td+4);const X=d=>ox+d/days*w;let d='';DR.hist.forEach((hh,i)=>{svg.appendChild(el('rect',{x:X(hh.day)-6,y:oy-hh.n/200*h,width:12,height:hh.n/200*h,fill:nv,opacity:.25}));const pr=hh.n?hh.r/hh.n:0;d+=(i?' L':'M')+X(hh.day)+' '+(oy-pr*h);svg.appendChild(el('circle',{cx:X(hh.day),cy:oy-pr*h,r:3,fill:bad}));});
+  svg.appendChild(el('path',{d,fill:'none',stroke:bad,'stroke-width':2}));svg.appendChild(el('rect',{x:X(0),y:oy+4,width:X(td)-X(0),height:4,fill:css('--gold')}));svg.appendChild(el('text',{x:X(0),y:oy+18,'font-size':'10',fill:ink2},'ilaç verilen günler'));
+  if(msg)$('#drOut').innerHTML=msg;}
+$('#drDay').onclick=drStep;$('#drRun').onclick=()=>{const td=drTreatDays();let guard=0;while(!DR.done&&guard<40){drStep();guard++;}};$('#drReset').onclick=drInit;
+['#drP0','#drDose','#drDur','#drHalf'].forEach(s=>$(s).addEventListener('change',drInit));
+/* --- Şekil tanıma --- */
+function shapeSVG(k){const c='#1f8a4c';let b='';if(k==='kok')b='<circle cx="100" cy="50" r="18" fill="'+c+'"/>';
+  else if(k==='diplokok')b='<circle cx="82" cy="50" r="17" fill="'+c+'"/><circle cx="118" cy="50" r="17" fill="'+c+'"/>';
+  else if(k==='streptokok')b=[0,1,2,3,4,5].map(i=>'<circle cx="'+(30+i*28)+'" cy="'+(50+(i%2?6:-6))+'" r="13" fill="'+c+'"/>').join('');
+  else if(k==='stafilokok')b=[[100,50],[75,40],[125,42],[88,72],[112,74],[100,25],[70,62],[130,66]].map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="13" fill="'+c+'"/>').join('');
+  else if(k==='basil')b='<rect x="45" y="35" width="110" height="30" rx="15" fill="'+c+'"/>';
+  else if(k==='streptobasil')b=[0,1,2].map(i=>'<rect x="'+(14+i*60)+'" y="36" width="54" height="28" rx="14" fill="'+c+'"/>').join('');
+  else if(k==='spiril')b='<path d="M20 50 c15 -35 30 -35 45 0 s30 35 45 0 s30 -35 45 0 s30 35 45 0" fill="none" stroke="'+c+'" stroke-width="12" stroke-linecap="round"/>';
+  else if(k==='vibrio')b='<path d="M60 30 q40 -10 70 30 q10 15 0 30" fill="none" stroke="'+c+'" stroke-width="16" stroke-linecap="round"/>';
+  return '<svg viewBox="0 0 200 100" style="max-width:260px;background:var(--bg);border-radius:8px">'+b+'</svg>';}
+const GB=['Kok','Diplokok','Streptokok','Stafilokok','Basil','Streptobasil','Spiril','Vibrio'];
+const GQ=[['streptokok',2,'Zincir kok: Streptococcus — boğaz enfeksiyonu; S. thermophilus yoğurt.'],['basil',4,'Çubuk: Bacillus, Lactobacillus (yoğurt), E. coli.'],['stafilokok',3,'Salkım kok: Staphylococcus aureus — çıban, gıda zehirlenmesi.'],['vibrio',7,'Virgül biçimi: Vibrio cholerae — kolera.'],['kok',0,'Tek küre: kok.'],['spiril',6,'Kıvrımlı: Spirillum; esnek olanı spiroket (Treponema).'],['diplokok',1,'İkili kok: Streptococcus pneumoniae — zatürre.'],['streptobasil',5,'Zincir çubuk: Bacillus anthracis (şarbon) zincirleri.']];
+let GM={i:0,s:0,log:[]};
+function drawGame(){const box=$('#game');if(GM.i>=GQ.length){box.innerHTML='<div class="readout">Puan: '+GM.s+' / '+GQ.length+'</div>'+GM.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ Doğru: <b>'+l.d+'</b> · ')+l.e+'</div></div>').join('');return;}
+  const q=GQ[GM.i];box.innerHTML='<div class="readout">'+(GM.i+1)+' / '+GQ.length+' · Puan '+GM.s+'</div><div class="q"><div class="stem">'+shapeSVG(q[0])+'</div><div class="ctrl">'+GB.map((b,j)=>'<button class="btn alt" data-v="'+j+'">'+b+'</button>').join('')+'</div><div class="fb" id="gmFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.v===q[1];if(ok)GM.s++;GM.log.push({q:GB[q[1]],ok,d:GB[q[1]],e:q[2]});box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#gmFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru: <b>'+GB[q[1]]+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="gmNext">Sonraki →</button>';$('#gmNext').onclick=()=>{GM.i++;drawGame();};});}
+$('#gmReset').onclick=()=>{GM={i:0,s:0,log:[]};drawGame();};
+/* --- Efsaneler --- */
+const EF=[['Endospor, bakterinin üreme biçimidir.',false,'Bir hücreden bir spor çıkar; sayı artmaz. Dayanma yapısıdır.'],['Antibiyotikler grip ve soğuk algınlığında işe yarar.',false,'Bunlar virüs hastalığıdır; antibiyotik yalnız bakteriye etki eder.'],['Arkeler bakterilerden çok ökaryotlara yakın akrabadır.',true,'rRNA, histon, RNA polimeraz benzerliği; Woese 1977.'],['Bütün bakteriler hastalık yapar.',false,'Çoğu zararsız ya da yararlıdır: flora, yoğurt, azot, arıtma.'],['Bakteri hücresinde ribozom bulunur.',true,'Protein sentezi için şart; zarsız olduğu için "organel" sayılmaz ama vardır.'],['Gram pozitif bakterilerin peptidoglikan tabakası kalındır.',true,'Kalın duvar boyayı tutar (mor); penisiline daha duyarlıdır.'],['Antibiyotik, bakteriyi direnç kazanmak için mutasyona zorlar.',false,'Mutasyon rastgele ve ilaçtan önce olur; ilaç yalnız dirençlileri seçer.'],['Bakterilerde zarla çevrili çekirdek yoktur; DNA nükleoid bölgesindedir.',true,'Prokaryot tanımı.'],['Kaynatma (100 °C) her bakteriyi ve endosporunu öldürür.',false,'Endospor 100 °C\'ye dayanır; 121 °C basınçlı buhar gerekir.'],['Konjugasyonla plazmit aktarımı bir üreme biçimi değildir.',true,'Hücre sayısı artmaz; gen alışverişidir (direnç yayılımı).']];
+let EG={i:0,s:0};
+function drawEF(){const box=$('#efgame');if(EG.i>=EF.length){box.innerHTML='<div class="readout">Puan: '+EG.s+' / '+EF.length+'</div>';return;}const q=EF[EG.i];
+  box.innerHTML='<div class="readout">'+(EG.i+1)+' / '+EF.length+' · Puan '+EG.s+'</div><div class="q"><div class="stem">'+q[0]+'</div><div class="ctrl"><button class="btn" data-v="1">Doğru</button><button class="btn alt" data-v="0">Yanlış</button></div><div class="fb" id="efFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=(b.dataset.v==='1')===q[1];if(ok)EG.s++;box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#efFb').innerHTML=(ok?'✔ Doğru. ':'✘ Bu iddia '+(q[1]?'doğru':'yanlış')+'. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="efNext">Sonraki →</button>';$('#efNext').onclick=()=>{EG.i++;drawEF();};});}
+$('#efReset').onclick=()=>{EG={i:0,s:0};drawEF();};
+function stopAll(){}
+
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawDD();anSetup();drawBS();drInit();drawGame();drawEF();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fizik 9 · Hafta 3 · Skaler ve Vektörel Nicelikler</title>
+<style>
+:root{
+  --bg:#f5f7fb; --paper:#ffffff; --ink:#14213d; --ink2:#3d4a6b; --line:#d5dbe8;
+  --navy:#1b2f6e; --navy2:#2f4aa8; --sky:#dfe7ff; --gold:#c98a12; --gold2:#fff3d6;
+  --ok:#1f7a4d; --ok2:#dff5e9; --bad:#b3261e; --bad2:#fde4e2; --tip:#7a4d00;
+  --r:10px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0f1526; --paper:#182036; --ink:#e9edf7; --ink2:#b8c2dc; --line:#2b3654;
+  --navy:#9fb3ff; --navy2:#7d95f0; --sky:#1f2c55; --gold:#f0b642; --gold2:#3a2d0f;
+  --ok:#5ed39a; --ok2:#123524; --bad:#ff8a80; --bad2:#3d1613; --tip:#f0c98a;
+}
+[data-theme="light"]{--navy:#9a3b00;--navy2:#d9540f;--sky:#ffe8d6;--gold:#1b4f9c;--gold2:#dce8ff}
+[data-theme="dark"]{--navy:#ffb37a;--navy2:#f07a2a;--sky:#4a2410;--gold:#8fb4ff;--gold2:#16264a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[data-motion="off"] *{animation:none!important;transition:none!important}
+
+/* üst şerit */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:10px 14px}
+[data-theme="dark"] .top{background:#101a3d}
+.top .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1040px;margin:0 auto}
+.top .crumb{font-size:14px;opacity:.9;flex:1;min-width:200px}
+.top .crumb b{font-size:16px;display:block;opacity:1}
+.top button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+.top button:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:6px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:8px;max-width:1040px;margin-left:auto;margin-right:auto;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+
+/* sekmeler */
+nav.tabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19}
+nav.tabs .in{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;max-width:1040px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+nav.tabs button[aria-selected="true"]{background:var(--sky);color:var(--navy);border-color:var(--navy2);font-weight:600}
+nav.tabs button .n{width:20px;height:20px;border-radius:50%;background:var(--line);color:var(--ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+nav.tabs button.done .n{background:var(--ok);color:#fff}
+
+main{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+section.tab{display:none}
+section.tab.active{display:block}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;color:var(--navy)}
+h2{font-size:clamp(22px,4vw,28px);margin:0 0 12px;color:var(--navy)}
+h3{font-size:19px;margin:26px 0 8px}
+p{margin:8px 0;max-width:72ch}
+.lead{font-size:19px;color:var(--ink2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.box{border-left:5px solid var(--navy2);background:var(--sky);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:14px 0}
+.box.def{border-color:var(--navy2)}
+.box.warn{border-color:var(--gold);background:var(--gold2)}
+.box.life{border-color:var(--ok);background:var(--ok2)}
+.box .t{font-weight:700;margin-bottom:4px}
+.formula{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.formula .m{font-size:21px;font-variant-numeric:tabular-nums}
+.formula .why{font-size:14px;color:var(--ink2);max-width:36ch}
+@media(max-width:560px){.formula{grid-template-columns:1fr}}
+sup{font-size:.7em;vertical-align:.5em}
+.rad{white-space:nowrap}
+.rad::before{content:"√";font-size:1.05em}
+.rad>i{font-style:normal;border-top:1.5px solid currentColor;padding:0 2px}
+.rad.n3::before{content:"∛"} .rad.n4::before{content:"∜"}
+.rad.nx{position:relative} .rad.nx::before{content:"√"} .rad.nx>small{position:absolute;left:-2px;top:-8px;font-size:.55em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;margin:0 2px}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.steps li{margin:6px 0}
+.steps .why{color:var(--ink2);font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--sky);color:var(--navy)}
+kbd{background:var(--line);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+/* etkileşim */
+.sim{background:var(--paper);border:2px solid var(--navy2);border-radius:var(--r);padding:14px;margin:16px 0}
+.sim h3{margin-top:0}
+.sim .hint{font-size:14px;color:var(--ink2);background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctrl button,.btn{background:var(--navy2);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;min-height:40px}
+.ctrl button.alt,.btn.alt{background:var(--paper);color:var(--navy);border:1.5px solid var(--navy2)}
+.ctrl label{display:flex;align-items:center;gap:6px;font-size:14px}
+input[type=range]{width:160px;accent-color:var(--navy2)}
+input[type=number],input[type=text]{font:inherit;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);width:110px}
+.readout{font-size:18px;font-variant-numeric:tabular-nums;margin:8px 0;padding:8px 10px;background:var(--sky);border-radius:8px;display:inline-block}
+svg{max-width:100%;height:auto;display:block}
+.svgwrap{background:var(--bg);border-radius:8px;padding:6px}
+
+/* test */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.q .stem{font-weight:600;margin-bottom:8px}
+.q .tag{font-size:12px;color:var(--navy);background:var(--sky);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:600}
+.opts{display:grid;gap:6px}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--navy2);background:var(--sky)}
+.q.right .opts label:has(input:checked){border-color:var(--ok);background:var(--ok2)}
+.q.wrong .opts label:has(input:checked){border-color:var(--bad);background:var(--bad2)}
+.fb{display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:15px}
+.q.right .fb{display:block;background:var(--ok2);border-left:4px solid var(--ok)}
+.q.wrong .fb{display:block;background:var(--bad2);border-left:4px solid var(--bad)}
+.q.shown .fb{display:block;background:var(--sky);border-left:4px solid var(--navy2)}
+.score{font-size:20px;font-weight:700;margin:14px 0}
+.nextbtn{margin:24px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.summary .card{margin:0}
+.summary .card b{display:block;color:var(--navy);margin-bottom:4px}
+@media(max-width:600px){.top{position:static;padding:8px 12px}.top .crumb{font-size:12px}.top .crumb b{font-size:14px}.top button{padding:4px 9px;font-size:12px}nav.tabs{top:0}}
+footer{max-width:1040px;margin:0 auto;padding:10px 14px 40px;font-size:13px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body data-theme="light" data-motion="on">
+
+<header class="top">
+  <div class="row">
+    <div class="crumb">Fizik · Ünite 2 Kuvvet ve Hareket · Hafta 3<b>Skaler ve vektörel nicelikler, vektörün ögeleri, eşit-zıt vektörler, aynı doğrultuda bileşke</b></div>
+    <a href="index.html" style="color:#fff;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 11px">← Ana sayfa</a><button id="themeBtn" aria-label="Koyu/açık tema">☾ Koyu tema</button>
+    <button id="motionBtn" aria-label="Animasyonları durdur/başlat">⏸ Animasyonları durdur</button>
+  </div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <span class="sr" id="progText" aria-live="polite"></span>
+</header>
+
+<nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabbar"></div></nav>
+
+<main>
+
+<div id="noLogin" class="box warn" style="display:none;margin-top:0"><div class="t">Giriş yapılmadı</div>İlerlemen yalnızca bu cihazda kalır ve puan kazanmazsın. <a href="index.html">Ana sayfadan giriş yap</a>, sonra bu sayfaya dön.</div>
+
+<section class="tab" id="t1" role="tabpanel" aria-labelledby="tab1">
+  <h1>"Ne kadar?" yetmez; "hangi yöne?"</h1>
+  <p class="lead">Geçen hafta her büyüklüğü sayı × birim olarak yazdık: 25 m/s, 14,3 cm, 70 kg. Bu hafta bir ayrım daha ekliyoruz: bazı büyüklükler için sayı yeter (kütle, zaman, sıcaklık), bazıları için sayı tek başına <em>eksik</em> bilgidir (kuvvet, hız, yer değiştirme). "25 m/s" diyen bir navigasyon seni eve götüremez; "25 m/s kuzeye" götürür. İşte fiziğin iki dili: skalerler ve vektörler.</p>
+  <div class="card">
+    <p><b>Skaler</b> nicelik yalnız büyüklükle (sayı ve birimle) tam olarak belirtilir. <b>Vektörel</b> nicelik için büyüklüğün yanında <b>doğrultu</b> ve <b>yön</b> de gerekir; ok ile gösterilir. Bu hafta okların dilini öğreneceğiz: bir vektörün ögeleri, eşit ve zıt vektörler, bir vektörü sayıyla çarpmak ve aynı doğrultudaki vektörleri toplamak. Ünite 2 "Kuvvet ve Hareket"in bütün hesapları bu dile dayanır: kuvvet, hız, ivme hep vektördür.</p>
+  </div>
+  <div class="box life"><div class="t">Merak sorusu</div>Bir bisikletli sabah İzmit'ten Sapanca'ya 45 km pedal çeviriyor, öğleden sonra aynı yoldan dönüyor. Akşam telefonundaki uygulama "90 km" yazıyor; GPS'in başlangıç ve bitiş noktası ise aynı: "yer değiştirme 0". Hangisi haklı? İkisi de — çünkü biri skaler, öbürü vektörel bir şeyi ölçüyor. Ayrıntı 4. sekmede.</div>
+  <div class="box def"><div class="t">Bu haftanın hedefleri (MEB Ünite 2 · Kuvvet ve Hareket)</div>Skaler ve vektörel nicelikleri özellikleriyle karşılaştırmak, benzerlik ve farklarını listelemek · bir vektörü büyüklük, doğrultu ve yön ile göstermek · eşit ve zıt vektörleri ayırt etmek · bir vektörün sayıyla çarpımını yorumlamak · aynı doğrultudaki vektörlerin yön ve büyüklükleri hakkında çıkarım yapmak (bileşke) · uzaklık–yer değiştirme ve sürat–hız çiftlerini ayırt etmek.</div>
+  <div class="nextbtn"><button class="btn" data-done="1" data-go="2">Anladım, hatırlatmaya geç →</button></div>
+</section>
+<section class="tab" id="t2" role="tabpanel" aria-labelledby="tab2">
+  <h2>Hatırlatma ve aralıklı tekrar</h2>
+  <div class="grid2">
+    <div class="card"><b>Geçen haftadan: ölçüm = sayı × birim</b><p>Her büyüklük bir birimle karşılaştırılarak ölçülür: 25 m/s, 3,5 N, 2 sa. Bu hafta o sayının "yeterli" mi "eksik" mi olduğunu soracağız.</p></div>
+    <div class="card"><b>2 hafta önce: fizik ölçerek konuşur</b><p>"Hızlı", "ağır", "güçlü" fizikte cevap değildir; sayı ve birim ister. Bu haftadan sonra bazı sorular bir şey daha isteyecek: yön.</p></div>
+    <div class="card"><b>Ortaokuldan kuvvet oku</b><p>Kuvveti bir okla çizdin: okun uzunluğu büyüklüğü, ucu yönü gösterir; birim newton (N). Dengelenmiş kuvvetlerde net kuvvet sıfırdır. Bu hafta o okun kurallarını netleştiriyoruz.</p></div>
+    <div class="card"><b>Dersler arası köprü</b><p>Matematik H1: √(x²) = |x|. Bu hafta aynı fikir: bir vektörün <em>büyüklüğü</em> mutlak değer gibidir, asla negatif olmaz; eksi işareti yalnız <em>yönü</em> söyler. −5 m yer değiştirmenin büyüklüğü 5 m'dir.</p></div>
+  </div>
+  <h3>Aralıklı tekrar (3 soru, anında geri bildirim)</h3>
+  <div id="miniQuiz"></div>
+  <div class="nextbtn"><button class="btn" data-done="2" data-go="3">Konu anlatımına geç →</button></div>
+</section>
+<section class="tab" id="t3" role="tabpanel" aria-labelledby="tab3">
+  <h2>Konu anlatımı</h2>
+  <h3>3.1 Skaler ve vektörel nicelikler: "yön" sorusu eksik mi, saçma mı?</h3>
+  <p>Bir niceliğin skaler mi vektörel mi olduğunu anlamak için basit bir test var: değerin sonuna bir yön ekle. <em>"Kütle 5 kg kuzeye"</em> — saçma; kütle skalerdir. <em>"Kuvvet 10 N"</em> — eksik: hangi yöne? Kuvvet vektöreldir. Skalerde yön anlamsız, vektörde yön zorunludur.</p>
+  <table>
+    <tr><th>Skaler (yalnız büyüklük)</th><th>Vektörel (büyüklük + doğrultu + yön)</th></tr>
+    <tr><td>kütle (70 kg)</td><td>kuvvet (20 N doğuya)</td></tr>
+    <tr><td>zaman (45 s)</td><td>yer değiştirme (3 km batıya)</td></tr>
+    <tr><td>sıcaklık (−5 °C)</td><td>hız (25 m/s kuzeye)</td></tr>
+    <tr><td>sürat (25 m/s)</td><td>ivme (2 m/s² güneye)</td></tr>
+    <tr><td>alınan yol / uzaklık (90 km)</td><td>ağırlık (yerin merkezine doğru)</td></tr>
+    <tr><td>enerji, iş, güç, hacim, yoğunluk, basınç, elektrik yükü</td><td>momentum, elektrik alan (ileride)</td></tr>
+  </table>
+  <div class="box def"><div class="t">Benzerlikler ve farklar</div><b>Benzer:</b> ikisinin de büyüklüğü (sayı × birim) vardır; ikisi de ölçülür. <b>Fark:</b> vektörün ayrıca doğrultusu ve yönü vardır; skalerler sıradan sayılar gibi toplanır (5 kg + 3 kg = 8 kg), vektörler yönleri hesaba katılarak toplanır (5 N + 3 N, yönlere göre 8 N de 2 N de olabilir).</div>
+  <div class="box warn"><div class="t">Tuzak: eksi işareti = vektör değildir</div>−5 °C sıcaklık, −200 J enerji, −2 C elektrik yükü: hepsi skaler. Buradaki eksi, yön değil; bir ölçekteki sıfıra göre konumu ya da bir türü (yükün cinsini) gösterir. Buna karşılık sayı doğrusu üzerindeki −5 m yer değiştirme <em>vektördür</em>; eksi burada "batıya" demektir. İşaretin anlamı niceliğe göre değişir.</div>
+
+  <h3>3.2 Vektörün ögeleri ve gösterimi</h3>
+  <p>Vektör bir okla temsil edilir. Okun başladığı nokta <b>uygulama noktası</b>, üzerinde bulunduğu doğru <b>doğrultu</b> (yatay, düşey, kuzey-güney…), ok ucunun gösterdiği taraf <b>yön</b> (doğu, batı, yukarı…), okun uzunluğu ise ölçekle birlikte <b>büyüklük</b>tür. Vektör a⃗ ya da koyu harfle (<b>a</b>) yazılır; büyüklüğü |a⃗| ile gösterilir ve daima sıfır ya da pozitiftir.</p>
+  <div class="formula"><div class="m">a⃗ : &nbsp;büyüklük |a⃗| = 5 N &nbsp;·&nbsp; doğrultu: yatay &nbsp;·&nbsp; yön: doğu</div><div class="why">Bir doğrultunun iki yönü vardır: yatay doğrultuda doğu ve batı. "Doğrultu" ile "yön" aynı şey değildir.</div></div>
+  <div class="sim">
+    <h3>Vektör çizici</h3>
+    <div class="hint">Izgarada ok ucunu sürükle (ya da bileşenleri yaz); simülasyon büyüklüğü, doğrultuyu ve yönü okusun. 1 kare = 1 birim. Ucu yatay ya da düşey eksene getirince doğrultu adının nasıl değiştiğine, (3, 4) gibi noktalarda büyüklüğün nasıl tam sayı çıktığına dikkat et.</div>
+    <div class="ctrl">
+      <label>Doğu bileşeni <input type="number" id="vcx" value="3" min="-8" max="8" style="width:70px"></label>
+      <label>Kuzey bileşeni <input type="number" id="vcy" value="4" min="-4" max="4" style="width:70px"></label>
+      <button id="vcReset" class="alt">Sıfırla</button>
+    </div>
+    <div class="svgwrap"><svg id="vcSvg" viewBox="0 0 720 380" role="img" aria-label="Vektör çizici" style="touch-action:none;cursor:crosshair"></svg></div>
+    <div class="readout" id="vcOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Aynı okun üç ögesini ayrı ayrı okumayı: uzunluk büyüklük, doğru doğrultu, uç yön. Bileşen işaretlerini değiştirince büyüklük değişmez ama yön değişir; bu, "büyüklük asla negatif olmaz" kuralının görsel hâli. Dik bileşenlerden büyüklük bulmak (3-4-5) gelecek haftanın "bileşenlere ayırma" konusunun ilk adımıdır.</div>
+
+  <h3>3.3 Eşit ve zıt vektörler</h3>
+  <p>Bir vektörü kendisine paralel olarak taşımak onu değiştirmez: <b>başlangıç noktası vektörün kimliğinin parçası değildir</b>. İki vektör büyüklük, doğrultu ve yön bakımından aynıysa <b>eşittir</b> (a⃗ = b⃗). Büyüklük ve doğrultuları aynı, yönleri ters ise <b>zıt</b>tır (b⃗ = −a⃗). Bir ögesi bile farklıysa ne eşit ne zıttır.</p>
+  <div class="sim">
+    <h3>Eşit mi, zıt mı? Dedektör</h3>
+    <div class="hint">A vektörü sabit. B'nin başlangıç noktasını ve bileşenlerini ayarlayarak görevi tamamla: önce B'yi A'ya eşit yap, sonra zıttı. Dedektör üç ögeyi ayrı ayrı kontrol eder; başlangıç noktasının hiçbir ögeyi etkilemediğini gör.</div>
+    <div class="ctrl">
+      <label>Görev <select id="ezTask" style="font:inherit;padding:6px;border-radius:8px"><option value="eq">B'yi A'ya eşit yap</option><option value="op">B'yi A'nın zıttı yap</option><option value="free">Serbest</option></select></label>
+      <label>B başlangıç x <input type="range" id="ezsx" min="-8" max="8" value="1"><output id="ezsxo">1</output></label>
+      <label>B başlangıç y <input type="range" id="ezsy" min="-4" max="4" value="-3"><output id="ezsyo">−3</output></label>
+      <label>B doğu bileşeni <input type="range" id="ezbx" min="-6" max="6" value="3"><output id="ezbxo">3</output></label>
+      <label>B kuzey bileşeni <input type="range" id="ezby" min="-4" max="4" value="-2"><output id="ezbyo">−2</output></label>
+    </div>
+    <div class="svgwrap"><svg id="ezSvg" viewBox="0 0 720 380" role="img" aria-label="Eşit ve zıt vektörler"></svg></div>
+    <div class="readout" id="ezOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Eşitlik ve zıtlığın "resme benziyor mu" sorusu değil, üç ögenin tek tek karşılaştırılması olduğunu. Aynı doğrultu için bileşen oranı aynı olmalı (3:2 ile 6:4 aynı doğrultudur), aynı büyüklük için uzunluk aynı, aynı yön için işaretler aynı. Başlangıç noktası ne kadar uzağa taşınırsa taşınsın hüküm değişmez.</div>
+
+  <h3>3.4 Bir vektörü sayıyla çarpmak</h3>
+  <p>k bir gerçek sayı (skaler) olsun. k·a⃗ vektörünün büyüklüğü |k|·|a⃗| olur; doğrultusu a⃗ ile aynıdır; yönü k pozitifse a⃗ ile aynı, negatifse terstir. k = −1 için −a⃗ (zıt vektör); k = 0 için <b>sıfır vektörü</b>: büyüklüğü 0, yönü tanımsız.</p>
+  <div class="formula"><div class="m">|k·a⃗| = |k|·|a⃗| &nbsp;·&nbsp; k &gt; 0: aynı yön &nbsp;·&nbsp; k &lt; 0: zıt yön</div><div class="why">Skaler × vektör = vektör. Fizikte en ünlü örnek: kuvvet = kütle × ivme (F⃗ = m·a⃗) — kütle skaler, ivme vektör, kuvvet ivme yönünde bir vektör.</div></div>
+  <div class="sim">
+    <h3>Vektörü sayıyla çarp</h3>
+    <div class="hint">k'yi −3 ile 3 arasında kaydır; k·a⃗ vektörünün uzunluğu ve yönü nasıl değişiyor? k = 0'da ne kaldığına, k = −1'de neye dönüştüğüne bak.</div>
+    <div class="ctrl"><label>k <input type="range" id="kk" min="-3" max="3" step="0.5" value="2"><output id="kko">2</output></label></div>
+    <div class="svgwrap"><svg id="kSvg" viewBox="0 0 720 200" role="img" aria-label="Vektörün sayıyla çarpımı"></svg></div>
+    <div class="readout" id="kOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Sayıyla çarpma vektörü aynı doğru üzerinde tutar: yalnız uzunluk ve yön değişir, doğrultu asla. Bu yüzden k·a⃗ ile a⃗ daima "aynı doğrultuda"dır — bir sonraki bölümün konusu.</div>
+
+  <h3>3.5 Aynı doğrultudaki vektörler: sayı doğrusu gibi</h3>
+  <p>Aynı doğru üzerindeki vektörler için bir <b>işaret sistemi</b> seçilir: örneğin doğu +, batı −. O andan itibaren vektörler işaretli sayılar gibi toplanır. Aynı yönlü vektörlerde büyüklükler toplanır; zıt yönlülerde farkı alınır ve sonuç büyük olanın yönündedir. Bir vektörle zıttının toplamı sıfır vektörüdür: a⃗ + (−a⃗) = 0⃗. Sonuç vektöre <b>bileşke</b> denir.</p>
+  <div class="formula"><div class="m">12 N (doğu) + 7 N (batı) + 3 N (doğu) &nbsp;⇒&nbsp; +12 − 7 + 3 = +8 &nbsp;⇒&nbsp; 8 N doğuya</div><div class="why">Büyüklüklerin toplamı 22 N'dir ama bileşke 8 N: vektör toplamı yönleri hesaba katar.</div></div>
+  <div class="sim">
+    <h3>Aynı doğrultuda bileşke</h3>
+    <div class="hint">Üç kuvvet aynı doğru üzerinde bir kutuya etki ediyor (doğu +, batı −). Kaydırıcıları değiştir; oklar uç uca dizilsin ve bileşke altta çizilsin. Bileşkeyi sıfır yapmayı dene: kaç farklı yolla olur?</div>
+    <div class="ctrl">
+      <label>F₁ <input type="range" id="f1" min="-10" max="10" value="12" step="1"><output id="f1o">12</output> N</label>
+      <label>F₂ <input type="range" id="f2" min="-10" max="10" value="-7" step="1"><output id="f2o">−7</output> N</label>
+      <label>F₃ <input type="range" id="f3" min="-10" max="10" value="3" step="1"><output id="f3o">3</output> N</label>
+    </div>
+    <div class="svgwrap"><svg id="blSvg" viewBox="0 0 720 240" role="img" aria-label="Aynı doğrultuda bileşke"></svg></div>
+    <div class="readout" id="blOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Aynı doğrultuda vektör toplamının işaretli sayı toplamına indirgendiğini ve "büyüklükler toplamı ≠ bileşke" gerçeğini. Bileşke sıfırken kutu dengededir; bu, gelecek haftaların "net kuvvet" ve "denge" kavramlarının çekirdeğidir.</div>
+
+  <h3>3.6 Uzaklık–yer değiştirme, sürat–hız</h3>
+  <table>
+    <tr><th>Skaler</th><th>Vektörel</th></tr>
+    <tr><td><b>Alınan yol (uzaklık):</b> izlenen yolun toplam uzunluğu; hep ≥ 0; parçalar toplanır.</td><td><b>Yer değiştirme:</b> ilk konumdan son konuma çizilen ok; yolun şekline bakmaz; büyüklüğü ≤ alınan yol.</td></tr>
+    <tr><td><b>Ortalama sürat</b> = toplam yol / toplam süre</td><td><b>Ortalama hız</b> = yer değiştirme / toplam süre (yönü yer değiştirme yönünde)</td></tr>
+    <tr><td>Anlık sürat: hız vektörünün büyüklüğü</td><td>Anlık hız: o andaki sürat + yön</td></tr>
+  </table>
+  <div class="box warn"><div class="t">Tuzak: "sürat = hızın büyüklüğü" her zaman geçerli mi?</div>Anlık değerler için evet. Ortalamalar için hayır: gidip dönen bisikletlinin ortalama sürati 18 km/sa iken ortalama hızı 0'dır; çünkü yol 90 km, yer değiştirme 0. Yol ile yer değiştirme farklıysa ortalamalar da farklıdır.</div>
+  <div class="box warn"><div class="t">Tuzak: kütle ve ağırlık</div>Kütle skalerdir (kg), ağırlık kütleye etki eden yer çekimi kuvvetidir: vektör (N), yönü yerin merkezine doğru. Ay'da kütlen aynı kalır, ağırlığın altıda birine düşer. F⃗ = m·g⃗: skaler × vektör = vektör.</div>
+  <div class="nextbtn"><button class="btn" data-done="3" data-go="4">Günlük yaşam örneklerine geç →</button></div>
+</section>
+<section class="tab" id="t4" role="tabpanel" aria-labelledby="tab4">
+  <h2>Günlük yaşamdan örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">1 · Bisiklet uygulaması 90 km diyor, GPS 0 m: kim haklı?</h3>
+    <p><b>Durum:</b> İzmit → Sapanca 45 km, aynı yoldan dönüş 45 km. Gidiş 3 saat (yokuş), dönüş 2 saat.</p>
+    <p><b>Kavramla bağ:</b> Uygulama tekerleğin döndüğü mesafeyi toplar: alınan yol, skaler, 90 km. GPS başlangıç ile bitişi karşılaştırır: yer değiştirme, vektör, 0.</p>
+    <p><b>Hesap:</b> Ortalama sürat = 90 km / 5 sa = 18 km/sa. Ortalama hız = 0 / 5 sa = 0. Gidişteki ortalama sürat 15 km/sa, dönüşte 22,5 km/sa; ikisinin ortalaması 18,75 <em>değil</em> 18'dir — çünkü yavaş bölümde daha uzun süre geçti.</p>
+    <p><b>Sonuç:</b> İki cihaz iki farklı niceliği ölçüyor; antrenman için yol ve sürat, konum için yer değiştirme ve hız anlamlıdır.</p></div>
+  <div class="card"><h3 style="margin-top:0">2 · 1999 depremi: "büyüklük" kelimesinin iki anlamı</h3>
+    <p><b>Durum:</b> 17 Ağustos 1999'da Kuzey Anadolu Fayı'nın iki tarafı birbirine göre yaklaşık 4 m kaydı; depremin büyüklüğü 7,4 olarak ölçüldü.</p>
+    <p><b>Kavramla bağ:</b> Fay boyunca kayma bir <em>yer değiştirme</em>dir: doğrultusu fay hattı (yaklaşık doğu-batı), yönü belirli (sağ yanal atım: karşı taraf sağa kayar), büyüklüğü 4 m — tam bir vektör. "Büyüklük 7,4" ise açığa çıkan enerjiyle ilgili yönsüz bir ölçek değeri: skaler.</p>
+    <p><b>Analiz:</b> Aynı kelime ("büyüklük") bir vektörün uzunluğunu da, bir skalerin değerini de adlandırabilir. Fizikte kavramı kelime değil, "yön sorusu" belirler: 4 m'nin yönü vardır, 7,4'ün yoktur.</p>
+    <p><b>Sonuç:</b> Deprem haritalarındaki oklar kayma vektörleridir; renk ölçekleri ise skaler büyüklük ve şiddet değerleridir.</p></div>
+  <div class="card"><h3 style="margin-top:0">3 · Telefonun içindeki skalerler ve vektörler</h3>
+    <p><b>Durum:</b> Telefon günde 12 000 adım saydı; harita uygulaması "evden 1,2 km kuzeydoğudasın" dedi; pusula kuzeyi gösterdi.</p>
+    <p><b>Kavramla bağ:</b> Adım sayısı ve yürünen mesafe skalerdir (sayaç yön bilmez). Konum, referans noktasına (ev) göre bir yer değiştirme vektörüdür: büyüklük 1,2 km, yön kuzeydoğu. Pusula ise bir doğrultu-yön göstergesidir.</p>
+    <p><b>Analiz:</b> Telefondaki ivmeölçer üç yöndeki ivmeyi ayrı ayrı ölçer; ekran döndürme, adım sayma ve deprem uyarı uygulamaları bu vektörün bileşenlerini okur. Akşam eve dönünce adım sayacı 12 000'de kalır ama konum vektörü sıfırlanır.</p>
+    <p><b>Sonuç:</b> Aynı cihazda iki tür nicelik yan yana çalışır; hangisinin işe yaradığı soruya bağlıdır: "ne kadar yürüdüm" skaler, "neredeyim" vektör.</p></div>
+  <div class="card"><h3 style="margin-top:0">4 · İzmit Körfezi'nde kano ve akıntı: aynı doğrultuda toplama</h3>
+    <p><b>Durum:</b> Durgun suda 3 m/s süratle kürek çekebilen bir kano, 1 m/s hızla akan bir akıntıda 400 m'lik sahil şeridini gidip dönüyor.</p>
+    <p><b>Kavramla bağ:</b> Kanonun suya göre hızı ile akıntının hızı aynı doğrultudadır; kıyıya göre hız, bu iki vektörün bileşkesidir: aynı yönde 3 + 1 = 4 m/s, zıt yönde 3 − 1 = 2 m/s.</p>
+    <p><b>Hesap:</b> Gidiş 400/4 = 100 s, dönüş 400/2 = 200 s; toplam 300 s. Durgun suda aynı tur 800/3 ≈ 267 s sürerdi: akıntı "gidişte kazandırdığını dönüşte fazlasıyla geri alır", çünkü yavaş bölümde daha uzun kalınır.</p>
+    <p><b>Sonuç:</b> Aynı doğrultudaki vektörler işaretli sayılar gibi toplanır; ama süre hesabında bu toplamın <em>tersi</em> devreye girdiği için etki simetrik değildir.</p></div>
+  <div class="nextbtn"><button class="btn" data-done="4" data-go="5">Etkileşimli materyale geç →</button></div>
+</section>
+<section class="tab" id="t5" role="tabpanel" aria-labelledby="tab5">
+  <h2>Etkileşimli materyal</h2>
+  <div class="sim">
+    <h3>Skaler mi, vektörel mi?</h3>
+    <div class="hint">14 nicelik; her biri için karar ver. Eksi işaretli skalerler ve "büyüklük" kelimesi tuzak olarak gelir. Gerekçe her cevaptan sonra görünür.</div>
+    <div id="game"></div>
+    <div class="ctrl"><button id="gmReset" class="alt">Oyunu sıfırla</button></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>"Yön sorusu" testinin her nicelikte işlediğini: yön eklemek saçma oluyorsa skaler, eksikliği gideriyorsa vektörel. İşaret, birim ya da sayının büyüklüğü bu karara etki etmez.</div>
+  <div class="sim">
+    <h3>Yol ve yer değiştirme kaydedici</h3>
+    <div class="hint">Doğu-batı doğrultusunda yürü (her metre 1 saniye sürsün). Sayaç alınan yolu, ok ise yer değiştirmeyi kaydeder. Başlangıca dönünce ne olduğuna, ortalama sürat ile ortalama hızın nasıl ayrıştığına bak.</div>
+    <div class="ctrl"><button data-d="2">2 m doğu →</button><button data-d="-2">← 2 m batı</button><button data-d="5">5 m doğu →</button><button data-d="-5">← 5 m batı</button><button id="ykReset" class="alt">Sıfırla</button></div>
+    <div class="svgwrap"><svg id="ykSvg" viewBox="0 0 720 200" role="img" aria-label="Yol ve yer değiştirme"></svg></div>
+    <div class="readout" id="ykOut" style="display:block"></div>
+  </div>
+  <div class="box def"><div class="t">Bu simülasyon neyi gösteriyor?</div>Yol her adımda büyür, yer değiştirme küçülebilir ya da sıfırlanabilir. Ortalama sürat hep 1 m/s kalırken ortalama hız yer değiştirmeye bağlı olarak değişir: iki nicelik aynı yürüyüşten farklı şeyler öğrenir.</div>
+  <div class="box def"><div class="t">Gözlem soruları</div>1) Oyunda hangi tuzağa düştün: eksi işaretli skaler mi, "büyüklük" kelimesi mi? &nbsp; 2) Kaydedicide yer değiştirmeyi sıfır yapmanın kaç yolu var; yol bu sırada ne oldu? &nbsp; 3) Vektör çizicide (3, 4) ve (−3, −4) için dedektör ne der; (6, 8) için ne der? Gerekçesini üç ögeyle yaz.</div>
+  <div class="nextbtn"><button class="btn" data-done="5" data-go="6">Çözümlü örneklere geç →</button></div>
+</section>
+<section class="tab" id="t6" role="tabpanel" aria-labelledby="tab6">
+  <h2>Çözümlü örnekler</h2>
+  <div class="card"><h3 style="margin-top:0">Temel · 5 kg, 20 N doğuya, −10 °C, 12 m/s kuzeye, 3 s ve 40 km/sa niceliklerini sınıflandır</h3>
+    <ol class="steps"><li>Yön testi uygula: "5 kg kuzeye" saçma → skaler. "20 N doğuya" yön var ve gerekli → vektörel. "−10 °C": eksi yön değil, ölçek → skaler.</li><li>"12 m/s kuzeye": hız → vektörel. "3 s" → skaler. "40 km/sa": yön verilmemiş, sürat → skaler.<div class="why">Aynı sayı × birim (m/s) yönle birlikte hız, yönsüz sürat olur: skaler/vektörel ayrımı birime değil, yön bilgisine bağlıdır.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Temel · a⃗ büyüklüğü 4 birim, doğuya. 2a⃗, −a⃗ ve −½a⃗ vektörlerini tanımla</h3>
+    <ol class="steps"><li>2a⃗: büyüklük 2·4 = 8 birim, yön doğu (k &gt; 0).</li><li>−a⃗: büyüklük 4 birim, yön batı (zıt vektör).</li><li>−½a⃗: büyüklük 0,5·4 = 2 birim, yön batı.<div class="why">Üçünün de doğrultusu aynı (yatay); yalnız uzunluk ve yön değişti.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Bir öğrenci 8 m doğuya, 3 m batıya, sonra 2 m doğuya yürüyor; toplam 10 s sürüyor. Yol, yer değiştirme, ortalama sürat ve ortalama hız?</h3>
+    <ol class="steps"><li>Yol = 8 + 3 + 2 = 13 m (skaler; işaretsiz toplanır).</li><li>Yer değiştirme: doğu + al: +8 − 3 + 2 = +7 → 7 m doğuya.</li><li>Ortalama sürat = 13/10 = 1,3 m/s. Ortalama hız = 7/10 = 0,7 m/s doğuya.<div class="why">Hız cevabında yön yazılmadıysa cevap eksiktir; sürat cevabına yön yazmak ise anlamsızdır.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Orta · Halat çekme: aynı doğrultuda 120 N doğu, 80 N doğu, 150 N batı. Bileşke? Dengelemek için hangi kuvvet eklenmeli?</h3>
+    <ol class="steps"><li>Doğu +: +120 + 80 − 150 = +50 → bileşke 50 N doğuya.</li><li>Denge için bileşke sıfır olmalı: 50 N batıya bir kuvvet eklenir (bileşkenin zıttı).<div class="why">Büyüklükler toplamı 350 N olsa da halat 50 N ile çekiliyor; ip yönü kazanan tarafı, sayı ise farkı söyler.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · 3 km doğuya, sonra 4 km kuzeye yürüyen birinin yolu ve yer değiştirmesi</h3>
+    <ol class="steps"><li>Yol = 3 + 4 = 7 km.</li><li>Yer değiştirme başlangıçtan bitişe çizilen ok: dik kenarları 3 ve 4 olan dik üçgenin hipotenüsü. Pisagor: √(3² + 4²) = √25 = 5 km. Yön: kuzeydoğu tarafı (doğuya 3, kuzeye 4).</li><li>Karşılaştır: 5 &lt; 7. Yer değiştirmenin büyüklüğü yolu ancak düz çizgide yürüyünce yakalar.<div class="why">Aynı doğrultuda olmayan vektörlerde büyüklükler doğrudan toplanmaz; gelecek hafta bunun genel yöntemini (uç uca ekleme, paralelkenar) öğreneceksin. Burada dik açı sayesinde Pisagor yetti.</div></li></ol></div>
+  <div class="card"><h3 style="margin-top:0">Fen lisesi · Gidiş 3 saat, dönüş 2 saat, tek yön 45 km: ortalama sürat neden 18,75 değil?</h3>
+    <ol class="steps"><li>Gidiş sürati 45/3 = 15 km/sa; dönüş 45/2 = 22,5 km/sa. Aritmetik ortalama 18,75 km/sa — <em>yanlış</em> yol.</li><li>Tanım: ortalama sürat = toplam yol / toplam süre = 90/5 = 18 km/sa.</li><li>Neden farklı? Yavaş bölüm (15 km/sa) 3 saat, hızlı bölüm 2 saat sürdü; süreler eşit olmadığından süratlerin ortalaması ağırlıksız kalır. Ortalama hız ise 0/5 = 0: yer değiştirme sıfır.<div class="why">Süratlerin ortalaması yalnızca <em>eşit sürelerde</em> ortalama sürate eşittir; eşit yollarda değil.</div></li></ol></div>
+  <div class="nextbtn"><button class="btn" data-done="6" data-go="7">Kendini sına →</button></div>
+</section>
+<section class="tab" id="t7" role="tabpanel" aria-labelledby="tab7">
+  <h2>Kendini sına</h2>
+  <p>12 soru: 4 temel, 5 orta, 3 fen lisesi. Cevaplarını işaretle ve sonunda kaydet; değerlendirme öğretmenine iletilir.</p>
+  <div id="quiz"></div><div class="score" id="scoreBox"></div>
+  <div class="nextbtn"><button class="btn" id="quizCheck">Cevapları kaydet</button><button class="btn alt" id="quizReset">Testi temizle</button><button class="btn" data-done="7" data-go="8">Özete geç →</button></div>
+</section>
+<section class="tab" id="t8" role="tabpanel" aria-labelledby="tab8">
+  <h2>Özet ve tuzaklar</h2>
+  <div class="summary">
+    <div class="card"><b>Skaler / vektörel</b>Skaler: yalnız büyüklük (kütle, zaman, sıcaklık, sürat, yol, enerji, basınç). Vektörel: büyüklük + doğrultu + yön (kuvvet, hız, ivme, yer değiştirme, ağırlık). Test: yön ekle — saçma mı, eksik mi?</div>
+    <div class="card"><b>Vektörün ögeleri</b>Ok: uzunluk = büyüklük (|a⃗| ≥ 0), doğru = doğrultu, uç = yön. Bir doğrultunun iki yönü vardır. Paralel taşıma vektörü değiştirmez.</div>
+    <div class="card"><b>Eşit, zıt, k·a⃗</b>Eşit: üç öge aynı. Zıt: büyüklük ve doğrultu aynı, yön ters (−a⃗). k·a⃗: büyüklük |k|·|a⃗|; k &lt; 0 yönü çevirir; k = 0 sıfır vektörü.</div>
+    <div class="card"><b>Aynı doğrultuda toplama</b>İşaret sistemi seç (doğu +), işaretli topla. Aynı yön: büyüklükler toplanır; zıt yön: fark, büyük olanın yönünde. a⃗ + (−a⃗) = 0⃗. Ort. sürat = yol/süre; ort. hız = yer değiştirme/süre.</div>
+  </div>
+  <h3>Sık yapılan 5 hata</h3>
+  <ol>
+    <li>Eksi işaretli her niceliği vektör sanmak: −5 °C, −200 J skalerdir; işaret ölçek ya da türdür.</li>
+    <li>Doğrultu ile yönü karıştırmak: yatay bir doğrultu, doğu ve batı olmak üzere iki yön içerir.</li>
+    <li>Aynı doğrultuda büyüklükleri düşünmeden toplamak: 30 N doğu + 20 N batı = 10 N doğu, 50 N değil.</li>
+    <li>Gidip dönen için "yer değiştirme = 90 km" demek: yer değiştirme başlangıç-bitiş vektörüdür, sıfır.</li>
+    <li>Süratlerin aritmetik ortalamasını ortalama sürat sanmak: doğrusu toplam yol / toplam süre.</li>
+  </ol>
+  <div class="box life"><div class="t">Gelecek haftaya köprü</div>Bu hafta yalnız aynı doğru üzerindeki vektörleri topladık. Peki 3 km doğu + 4 km kuzey nasıl 5 km oldu? Gelecek hafta: <b>vektörlerde işlemler</b> — uç uca ekleme, paralelkenar yöntemi, bileşenlere ayırma ve bileşkenin alabileceği en küçük/en büyük değer. Hazırlık: 5 N ve 3 N iki kuvvetin bileşkesi 2 N ile 8 N arasında olmalı — neden 9 N olamaz, neden 1 N olamaz?</div>
+  <div class="nextbtn"><button class="btn" data-done="8" data-go="1">Haftayı tamamladım ✓</button></div>
+</section>
+</main>
+<footer><span>Fen Lisesi 9 · Fizik · Ünite 2 · Hafta 3 · MEB Türkiye Yüzyılı Maarif Modeli'ne göre hazırlandı · <b>s4.0</b></span><button class="btn alt" id="resetAll" style="min-height:32px;padding:4px 10px;font-size:13px">İlerlemeyi sıfırla</button></footer>
+<script>
+(function(){
+"use strict";
+const S=JSON.parse(localStorage.getItem('ah9-student')||'null');
+const PAKET='fiz-h03', HAFTA=3;
+const BASEKEY='ah9-fiz-h03';
+const KEY=BASEKEY+(S?'-'+S.id:'');
+/* ==== VELİ RAPORU AYARI: Apps Script web uygulaması URL'sini tırnak içine yapıştır ==== */
+let WEBHOOK=localStorage.getItem('ah9-webhook')||'https://script.google.com/macros/s/AKfycbw8VTyagXZXHCfXm4SAO73OP6yTJWAshco_J7Yhiptx7QrNQC-NFwAMXmG-ELhO2PLpuQ/exec';
+const STUDENT='Öğrenci', PACKAGE='Fizik 9 · Ünite 2 · Hafta 3 · Skaler ve vektörel nicelikler';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let state={done:[],quiz:{},mini:{},theme:'light',motion:'on',session:null};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s)state=Object.assign(state,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const TABS=['Neden?','Hatırlatma','Konu','Günlük yaşam','Etkileşim','Çözümlü','Kendini sına','Özet'];
+
+/* tema / hareket */
+const body=document.body;
+function applyTheme(){body.dataset.theme=state.theme;$('#themeBtn').textContent=state.theme==='dark'?'☀ Açık tema':'☾ Koyu tema';}
+function applyMotion(){body.dataset.motion=state.motion;$('#motionBtn').textContent=state.motion==='on'?'⏸ Animasyonları durdur':'▶ Animasyonları aç';if(state.motion==='off'){stopAll();}}
+$('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save();applyTheme();};
+$('#motionBtn').onclick=()=>{state.motion=state.motion==='on'?'off':'on';save();applyMotion();};
+const motionOn=()=>state.motion==='on'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* sekmeler */
+const bar=$('#tabbar');
+TABS.forEach((t,i)=>{const b=document.createElement('button');b.role='tab';b.id='tab'+(i+1);b.innerHTML='<span class="n">'+(i+1)+'</span>'+t;b.onclick=()=>go(i+1);bar.appendChild(b);});
+function go(i){$$('section.tab').forEach(s=>s.classList.remove('active'));$('#t'+i).classList.add('active');
+  $$('#tabbar button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i-1);b.classList.toggle('done',state.done.includes(j+1));});
+  window.scrollTo({top:0,behavior:motionOn()?'smooth':'auto'});location.hash='b'+i;renderProg();}
+function markDone(i){if(!state.done.includes(i))state.done.push(i);save();syncProgress();}
+let syncT=null;
+function syncProgress(){if(!S||!WEBHOOK)return;clearTimeout(syncT);syncT=setTimeout(()=>{const mini=MINI.reduce((a,q,i)=>a+(state.mini['m'+i]!=null&&+state.mini['m'+i]===q.a?1:0),0);
+  const d={action:'progress',id:S.id,pin:S.pin,paket:PAKET,hafta:HAFTA,done:state.done,mini,miniOf:MINI.length,activeSec:state.session?state.session.activeSec:0};
+  const cb='cb'+Date.now();const sc=document.createElement('script');window[cb]=r=>{delete window[cb];sc.remove();try{const p=r&&r.progress&&r.progress[PAKET];if(p){if(!p.locked&&state.quiz.submitted){state.quiz.submitted='';save();renderQuiz();$('#scoreBox').textContent='Öğretmenin testi yeniden açtı; cevaplarını düzenleyip tekrar kaydedebilirsin.';}else if(p.locked&&!state.quiz.submitted){state.quiz.submitted=p.quizSubmitted||new Date().toISOString();save();renderQuiz();}}}catch(e){}};sc.onerror=()=>{delete window[cb];sc.remove();};sc.src=WEBHOOK+'?cb='+cb+'&d='+encodeURIComponent(JSON.stringify(d));document.body.appendChild(sc);},800);}
+function renderProg(){const p=Math.round(state.done.length/8*100);$('#progBar').style.width=p+'%';$('#progText').textContent='İlerleme %'+p;
+  $$('#tabbar button').forEach((b,j)=>b.classList.toggle('done',state.done.includes(j+1)));}
+$$('[data-go]').forEach(b=>b.onclick=()=>{markDone(+b.dataset.done);go(+b.dataset.go);});
+$('#resetAll').onclick=()=>{if(confirm('Tüm ilerleme ve test sonuçları silinsin mi?')){state.done=[];state.quiz={};state.mini={};state.session.resets=(state.session.resets||0)+1;save();renderQuiz();renderMini();go(1);}};
+
+/* mini test */
+const MINI=[{"s": "<span class=\"tag\">Geçen hafta</span> 90 km/sa kaç m/s'dir?", "o": ["25 m/s", "90 m/s", "324 m/s", "9 m/s"], "a": 0, "e": "km/sa → m/s için 3,6'ya böl: 90/3,6 = 25. Bu hafta 25 m/s'nin yalnız \"ne kadar hızlı\" dediğini, \"hangi yöne\" demediğini göreceğiz."}, {"s": "<span class=\"tag\">2 hafta önce</span> Fizik açısından \"bu araba hızlı\" ifadesi neden yetersizdir?", "o": ["Ölçülmüş bir sayı ve birim içermez", "Araba fiziğin konusu değildir", "Hız skaler olduğu için", "Cümle çok kısa olduğu için"], "a": 0, "e": "Fizik ölçerek konuşur: \"hızlı\" yerine \"25 m/s\" — ve bu haftadan sonra \"25 m/s kuzeye\"."}, {"s": "<span class=\"tag\">Matematik H1 köprüsü</span> √((−5)²) işleminin sonucu kaçtır?", "o": ["5", "−5", "±5", "25"], "a": 0, "e": "√(x²) = |x|: kare kök işareti siler, sonuç 5. Bu hafta aynı fikir: eksi işareti yönü, mutlak değer büyüklüğü söyler; −5 m yer değiştirmenin büyüklüğü 5 m'dir."}];
+function renderMini(){const box=$('#miniQuiz');box.innerHTML='';MINI.forEach((q,i)=>box.appendChild(makeQ(q,'m'+i,state.mini,true)));}
+/* ana test */
+const QUIZ=[{"s": "Aşağıdaki niceliklerden hangisi skalerdir?", "o": ["Sıcaklık", "Hız", "Kuvvet", "Yer değiştirme"], "a": 0, "e": "Sıcaklığın büyüklüğü vardır, yönü yoktur; \"20 °C kuzeye\" anlamsızdır. Diğer üçü yön gerektirir."}, {"s": "Bir vektörü eksiksiz tanımlamak için gerekli olanlar hangisidir?", "o": ["Büyüklük, doğrultu ve yön", "Yalnız büyüklük ve birim", "Yalnız yön", "Büyüklük ve zaman"], "a": 0, "e": "Ok modeli: uzunluk büyüklüğü, üzerinde bulunduğu doğru doğrultuyu, ok ucu yönü verir. Biri eksikse vektör belirsiz kalır."}, {"s": "Aynı büyüklük, aynı doğrultu ve aynı yöne sahip; fakat farklı noktalardan başlayan iki vektör için hangisi doğrudur?", "o": ["Eşittir; başlangıç noktası vektörü değiştirmez", "Farklıdır; başlangıç noktaları farklı olduğundan", "Zıt vektörlerdir", "Karşılaştırılamaz"], "a": 0, "e": "Vektör kendisine paralel taşınabilir; üç öge aynıysa vektörler eşittir."}, {"s": "−a⃗ vektörü için hangisi doğrudur?", "o": ["a⃗ ile aynı büyüklük ve doğrultuda, zıt yöndedir", "a⃗'dan daha küçük büyüklüktedir", "a⃗ ile aynı yöndedir", "Büyüklüğü negatiftir"], "a": 0, "e": "Eksi işareti yalnız yönü ters çevirir; büyüklük daima sıfır ya da pozitiftir."}, {"tag": "bağlam", "s": "Bir bisikletli sabah İzmit'ten Sapanca'ya 45 km pedal çeviriyor, öğleden sonra aynı yoldan geri dönüyor. Gün sonunda aldığı yol ve yer değiştirmesi sırasıyla nedir?", "o": ["90 km ve 0", "0 ve 90 km", "90 km ve 90 km", "45 km ve 45 km"], "a": 0, "e": "Yol skalerdir, parçalar toplanır: 90 km. Yer değiştirme ilk konumdan son konuma çizilen vektördür; başlangıca dönüldüğü için sıfırdır."}, {"s": "Aynı doğrultuda etki eden 30 N doğuya, 20 N batıya ve 10 N batıya kuvvetlerinin bileşkesi nedir?", "o": ["Sıfır", "60 N doğuya", "20 N doğuya", "40 N batıya"], "a": 0, "e": "Doğuyu + al: 30 − 20 − 10 = 0. Bileşke sıfır: kuvvetler dengede. 60 N büyüklüklerin toplamıdır, vektörlerin değil."}, {"s": "−5 °C sıcaklık değeri için hangisi doğrudur?", "o": ["Skalerdir; eksi işareti yön değil, ölçekteki konumu gösterir", "Vektöreldir; eksi işareti yön belirtir", "Skalerdir; ama pozitif olduğunda vektörel olur", "Vektöreldir; çünkü birimi vardır"], "a": 0, "e": "\"−5 °C batıya\" anlamsızdır. İşaret, seçilen ölçeğin sıfırına göredir; kelvin cinsinden aynı sıcaklık 268 K'dir, işaret bile kalmaz."}, {"tag": "bağlam", "s": "İzmit Körfezi'nde durgun suda 3 m/s süratle ilerleyebilen bir kano, 1 m/s hızla akan bir akıntıda 400 m'lik bir yolu önce akıntı yönünde, sonra akıntıya karşı alıyor. Gidiş ve dönüş süreleri sırasıyla kaç saniyedir?", "o": ["100 s ve 200 s", "133 s ve 133 s", "200 s ve 100 s", "80 s ve 400 s"], "a": 0, "e": "Aynı doğrultudaki hızlar cebirsel toplanır: gidiş 3 + 1 = 4 m/s → 400/4 = 100 s; dönüş 3 − 1 = 2 m/s → 200 s. Durgun suda tur 267 s sürerdi; akıntı süreyi uzatır."}, {"s": "Büyüklüğü 6 N olan, doğuya yönelmiş a⃗ vektörü için −½·a⃗ vektörü nedir?", "o": ["3 N batıya", "3 N doğuya", "12 N batıya", "6 N batıya"], "a": 0, "e": "Sayıyla çarpma: büyüklük |k|·|a⃗| = 0,5 · 6 = 3 N; k negatif olduğundan yön tersine döner: batıya."}, {"tag": "bağlam", "s": "<b>Bilgi:</b> 17 Ağustos 1999 depreminde Kuzey Anadolu Fayı boyunca yer kabuğunun iki tarafı birbirine göre yaklaşık 4 m kaydı; depremin büyüklüğü 7,4 olarak ölçüldü; sarsıntı yaklaşık 45 saniye sürdü.<br>Bu bilgilerdeki niceliklerden hangisi vektöreldir?", "o": ["Fay boyunca kayma (yer değiştirme)", "Deprem büyüklüğü 7,4", "Sarsıntı süresi", "Depremde açığa çıkan enerji"], "a": 0, "e": "Kayma, belirli bir doğrultu ve yönde bir yer değiştirmedir. \"Büyüklük\" sözcüğüne rağmen 7,4 yönsüz bir ölçek değeridir; süre ve enerji de skalerdir."}, {"s": "Bir sürücü 45 km'lik yolu 3 saatte gidip aynı yoldan 2 saatte dönüyor. Tüm yolculuk için ortalama sürati ve ortalama hızı sırasıyla nedir?", "o": ["18 km/sa ve 0", "18,75 km/sa ve 0", "18 km/sa ve 18 km/sa", "22,5 km/sa ve 15 km/sa"], "a": 0, "e": "Ortalama sürat = toplam yol / toplam süre = 90/5 = 18 km/sa (süratlerin ortalaması 18,75 yanlıştır: süreler eşit değil). Ortalama hız = yer değiştirme / süre = 0/5 = 0."}, {"s": "Bir öğrenci 3 km doğuya, sonra 4 km kuzeye yürüyor. Aldığı yol ve yer değiştirmesinin büyüklüğü sırasıyla kaç km'dir?", "o": ["7 ve 5", "5 ve 7", "7 ve 7", "5 ve 5"], "a": 0, "e": "Yol = 3 + 4 = 7 km. Yer değiştirme başlangıçtan bitişe çizilen vektördür; dik bileşenlerden Pisagor ile √(3² + 4²) = 5 km. Vektörler aynı doğrultuda olmadığından büyüklükler toplanmaz."}, {"open": true, "s": "Kütle skaler, ağırlık vektörel bir niceliktir. F⃗ = m·g⃗ ilişkisini kullanarak bunun nedenini açıkla; Ay'da kütle ve ağırlık ne olur?", "ans": "Kütle madde miktarıdır, yönü yoktur. Ağırlık, kütleye etki eden yer çekimi kuvvetidir: skaler m ile vektör g⃗ çarpılınca g⃗ yönünde (yerin merkezine doğru) bir vektör çıkar. Ay'da kütle aynı kalır; g küçük olduğundan ağırlık yaklaşık altıda birine düşer, yönü Ay'ın merkezine doğrudur.", "e": "Skaler × vektör = vektör (g⃗ yönünde) gerekçesi ve Ay karşılaştırması beklenir."}, {"open": true, "s": "\"Sürat, hızın büyüklüğüdür; öyleyse ortalama sürat de ortalama hızın büyüklüğüne eşittir.\" Bu iddiayı sayısal bir örnekle çürüt.", "ans": "Anlık değerler için doğru, ortalamalar için yanlış. Gidiş-dönüş örneği: 45 km gidip dönen bisikletli 5 saatte 90 km yol alır → ortalama sürat 18 km/sa; yer değiştirme sıfır → ortalama hız 0. Yol ile yer değiştirme farklı olduğunda ortalamalar ayrışır.", "e": "Yol / yer değiştirme farkına dayanan sayısal örnek beklenir."}];
+function makeQ(q,id,store,instant){
+  const d=document.createElement('div');d.className='q';d.dataset.id=id;
+  let h='<div class="stem">'+q.s+(q.tag?'<span class="tag">Maarif tarzı · bağlam</span>':'')+'</div>';
+  if(q.open){h+='<input type="text" placeholder="Cevabın" value="'+(store[id]||'')+'" style="width:100%;max-width:320px">';}
+  else{const order=shuf([0,1,2,3],id);h+='<div class="opts">'+order.map(k=>'<label><input type="radio" name="'+id+'" value="'+k+'"'+(store[id]==k?' checked':'')+'> <span>'+q.o[k]+'</span></label>').join('')+'</div><div class="fb"></div>';}
+  d.innerHTML=h;
+  if(q.open){d.querySelector('input').oninput=e=>{store[id]=e.target.value;save();};}
+  else{d.querySelectorAll('input').forEach(r=>r.onchange=()=>{store[id]=+r.value;save();if(instant)grade(d,q);});if(instant&&store[id]!=null)grade(d,q);}
+  return d;
+}
+function shuf(arr,seed){let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;const a=arr.slice();for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1103515245)+12345)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function grade(d,q){const v=d.querySelector('input:checked');if(!v){d.classList.remove('right','wrong');return false;}
+  const ok=+v.value===q.a;d.classList.toggle('right',ok);d.classList.toggle('wrong',!ok);
+  d.querySelector('.fb').innerHTML=(ok?'<b>Doğru.</b> ':'<b>Yanlış.</b> Doğru cevap: '+q.o[q.a]+'. ')+q.e;return ok;}
+function lockQuiz(){const on=!!state.quiz.submitted;$$('#quiz input').forEach(i=>i.disabled=on);$('#quizCheck').disabled=on;$('#quizCheck').textContent=on?'Kaydedildi · kilitli 🔒':'Cevapları kaydet';$('#quizReset').style.display=on?'none':'';}
+function renderQuiz(){const box=$('#quiz');box.innerHTML='';QUIZ.forEach((q,i)=>box.appendChild(makeQ(q,'q'+i,state.quiz,false)));lockQuiz();$('#scoreBox').textContent=state.quiz.submitted?'Cevapların '+new Date(state.quiz.submitted).toLocaleString('tr-TR')+' tarihinde kaydedildi.':'';}
+$('#quizCheck').onclick=()=>{const empty=QUIZ.filter((q,i)=>state.quiz['q'+i]==null||state.quiz['q'+i]==='').length;
+  if(empty&&!confirm(empty+' soru boş. Yine de kaydedilsin mi?'))return;
+  state.quiz.submitted=new Date().toISOString();save();report('quiz');lockQuiz();$('#scoreBox').textContent='Cevapların kaydedildi ve kilitlendi. Konuyu yeniden çalışabilir, cevaplarını görebilirsin; değiştirmek için öğretmenin testi yeniden açması gerekir.';};
+$('#quizReset').onclick=()=>{if(state.quiz.submitted)return;state.quiz={};save();renderQuiz();};
+
+/* SVG yardımcıları */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+const css=v=>getComputedStyle(body).getPropertyValue(v).trim();
+
+
+
+/* --- yardımcılar --- */
+function fmtN(v){if(Number.isInteger(v))return String(v).replace('-','−');return (Math.round(v*100)/100).toString().replace('.',',').replace('-','−');}
+function arrow(svg,x1,y1,x2,y2,col,w,dash){const L=Math.hypot(x2-x1,y2-y1);if(L<1){svg.appendChild(el('circle',{cx:x1,cy:y1,r:5,fill:col}));return;}const ux=(x2-x1)/L,uy=(y2-y1)/L,hl=Math.min(14,L*0.5);const bx=x2-ux*hl,by=y2-uy*hl;svg.appendChild(el('line',{x1,y1,x2:bx,y2:by,stroke:col,'stroke-width':w||4,'stroke-linecap':'round','stroke-dasharray':dash||'none'}));svg.appendChild(el('path',{d:'M'+x2+' '+y2+' L'+(bx-uy*hl*0.5)+' '+(by+ux*hl*0.5)+' L'+(bx+uy*hl*0.5)+' '+(by-ux*hl*0.5)+' Z',fill:col}));}
+function grid(svg,cx,cy,step,w,h){const ln=css('--line'),ink=css('--ink');for(let x=cx%step;x<=w;x+=step)svg.appendChild(el('line',{x1:x,y1:0,x2:x,y2:h,stroke:ln}));for(let y=cy%step;y<=h;y+=step)svg.appendChild(el('line',{x1:0,y1:y,x2:w,y2:y,stroke:ln}));svg.appendChild(el('line',{x1:0,y1:cy,x2:w,y2:cy,stroke:ink,'stroke-width':1.5}));svg.appendChild(el('line',{x1:cx,y1:0,x2:cx,y2:h,stroke:ink,'stroke-width':1.5}));svg.appendChild(el('text',{x:w-40,y:cy-6,'font-size':'12',fill:ink},'doğu →'));svg.appendChild(el('text',{x:cx+6,y:14,'font-size':'12',fill:ink},'↑ kuzey'));}
+function dirWords(x,y){if(!x&&!y)return 'sıfır vektörü (yön tanımsız)';const ew=x>0?'doğu':x<0?'batı':'',ns=y>0?'kuzey':y<0?'güney':'';if(!ns)return ew;if(!ew)return ns;return ns+ew+' tarafı ('+Math.abs(x)+' '+ew+', '+Math.abs(y)+' '+ns+')';}
+function dirLine(x,y){if(!x&&!y)return '—';if(!y)return 'yatay (doğu-batı)';if(!x)return 'düşey (kuzey-güney)';return 'eğik (yatayla açı yapan doğru)';}
+function magTxt(x,y){const m2=x*x+y*y,m=Math.sqrt(m2);return Number.isInteger(m)?String(m):'√'+m2+' ≈ '+fmtN(m);}
+/* --- Vektör çizici --- */
+const VC={x:3,y:4};const VCW=720,VCH=380,VCS=40,VCX=360,VCY=200;
+function drawVC(){const svg=$('#vcSvg');svg.innerHTML='';grid(svg,VCX,VCY,VCS,VCW,VCH);const nv=css('--navy2'),gd=css('--gold'),ink=css('--ink');const x2=VCX+VC.x*VCS,y2=VCY-VC.y*VCS;
+  if(VC.x)svg.appendChild(el('line',{x1:VCX,y1:VCY,x2,y2:VCY,stroke:gd,'stroke-width':2,'stroke-dasharray':'5 4'}));if(VC.y)svg.appendChild(el('line',{x1:x2,y1:VCY,x2,y2,stroke:gd,'stroke-width':2,'stroke-dasharray':'5 4'}));
+  arrow(svg,VCX,VCY,x2,y2,nv,5);svg.appendChild(el('circle',{cx:x2,cy:y2,r:9,fill:nv,opacity:.25}));svg.appendChild(el('text',{x:Math.min(x2+10,600),y:Math.max(y2-8,16),'font-size':'16','font-weight':'700',fill:nv},'a⃗ = ('+fmtN(VC.x)+', '+fmtN(VC.y)+')'));
+  $('#vcx').value=VC.x;$('#vcy').value=VC.y;
+  $('#vcOut').innerHTML='<b>Büyüklük</b> |a⃗| = '+magTxt(VC.x,VC.y)+' birim &nbsp;·&nbsp; <b>Doğrultu:</b> '+dirLine(VC.x,VC.y)+' &nbsp;·&nbsp; <b>Yön:</b> '+dirWords(VC.x,VC.y)+(!VC.x&&!VC.y?'':'<br><span style="color:var(--ink2)">Büyüklük asla negatif değil; işaretler yalnız yönü değiştirir. Aynı doğru üzerindeki iki yönden birini seçtin.</span>');}
+function vcFromEvent(e){const r=$('#vcSvg').getBoundingClientRect();const sx=(e.clientX-r.left)*VCW/r.width,sy=(e.clientY-r.top)*VCH/r.height;VC.x=Math.max(-8,Math.min(8,Math.round((sx-VCX)/VCS)));VC.y=Math.max(-4,Math.min(4,Math.round((VCY-sy)/VCS)));drawVC();}
+let vcDrag=false;$('#vcSvg').addEventListener('pointerdown',e=>{vcDrag=true;vcFromEvent(e);});$('#vcSvg').addEventListener('pointermove',e=>{if(vcDrag)vcFromEvent(e);});window.addEventListener('pointerup',()=>vcDrag=false);
+['#vcx','#vcy'].forEach(s=>$(s).addEventListener('input',()=>{VC.x=Math.max(-8,Math.min(8,Math.round(+$('#vcx').value||0)));VC.y=Math.max(-4,Math.min(4,Math.round(+$('#vcy').value||0)));drawVC();}));
+$('#vcReset').onclick=()=>{VC.x=3;VC.y=4;drawVC();};
+/* --- Eşit / zıt dedektörü --- */
+const EZA={sx:-6,sy:-1,x:3,y:2};
+function drawEZ(){const sx=+$('#ezsx').value,sy=+$('#ezsy').value,bx=+$('#ezbx').value,by=+$('#ezby').value,task=$('#ezTask').value;$('#ezsxo').value=fmtN(sx);$('#ezsyo').value=fmtN(sy);$('#ezbxo').value=fmtN(bx);$('#ezbyo').value=fmtN(by);
+  const svg=$('#ezSvg');svg.innerHTML='';grid(svg,360,200,40,720,380);const nv=css('--navy2'),gd=css('--gold');const P=(x,y)=>[360+x*40,200-y*40];
+  let a=P(EZA.sx,EZA.sy),a2=P(EZA.sx+EZA.x,EZA.sy+EZA.y);arrow(svg,a[0],a[1],a2[0],a2[1],nv,5);svg.appendChild(el('text',{x:a2[0]+8,y:a2[1]-6,'font-size':'16','font-weight':'700',fill:nv},'A⃗ = (3, 2)'));
+  let b=P(sx,sy),b2=P(sx+bx,sy+by);arrow(svg,b[0],b[1],b2[0],b2[1],gd,5);svg.appendChild(el('text',{x:Math.min(b2[0]+8,600),y:Math.max(b2[1]-6,16),'font-size':'16','font-weight':'700',fill:gd},'B⃗ = ('+fmtN(bx)+', '+fmtN(by)+')'));
+  const magA=Math.hypot(EZA.x,EZA.y),magB=Math.hypot(bx,by);const sameMag=Math.abs(magA-magB)<1e-9;const parallel=(EZA.x*by-EZA.y*bx)===0&&(bx||by);const dot=EZA.x*bx+EZA.y*by;const sameDir=parallel&&dot>0,oppDir=parallel&&dot<0;
+  const chk=(ok,t)=>'<span style="color:'+(ok?'var(--ok)':'var(--bad)')+'">'+(ok?'✔':'✘')+' '+t+'</span>';
+  let h=chk(sameMag,'büyüklük: |A⃗| = '+magTxt(EZA.x,EZA.y)+', |B⃗| = '+magTxt(bx,by))+' &nbsp; '+chk(!!parallel,'doğrultu: '+(parallel?'aynı doğru üzerinde/paralel':'farklı'))+' &nbsp; '+(parallel?chk(true,'yön: '+(sameDir?'aynı':'ters')):chk(false,'yön: karşılaştırılamaz (doğrultu farklı)'))+'<br>';
+  const isEq=sameMag&&sameDir,isOp=sameMag&&oppDir;
+  h+='<b>Hüküm:</b> '+(isEq?'B⃗ = A⃗ (eşit vektörler)':isOp?'B⃗ = −A⃗ (zıt vektörler)':'ne eşit ne zıt')+'. ';
+  if(task==='eq')h+=isEq?'<span style="color:var(--ok)">Görev tamam. Başlangıç noktasını kaydır: hüküm değişmez.</span>':'<span style="color:var(--gold)">Görev: eşit yap → bileşenler (3, 2) olmalı; başlangıç serbest.</span>';
+  else if(task==='op')h+=isOp?'<span style="color:var(--ok)">Görev tamam: B⃗ = −A⃗. Başlangıç noktası yine önemsiz.</span>':'<span style="color:var(--gold)">Görev: zıt yap → bileşenler (−3, −2) olmalı.</span>';
+  else h+='<span style="color:var(--ink2)">(6, 4) dene: doğrultu ve yön aynı ama büyüklük iki katı — eşit değil, B⃗ = 2A⃗.</span>';
+  $('#ezOut').innerHTML=h;}
+['#ezsx','#ezsy','#ezbx','#ezby','#ezTask'].forEach(s=>$(s).addEventListener('input',drawEZ));
+/* --- k·a --- */
+function drawK(){const k=+$('#kk').value;$('#kko').value=fmtN(k);const svg=$('#kSvg');svg.innerHTML='';const nv=css('--navy2'),gd=css('--gold'),ink=css('--ink'),ln=css('--line');const ox=360,oy=110,ax=80;
+  svg.appendChild(el('line',{x1:20,y1:oy,x2:700,y2:oy,stroke:ln}));for(let i=-4;i<=4;i++){svg.appendChild(el('line',{x1:ox+i*ax,y1:oy-5,x2:ox+i*ax,y2:oy+5,stroke:ink}));svg.appendChild(el('text',{x:ox+i*ax,y:oy+22,'text-anchor':'middle','font-size':'11',fill:css('--ink2')},i));}
+  arrow(svg,ox,oy-40,ox+ax,oy-40,ink,3);svg.appendChild(el('text',{x:ox+ax+8,y:oy-36,'font-size':'14',fill:ink},'a⃗ (1 birim, doğu)'));
+  arrow(svg,ox,oy+45,ox+k*ax,oy+45,k<0?gd:nv,5);svg.appendChild(el('text',{x:ox+(k*ax)+(k>=0?10:-10),y:oy+50,'text-anchor':k>=0?'start':'end','font-size':'14','font-weight':'700',fill:k<0?gd:nv},k+'·a⃗'));
+  $('#kOut').innerHTML='k = '+fmtN(k)+' → |k·a⃗| = |'+fmtN(k)+'|·1 = <b>'+fmtN(Math.abs(k))+' birim</b>, yön: <b>'+(k>0?'doğu (a⃗ ile aynı)':k<0?'batı (a⃗ ile zıt)':'tanımsız — sıfır vektörü')+'</b>'+(k===-1?' — bu tam olarak −a⃗, zıt vektör.':'')+(k===1?' — a⃗\'nın kendisi.':'')+'<br><span style="color:var(--ink2)">Doğrultu hiç değişmedi: yatay. Değişen yalnız uzunluk ve yön.</span>';}
+$('#kk').addEventListener('input',drawK);
+/* --- Aynı doğrultuda bileşke --- */
+function drawBL(){const f=[+$('#f1').value,+$('#f2').value,+$('#f3').value];$('#f1o').value=fmtN(f[0]);$('#f2o').value=fmtN(f[1]);$('#f3o').value=fmtN(f[2]);const svg=$('#blSvg');svg.innerHTML='';const nv=css('--navy2'),gd=css('--gold'),ok=css('--ok'),ink=css('--ink'),ln=css('--line');const ox=360,sc=14;
+  svg.appendChild(el('line',{x1:20,y1:130,x2:700,y2:130,stroke:ink,'stroke-width':1.5}));svg.appendChild(el('rect',{x:ox-22,y:108,width:44,height:44,rx:6,fill:css('--sky'),stroke:nv}));svg.appendChild(el('text',{x:ox,y:170,'text-anchor':'middle','font-size':'11',fill:css('--ink2')},'kutu'));svg.appendChild(el('text',{x:690,y:120,'text-anchor':'end','font-size':'12',fill:ink},'doğu +'));
+  let cur=0;const cols=[nv,gd,'#7a4d00'];f.forEach((v,i)=>{const y=40+i*26;if(v){arrow(svg,ox+cur*sc,y,ox+(cur+v)*sc,y,cols[i],4);svg.appendChild(el('text',{x:ox+(cur+v/2)*sc,y:y-8,'text-anchor':'middle','font-size':'12',fill:cols[i]},'F'+(i+1)+' = '+fmtN(v)));}else svg.appendChild(el('text',{x:ox+cur*sc,y:y+4,'font-size':'12',fill:cols[i]},'F'+(i+1)+' = 0'));cur+=v;});
+  const R=f[0]+f[1]+f[2];if(R){arrow(svg,ox,205,ox+R*sc,205,ok,6);svg.appendChild(el('text',{x:ox+R*sc/2,y:228,'text-anchor':'middle','font-size':'13','font-weight':'700',fill:ok},'bileşke = '+fmtN(R)+' N'));}else{svg.appendChild(el('circle',{cx:ox,cy:205,r:6,fill:ok}));svg.appendChild(el('text',{x:ox,y:228,'text-anchor':'middle','font-size':'13','font-weight':'700',fill:ok},'bileşke = 0 (denge)'));}
+  const absSum=Math.abs(f[0])+Math.abs(f[1])+Math.abs(f[2]);
+  $('#blOut').innerHTML='Bileşke = ('+f.map(fmtN).join(') + (')+') = <b>'+fmtN(R)+' N</b> → '+(R>0?'<b>'+fmtN(R)+' N doğuya</b>':R<0?'<b>'+fmtN(-R)+' N batıya</b>':'<b>sıfır: kuvvetler dengede</b>')+'. Büyüklüklerin toplamı '+absSum+' N'+(absSum!==Math.abs(R)?' — bileşkeden farklı, çünkü yönler farklı.':' — hepsi aynı yönde olduğundan bileşkeye eşit.');}
+['#f1','#f2','#f3'].forEach(s=>$(s).addEventListener('input',drawBL));
+/* --- Skaler mi vektörel mi? --- */
+const GB=['Skaler','Vektörel'];
+const GQ=[['Kütle: 70 kg',0,'"70 kg kuzeye" anlamsız; madde miktarının yönü yoktur.'],['Kuvvet: 20 N',1,'Hangi yöne? Yön eksik: vektörel.'],['Sıcaklık: −5 °C',0,'Eksi işareti yön değil, ölçek konumu. Skaler.'],['Hız: 12 m/s kuzeye',1,'Yön verilmiş ve gerekli: vektörel.'],['Sürat: 12 m/s',0,'Yönsüz "ne kadar hızlı": skaler.'],['Yer değiştirme: 3 km batıya',1,'Başlangıçtan bitişe ok: vektörel.'],['Alınan yol: 90 km',0,'Yolun uzunluğu, yön bilgisi taşımaz.'],['Zaman: 45 s',0,'Zamanın yönü yoktur (fizikte skaler).'],['İvme: 2 m/s² güneye',1,'Hız değişiminin yönü vardır: vektörel.'],['Enerji: −200 J',0,'İşaret referans seçimidir; enerji skaler.'],['Ağırlık',1,'Yerin merkezine doğru bir kuvvet: vektörel.'],['Basınç: 2 atm',0,'Her yöne aynı etkir; skalerdir (Ünite 3).'],['Elektrik yükü: −2 C',0,'Eksi, yükün cinsidir; yük skaler.'],['Deprem büyüklüğü: 7,4',0,'"Büyüklük" kelimesine rağmen yönsüz ölçek değeri: skaler.']];
+let GM={i:0,s:0,log:[]};
+function drawGame(){const box=$('#game');if(GM.i>=GQ.length){box.innerHTML='<div class="readout">Puan: '+GM.s+' / '+GQ.length+'</div>'+GM.log.map(l=>'<div class="q '+(l.ok?'right':'wrong')+'"><div class="stem">'+l.q+'</div><div class="fb">'+(l.ok?'✔ ':'✘ Doğru: <b>'+l.d+'</b> · ')+l.e+'</div></div>').join('');return;}
+  const q=GQ[GM.i];box.innerHTML='<div class="readout">'+(GM.i+1)+' / '+GQ.length+' · Puan '+GM.s+'</div><div class="q"><div class="stem" style="font-size:20px">'+q[0]+'</div><div class="ctrl">'+GB.map((b,j)=>'<button class="btn alt" data-v="'+j+'">'+b+'</button>').join('')+'</div><div class="fb" id="gmFb"></div></div>';
+  box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.v===q[1];if(ok)GM.s++;GM.log.push({q:q[0],ok,d:GB[q[1]],e:q[2]});box.querySelector('.q').classList.add(ok?'right':'wrong');box.querySelectorAll('[data-v]').forEach(x=>x.disabled=true);$('#gmFb').innerHTML=(ok?'✔ Doğru. ':'✘ Doğru: <b>'+GB[q[1]]+'</b>. ')+q[2]+' <button class="btn" style="margin-left:8px;min-height:32px;padding:4px 10px" id="gmNext">Sonraki →</button>';$('#gmNext').onclick=()=>{GM.i++;drawGame();};});}
+$('#gmReset').onclick=()=>{GM={i:0,s:0,log:[]};drawGame();};
+/* --- Yol ve yer değiştirme kaydedici --- */
+let YK={pos:0,yol:0,t:0,steps:[]};
+function drawYK(){const svg=$('#ykSvg');svg.innerHTML='';const nv=css('--navy2'),gd=css('--gold'),ok=css('--ok'),ink=css('--ink'),ln=css('--line');const ox=360,sc=16;
+  svg.appendChild(el('line',{x1:20,y1:150,x2:700,y2:150,stroke:ink,'stroke-width':1.5}));for(let m=-20;m<=20;m+=5){svg.appendChild(el('line',{x1:ox+m*sc,y1:145,x2:ox+m*sc,y2:155,stroke:ink}));svg.appendChild(el('text',{x:ox+m*sc,y:172,'text-anchor':'middle','font-size':'11',fill:css('--ink2')},m+' m'));}
+  let p=0;YK.steps.slice(0,-8).forEach(d=>p+=d);YK.steps.slice(-8).forEach((d,i)=>{const y=25+i*12;arrow(svg,ox+p*sc,y,ox+(p+d)*sc,y,d>0?nv:gd,3);p+=d;});
+  if(YK.steps.length>8)svg.appendChild(el('text',{x:30,y:20,'font-size':'11',fill:css('--ink2')},'(son 8 adım gösteriliyor)'));
+  svg.appendChild(el('circle',{cx:ox,cy:150,r:6,fill:'none',stroke:ok,'stroke-width':2}));svg.appendChild(el('text',{x:ox,y:195,'text-anchor':'middle','font-size':'11',fill:ok},'başlangıç'));
+  svg.appendChild(el('circle',{cx:ox+YK.pos*sc,cy:150,r:8,fill:css('--bad')}));
+  if(YK.pos)arrow(svg,ox,130,ox+YK.pos*sc,130,ok,5);
+  const vs=YK.t?YK.yol/YK.t:0,vh=YK.t?YK.pos/YK.t:0;
+  $('#ykOut').innerHTML='<b>Süre:</b> '+YK.t+' s &nbsp;·&nbsp; <b>Alınan yol:</b> '+YK.yol+' m &nbsp;·&nbsp; <b>Yer değiştirme:</b> '+(YK.pos?Math.abs(YK.pos)+' m '+(YK.pos>0?'doğu':'batı'):'0')+'<br><b>Ortalama sürat:</b> '+(YK.t?fmtN(vs)+' m/s':'—')+' &nbsp;·&nbsp; <b>Ortalama hız:</b> '+(YK.t?(YK.pos?fmtN(Math.abs(vh))+' m/s '+(YK.pos>0?'doğu':'batı'):'0'):'—')+(YK.steps.length&&!YK.pos?' &nbsp;<span style="color:var(--gold)">Başlangıçtasın: yol '+YK.yol+' m ama yer değiştirme sıfır.</span>':'');}
+$$('[data-d]').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(Math.abs(YK.pos+d)>20)return;YK.pos+=d;YK.yol+=Math.abs(d);YK.t+=Math.abs(d);YK.steps.push(d);drawYK();});
+$('#ykReset').onclick=()=>{YK={pos:0,yol:0,t:0,steps:[]};drawYK();};
+function stopAll(){}
+
+
+
+/* --- oturum takibi (öğrenciye gösterilmez) --- */
+function curTab(){const a=$('section.tab.active');return a?+a.id.slice(1):1;}
+if(!state.session)state.session={start:new Date().toISOString(),activeSec:0,tabs:{},visits:0,ua:navigator.userAgent.slice(0,120)};
+state.session.visits++;state.session.lastOpen=new Date().toISOString();save();
+let lastTick=Date.now();
+function tick(){if(document.visibilityState!=='visible')return;const now=Date.now(),dt=Math.min(60,Math.round((now-lastTick)/1000));lastTick=now;
+  if(dt<=0)return;state.session.activeSec+=dt;const t=curTab();state.session.tabs[t]=(state.session.tabs[t]||0)+dt;state.session.lastActive=new Date().toISOString();save();if(!(state.session.activeSec%120))syncProgress();}
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')lastTick=Date.now();else tick();});
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.round(sec%3600/60);return (h?h+' sa ':'')+m+' dk';}
+function plain(h){return h.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<span class="rad[^"]*"><i>/g,'√(').replace(/<\/i><\/span>/g,')').replace(/<span class="frac"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'($1)/($2)').replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+function buildReport(ev){const ans=QUIZ.map((q,i)=>{const v=state.quiz['q'+i];
+  return q.open?{n:i+1,soru:plain(q.s),cevap:v||'',dogru:plain(q.ans),tip:'açık uçlu'}
+  :{n:i+1,soru:plain(q.s),cevap:v==null?'':plain(q.o[v]),dogru:plain(q.o[q.a]),puan:v==null?0:(+v===q.a?1:0),tip:q.tag||'standart'};});
+  const mini=MINI.map((q,i)=>{const v=state.mini['m'+i];return {n:i+1,cevap:v==null?'':plain(q.o[v]),puan:v==null?0:(+v===q.a?1:0)};});
+  return {event:ev,student:S?S.ad:STUDENT,studentId:S?S.id:'',studentPin:S?S.pin:'',paket:PAKET,hafta:HAFTA,package:PACKAGE,sent:new Date().toISOString(),
+    session:{start:state.session.start,lastActive:state.session.lastActive,activeSec:state.session.activeSec,active:fmt(state.session.activeSec),visits:state.session.visits,
+      tabs:TABS.map((t,i)=>({tab:(i+1)+' '+t,sec:state.session.tabs[i+1]||0,dk:Math.round((state.session.tabs[i+1]||0)/60)})),done:state.done.slice().sort(),ua:state.session.ua},
+    mini:{score:mini.reduce((a,b)=>a+b.puan,0),of:MINI.length,items:mini},
+    quiz:{submitted:state.quiz.submitted||null,score:ans.reduce((a,b)=>a+(b.puan||0),0),of:QUIZ.filter(q=>!q.open).length,items:ans}};}
+function report(ev){const payload=buildReport(ev);const box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');box.push(payload);localStorage.setItem(KEY+'-outbox',JSON.stringify(box.slice(-20)));flush();}
+async function flush(){if(!WEBHOOK||!navigator.onLine)return;let box=JSON.parse(localStorage.getItem(KEY+'-outbox')||'[]');if(!box.length)return;
+  const rest=[];for(const p of box){try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});}catch(e){rest.push(p);}}
+  localStorage.setItem(KEY+'-outbox',JSON.stringify(rest));}
+window.addEventListener('online',flush);
+document.querySelector('[data-done="8"]').addEventListener('click',()=>setTimeout(()=>report('week_done'),50));
+/* gizli kurulum ekranı: adres çubuğuna #kurulum ekle */
+function setupScreen(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99;background:var(--paper);padding:20px;overflow:auto';
+  d.innerHTML='<h2>Veli raporu kurulumu</h2><p style="max-width:60ch">Apps Script\'ten aldığın <b>Web uygulaması URL</b>\'sini aşağıya yapıştır ve kaydet. Bu bilgi yalnızca bu cihazda saklanır; öğrenci ekranında görünmez.</p>'+
+    '<input type="text" id="whIn" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;max-width:520px;margin:10px 0">'+
+    '<div class="ctrl"><button class="btn" id="whSave">Kaydet</button><button class="btn alt" id="whTest">Deneme raporu gönder</button><button class="btn alt" id="whClose">Kapat</button></div>'+
+    '<div id="whMsg" class="readout" style="display:none"></div>'+
+    '<p style="font-size:14px;color:var(--ink2);max-width:60ch">Kurulumu <b>öğrencinin kullanacağı cihazda</b> bir kez yapman gerekir. Bu ekrana her zaman adresin sonuna <b>#kurulum</b> yazarak dönebilirsin.</p>';
+  document.body.appendChild(d);
+  const msg=t=>{const m=d.querySelector('#whMsg');m.style.display='inline-block';m.textContent=t;};
+  d.querySelector('#whIn').value=WEBHOOK;
+  d.querySelector('#whSave').onclick=()=>{const v=d.querySelector('#whIn').value.trim();
+    if(v&&!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(v)){msg('URL beklenen biçimde değil; ".../exec" ile bitmeli. Yine de kaydedildi.');}
+    WEBHOOK=v;localStorage.setItem('ah9-webhook',v);msg(v?'Kaydedildi. Raporlar bu adrese gönderilecek.':'Adres silindi; rapor gönderilmeyecek.');};
+  d.querySelector('#whTest').onclick=()=>{if(!WEBHOOK)return msg('Önce adresi kaydet.');report('kurulum_denemesi');msg('Deneme raporu gönderildi. Bir dakika içinde e-postana bak.');};
+  d.querySelector('#whClose').onclick=()=>{d.remove();location.hash='b1';};
+}
+if(location.hash==='#kurulum')setTimeout(setupScreen,100);
+window.addEventListener('hashchange',()=>{if(location.hash==='#kurulum')setupScreen();});
+/* başlat */
+if(!S)$('#noLogin').style.display='';setTimeout(syncProgress,1500);applyTheme();applyMotion();renderMini();renderQuiz();drawVC();drawEZ();drawK();drawBL();drawGame();drawYK();flush();
+const h=+(location.hash.replace('#b',''))||1;go(h>=1&&h<=8?h:1);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;const cur=+$('section.tab.active').id.slice(1);if(e.key==='ArrowRight'&&cur<8)go(cur+1);if(e.key==='ArrowLeft'&&cur>1)go(cur-1);});
+})();
+</script>
+</body>
+</html>
